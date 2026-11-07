@@ -1,4 +1,5 @@
 import { useCallback, useState, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   ApiError,
   type RecordSearch,
@@ -321,7 +322,10 @@ export function SourceLibraryPage() {
   const [search, setSearch] = useState<RecordSearch>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
-  const [selected, setSelected] = useState<string | null>(null);
+  // A linked record (from relevance screening or evidence) opens straight in the inspector; the
+  // server still checks access to it.
+  const [params] = useSearchParams();
+  const [selected, setSelected] = useState<string | null>(params.get("record"));
 
   async function run(next: RecordSearch, cursor?: string) {
     setBusy(true);

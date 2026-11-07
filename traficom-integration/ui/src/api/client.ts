@@ -82,6 +82,12 @@ export interface ApiClient {
   getUpload(uploadId: string, signal?: AbortSignal): Promise<Schemas["UploadSession"]>;
   completeUpload(uploadId: string, body: Schemas["UploadCompleteRequest"]): Promise<Schemas["UploadSession"]>;
   getJob(jobId: string, signal?: AbortSignal): Promise<Schemas["JobRun"]>;
+  screenFrequency(
+    startMhz: number,
+    endMhz: number,
+    signal?: AbortSignal,
+  ): Promise<Schemas["FrequencyRelevanceScreen"]>;
+  getOperationsMetrics(signal?: AbortSignal): Promise<Schemas["OperationsMetrics"]>;
   searchRecords(search: RecordSearch, cursor?: string, signal?: AbortSignal): Promise<SourceRecordList>;
   getRecord(recordId: string, signal?: AbortSignal): Promise<Schemas["SourceRecordDetail"]>;
   getArtifact(artifactId: string, signal?: AbortSignal): Promise<Schemas["SourceArtifactDetail"]>;
@@ -276,6 +282,11 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     completeUpload: (uploadId, body) =>
       write("POST", `/api/v1/uploads/${encodeURIComponent(uploadId)}/complete`, body),
     getJob: (jobId, signal) => get(`/api/v1/jobs/${encodeURIComponent(jobId)}`, signal),
+    screenFrequency: (startMhz, endMhz, signal) => {
+      const params = new URLSearchParams({ start_mhz: String(startMhz), end_mhz: String(endMhz) });
+      return get(`/api/v1/finland-relevance/frequency-screen?${params.toString()}`, signal);
+    },
+    getOperationsMetrics: (signal) => get("/api/v1/operations/metrics", signal),
     searchRecords: (search, cursor, signal) => {
       const params = new URLSearchParams();
       for (const [name, value] of Object.entries(search)) {

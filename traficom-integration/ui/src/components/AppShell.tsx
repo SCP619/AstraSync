@@ -4,7 +4,7 @@
  * app's router, capabilities and live alert counts. Only one navigation is rendered at a time,
  * so links are never announced twice.
  */
-import { Bell, Briefcase, FlaskConical, Gauge, Library, LogOut, Radio, Upload } from "lucide-react";
+import { Bell, Briefcase, FlaskConical, Gauge, Library, LogOut, MapPin, Radio, Upload } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "./cn";
@@ -23,6 +23,7 @@ const ITEMS: Item[] = [
   { to: "/alerts", label: "Alerts", icon: Bell, capability: "ALERT_READ" },
   { to: "/sources", label: "Source library", icon: Library, capability: "SOURCE_HEALTH_READ" },
   { to: "/uploads", label: "Upload", icon: Upload, capability: "UPLOAD_MANAGE" },
+  { to: "/finland", label: "Finland relevance", icon: MapPin, capability: "SOURCE_READ" },
 ];
 
 const NARROW = "(max-width: 767px)";
@@ -94,6 +95,12 @@ export function AppShell({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-surface focus:px-3 focus:py-2"
+      >
+        Skip to main content
+      </a>
       {user.environment === "DEMO" && (
         <div
           role="note"
@@ -135,13 +142,15 @@ export function AppShell({
               Sign out
             </button>
           </header>
-          <div className={cn("flex-1", narrow && "pb-16")}>{children}</div>
+          <div id="main-content" tabIndex={-1} className={cn("flex-1", narrow && "pb-16")}>
+            {children}
+          </div>
         </div>
       </div>
       {narrow && (
         <nav
           aria-label="Main"
-          className="fixed inset-x-0 bottom-0 z-30 flex border-t border-border bg-surface"
+          className="fixed inset-x-0 bottom-0 z-30 flex border-t border-border bg-surface pb-[env(safe-area-inset-bottom)]"
         >
           {items.map((item) => link(item, true))}
         </nav>

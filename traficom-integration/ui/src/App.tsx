@@ -26,6 +26,8 @@ import { AlertDetailPage, AlertsPage } from "./alerts/AlertsPage";
 import { CaseInspectorPage } from "./cases/CaseInspectorPage";
 import { CaseListPage } from "./cases/CaseListPage";
 import { AppShell as ShellLayout } from "./components/AppShell";
+import { OperationsPanel } from "./components/OperationsPanel";
+import { FinlandRelevancePage } from "./relevance/FinlandRelevancePage";
 import { webPlatform, type PlatformAdapter, type PushPermission } from "./platform/types";
 import { SourceLibraryPage } from "./sources/SourceLibraryPage";
 import { UploadPage } from "./sources/UploadPage";
@@ -444,6 +446,7 @@ function DashboardPage() {
         </dl>
       </section>
       {me.capabilities.includes("CASE_READ") && <CasesPanel />}
+      {me.capabilities.includes("JOB_READ") && <OperationsPanel />}
       <section className="panel" aria-labelledby="permissions-title">
         <h2 id="permissions-title">Permissions</h2>
         <ul className="chips">
@@ -536,6 +539,10 @@ export function App({
         <Route
           path="/uploads"
           element={shell(<RequireCapability capability="UPLOAD_MANAGE"><UploadPage /></RequireCapability>)}
+        />
+        <Route
+          path="/finland"
+          element={shell(<RequireCapability capability="SOURCE_READ"><FinlandRelevancePage /></RequireCapability>)}
         />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

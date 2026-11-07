@@ -33,6 +33,7 @@ from .ingest import PipelineContext, process_artifact, process_upload
 from .jobs import PermanentJobError, claim, finish, retry_or_fail
 from .library_tables import JobRunRow, UploadSessionRow
 from .objectstore import LocalObjectStore
+from .parser_sandbox import IsolatedAdapter, ParserLimits
 from .record_store import ParquetRecordStore
 
 logger = logging.getLogger("astrasync.worker")
@@ -122,13 +123,20 @@ def run_until_idle(runtime: WorkerRuntime) -> int:
     return count
 
 
-def load_adapters(specs: tuple[str, ...]) -> dict[str, SourceAdapter]:
+def load_adapters(
+    specs: tuple[str, ...], limits: ParserLimits | None = None
+) -> dict[str, SourceAdapter]:
+    """With ``limits``, each adapter parses in a separate limited process (``parser_sandbox``)."""
     adapters: dict[str, SourceAdapter] = {}
     for spec in specs:
         adapter = load_named(spec)()
         if not isinstance(adapter, SourceAdapter):
             raise SettingsError(f"{spec} does not implement SourceAdapter")
-        adapters[adapter.source_type] = adapter
+        adapters[adapter.source_type] = (
+            IsolatedAdapter(spec, adapter.source_type, adapter.parser_version, limits)
+            if limits is not None
+            else adapter
+        )
     return adapters
 
 
@@ -167,7 +175,12 @@ def build_runtime(settings: Settings) -> WorkerRuntime:
         context=PipelineContext(
             sessions=build_session_factory(build_engine(settings.database_url)),
             store=LocalObjectStore(settings.object_store_path),
-            adapters=load_adapters(settings.source_adapters),
+            adapters=load_adapters(
+                settings.source_adapters,
+                ParserLimits(settings.parser_memory_mb, settings.parser_timeout_seconds)
+                if settings.parser_isolation == "process"
+                else None,
+            ),
             records=(
                 ParquetRecordStore(settings.record_store_path)
                 if settings.record_store_path is not None

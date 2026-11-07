@@ -1,6 +1,6 @@
 # AstraSync backend
 
-FastAPI service. **Status:** IPD stage 1, secure skeleton. Identity, authorization and audit are implemented; apart from `GET /api/v1/me`, every route returns `501` after authorization. MFA, native-client sign-in and the production identity provider have not been tested against a real provider.
+FastAPI service. **Status:** IPD stage 2. Identity, authorization, audit and the source library are implemented. Each operation's `x-implementation-status` in `contract/openapi.json` says what is real; other routes return `501` after authorization. MFA and the production identity provider have not been tested against a real provider. Object storage is local and demo-only; real ITU and workbook parsers and connectors do not exist yet.
 
 ## How access works
 
@@ -9,9 +9,24 @@ Each request passes these checks in order, before its body is read:
 1. **Token (`oidc.py`):** signature against the provider's published keys, issuer, audience, expiry, required scopes and MFA evidence (`amr` or `acr`). Only asymmetric algorithms are possible.
 2. **Identity (`identity.py`):** the issuer and subject must match a provisioned, active user. Roles and tenant always come from the database; those claims in a token are ignored.
 3. **Capability (`security.py`):** the role must grant the capability the route declares in the contract. A v1 route cannot be registered without one.
-4. **Object (`authz.py`):** **each route that touches a stored object must call `ObjectAccessPolicy`.** It checks tenant, data environment, classification and source entitlement, and answers a denial with the same `404` as a missing object. No stored-object route exists yet, so its route-level use starts in Stage 2.
+4. **Object (`authz.py`):** **each route that touches a stored object must call `ObjectAccessPolicy`.** It checks tenant, data environment, classification and source entitlement, and answers a denial with the same `404` as a missing object. List and search routes apply the same rules inside the query.
 
 Denied actions, permitted writes, and exports and downloads are recorded in `audit_events`. A write, export or download that cannot be audited does not proceed. Rejected tokens are logged with a reason code only, never the token.
+
+## Source library
+
+Files arrive through a resumable upload session or a registered connector client, then go through one pipeline in the worker (`python -m astrasync_api.worker`):
+
+1. **Verify:** hash the final assembled bytes, and check size and digests. A failure is quarantined and can't be searched, previewed, downloaded or analysed.
+2. **Preserve:** store an immutable master. The same bytes make one artifact and a recorded repeat receipt. A changed file makes a new revision, and old bytes stay retrievable.
+3. **Parse:** run the `SourceAdapter` registered for the source type. With none, bytes stay `VERIFIED_BYTES`, the job ends `PARTIAL` with `PARSER_UNAVAILABLE`, and `POST /ingest/ific` can index them later.
+4. **Index:** store each record's raw values, exact location and quality findings. Previews read these rows, never the master.
+
+**Three separate states are never merged:** byte integrity (`artifact_integrity_checks`), publisher trust (`publisher_auth_status`) and parse status (`status`). Only a `SourceClient` reporting a signed digest can reach `VERIFIED_PUBLISHER`; a match with a digest supplied alongside a file stays `HASH_MATCH_MANIFEST_UNTRUSTED`.
+
+**Entitlements:** rights on `resource_entitlements` with `object_type=source` and the artifact's classification: `READ`, `DOWNLOAD` and `IMPORT`. `PUBLIC` and `INTERNAL` are open within a tenant; everything else needs one.
+
+**Plugging in components (Data/AI):** set `ASTRASYNC_SOURCE_ADAPTERS` to `module:Class` values, and `ASTRASYNC_SOURCE_CLIENTS` to `endpoint_ref=module:Class` values. See `contract/interfaces.py` and `AdapterRecord`.
 
 ## Session policy
 
@@ -39,6 +54,9 @@ There is no self-registration. A valid sign-in with no provisioned account gets 
 | `ASTRASYNC_OIDC_MFA_REQUIRED` | No | Default `true`. Cannot be `false` outside `DEMO` |
 | `ASTRASYNC_OIDC_MFA_AMR`, `ASTRASYNC_OIDC_MFA_ACR` | No | Accepted values. Default `amr` of `mfa`. **Check what your provider actually issues** |
 | `ASTRASYNC_CORS_ORIGINS` | No | Exact origins, no wildcards |
+| `ASTRASYNC_OBJECT_STORE_PATH` | For uploads | Local store, `DEMO` only: refused elsewhere because it has no encryption at rest |
+| `ASTRASYNC_MAX_UPLOAD_BYTES` | No | Default 10 GiB |
+| `ASTRASYNC_SOURCE_ADAPTERS`, `ASTRASYNC_SOURCE_CLIENTS` | Worker | Comma-separated. See above |
 
 With none set, the API starts unconfigured and denies everything. An unsafe or partial configuration refuses to start.
 
@@ -68,6 +86,10 @@ python -m astrasync_api.admin create-tenant --tenant MY-TENANT
 python -m astrasync_api.admin provision-user --tenant MY-TENANT --issuer https://idp.example --subject USER-SUB --role ANALYST
 ```
 
+```bash
+python -m astrasync_api.admin register-source --tenant MY-TENANT --source-id MY-SOURCE --publisher "Publisher" --domain FINNISH_REFERENCE --source-type M4_ALLOCATION --classification INTERNAL --rights-basis "Basis for access and retention"
+```
+
 Run:
 
 ```bash
@@ -82,7 +104,7 @@ python -m pytest
 
 ## Local development stack
 
-`tests/support/dev_stack.py` provides a throwaway identity provider with test personas and no passwords, and runs the API against SQLite with matching accounts. It is not packaged, binds to loopback and works only in `DEMO`. From the repository root, start each in its own terminal:
+`tests/support/dev_stack.py` provides a throwaway identity provider with test personas and no passwords, and runs the API against SQLite with matching accounts and made-up source records, indexed through the real pipeline by a test-only parser. It is not packaged, binds to loopback and works only in `DEMO`. From the repository root, start each in its own terminal:
 
 ```bash
 traficom-integration/backend/.venv/Scripts/python traficom-integration/backend/tests/support/dev_stack.py idp

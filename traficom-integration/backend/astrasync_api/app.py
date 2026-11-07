@@ -12,6 +12,7 @@ from .authz import ObjectAccessPolicy
 from .config import Settings
 from .contract import CONTRACT_VERSION
 from .contract.models import (
+    AdapterRecord,
     AgentDraftResponse,
     DomainEvent,
     MethodAssessment,
@@ -21,12 +22,15 @@ from .contract.models import (
 from .db import build_engine, build_session_factory
 from .errors import install_error_handlers
 from .identity import IdentityStore
+from .library import LibraryRuntime
+from .objectstore import LocalObjectStore
 from .oidc import JwksCache, TokenValidator, fetch_jwks_over_http
 from .routes import router
 from .security import SecurityRuntime
 
 # Payloads exchanged outside REST, published so workers and clients share one generated contract.
 _INTEGRATION_MODELS = (
+    AdapterRecord,
     AgentDraftResponse,
     DomainEvent,
     MethodAssessment,
@@ -78,9 +82,20 @@ def create_app(settings: Settings | None = None, *, keys: JwksCache | None = Non
     )
     app.state.security = _build_security(settings, keys)
     identities = app.state.security.identities
-    app.state.object_access = (
-        ObjectAccessPolicy(identities.session_factory) if identities is not None else None
-    )
+    app.state.object_access = None
+    app.state.library = None
+    if identities is not None:
+        app.state.object_access = ObjectAccessPolicy(identities.session_factory)
+        app.state.library = LibraryRuntime(
+            policy=app.state.object_access,
+            identities=identities,
+            store=(
+                LocalObjectStore(settings.object_store_path)
+                if settings.object_store_path is not None
+                else None
+            ),
+            max_upload_bytes=settings.max_upload_bytes,
+        )
     install_error_handlers(app)
     app.include_router(router)
     if settings.cors_origins:

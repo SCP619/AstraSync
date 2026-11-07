@@ -12,9 +12,17 @@ from uuid import uuid4
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session, sessionmaker
 
+from .contract.enums import (
+    DiscoveryMode,
+    IssueDomain,
+    SourceHealthStatus,
+    SourceType,
+    UsageClassification,
+)
 from .contract.permissions import Role
 from .db import Tenant, User, UserRoleGrant, build_engine, build_session_factory, run_migrations
 from .identity import IdentityStore
+from .library_tables import SourceConnectorRow
 
 _ACTOR = "cli:operator"
 
@@ -56,6 +64,50 @@ def provision_user(
         session.commit()
     _audit(sessions, tenant_id, "provision_user", "users", user_id)
     return user_id
+
+
+def register_source(
+    sessions: sessionmaker[Session],
+    *,
+    tenant_id: str,
+    source_id: str,
+    publisher: str,
+    domain: IssueDomain,
+    source_type: SourceType,
+    classification: UsageClassification,
+    rights_basis: str,
+    discovery_mode: DiscoveryMode = DiscoveryMode.MANUAL_TRANSFER,
+    endpoint_ref: str | None = None,
+    poll_interval_seconds: int | None = None,
+    expected_cadence_seconds: int | None = None,
+    is_synthetic: bool = False,
+) -> None:
+    """A source is registered with its access basis before anything can be acquired from it."""
+    if not rights_basis.strip():
+        raise SystemExit("A source needs a recorded rights basis")
+    manual = discovery_mode is DiscoveryMode.MANUAL_TRANSFER
+    with sessions() as session:
+        session.add(
+            SourceConnectorRow(
+                source_id=source_id,
+                tenant_id=tenant_id,
+                publisher=publisher,
+                domain=domain.value,
+                source_type=source_type.value,
+                discovery_mode=discovery_mode.value,
+                endpoint_ref=endpoint_ref,
+                rights_basis=rights_basis,
+                usage_classification=classification.value,
+                poll_interval_seconds=poll_interval_seconds,
+                expected_cadence_seconds=expected_cadence_seconds,
+                status=(
+                    SourceHealthStatus.MANUAL_REQUIRED if manual else SourceHealthStatus.HEALTHY
+                ).value,
+                is_synthetic=is_synthetic,
+            )
+        )
+        session.commit()
+    _audit(sessions, tenant_id, "register_source", "sources", source_id)
 
 
 def deactivate_user(sessions: sessionmaker[Session], user_id: str) -> None:
@@ -129,6 +181,18 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("deactivate-user", "revoke-sessions"):
         commands.add_parser(name).add_argument("--user-id", required=True)
 
+    source = commands.add_parser("register-source", help="register a manual-import source")
+    source.add_argument("--tenant", required=True)
+    source.add_argument("--source-id", required=True)
+    source.add_argument("--publisher", required=True)
+    source.add_argument("--domain", required=True, choices=[d.value for d in IssueDomain])
+    source.add_argument("--source-type", required=True, choices=[s.value for s in SourceType])
+    source.add_argument(
+        "--classification", required=True, choices=[c.value for c in UsageClassification]
+    )
+    source.add_argument("--rights-basis", required=True)
+    source.add_argument("--synthetic", action="store_true")
+
     role = commands.add_parser("revoke-role")
     role.add_argument("--user-id", required=True)
     role.add_argument("--role", required=True, choices=[r.value for r in Role])
@@ -154,6 +218,18 @@ def main(argv: list[str] | None = None) -> int:
                 subject=args.subject,
                 roles=roles,
             )
+        )
+    elif args.command == "register-source":
+        register_source(
+            sessions,
+            tenant_id=args.tenant,
+            source_id=args.source_id,
+            publisher=args.publisher,
+            domain=IssueDomain(args.domain),
+            source_type=SourceType(args.source_type),
+            classification=UsageClassification(args.classification),
+            rights_basis=args.rights_basis,
+            is_synthetic=args.synthetic,
         )
     elif args.command == "deactivate-user":
         deactivate_user(sessions, args.user_id)

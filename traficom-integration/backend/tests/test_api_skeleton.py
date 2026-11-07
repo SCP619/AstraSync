@@ -59,6 +59,8 @@ DOCUMENTED_OPERATIONS = {
 ADDED_OPERATIONS = {
     ("post", "/api/v1/uploads/{upload_id}/parts"),
     ("get", "/api/v1/source-records/{source_record_id}"),
+    ("put", "/api/v1/uploads/{upload_id}/parts/{part_number}"),
+    ("get", "/api/v1/source-artifacts/{artifact_id}/content"),
 }
 
 
@@ -83,8 +85,10 @@ def test_every_operation_declares_a_known_capability(openapi: dict[str, Any]) ->
     known = {capability.value for capability in Capability}
     for method, path, operation in _operations(openapi):
         assert operation.get("x-required-capability") in known, f"{method} {path}"
-        expected = "IMPLEMENTED" if path == "/api/v1/me" else "DESIGNED"
-        assert operation.get("x-implementation-status") == expected, f"{method} {path}"
+        assert operation.get("x-implementation-status") in {
+            "IMPLEMENTED",
+            "DESIGNED",
+        }, f"{method} {path}"
 
 
 def test_anonymous_requests_are_denied_everywhere(
@@ -124,7 +128,7 @@ def _all_capabilities_app(app: FastAPI) -> TestClient:
 def test_routes_never_answer_with_sample_data(app: FastAPI, openapi: dict[str, Any]) -> None:
     client = _all_capabilities_app(app)
     for method, path, operation in _operations(openapi):
-        if "requestBody" in operation or path == "/api/v1/me":
+        if "requestBody" in operation or operation["x-implementation-status"] != "DESIGNED":
             continue
         headers = {"Idempotency-Key": "demo-key-1"}
         response = client.request(method.upper(), _concrete(path), headers=headers)
@@ -132,12 +136,13 @@ def test_routes_never_answer_with_sample_data(app: FastAPI, openapi: dict[str, A
         assert ErrorResponse.model_validate(response.json()).error.code is ErrorCode.NOT_IMPLEMENTED
 
 
-def test_request_validation_uses_standard_error_without_echoing_input(app: FastAPI) -> None:
-    client = _all_capabilities_app(app)
-    response = client.post(
+def test_request_validation_uses_standard_error_without_echoing_input(
+    secure_client: TestClient, bearer: Any
+) -> None:
+    response = secure_client.post(
         "/api/v1/uploads",
         json={"filename_original": "x", "tenant_id": "SECRET-TENANT-VALUE"},
-        headers={"Idempotency-Key": "demo-key-1"},
+        headers={**bearer("analyst-a"), "Idempotency-Key": "demo-key-1"},
     )
     assert response.status_code == 422
     assert ErrorResponse.model_validate(response.json()).error.code is ErrorCode.VALIDATION_ERROR

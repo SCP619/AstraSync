@@ -1,6 +1,252 @@
 {
   "components": {
     "schemas": {
+      "AdapterQualityFinding": {
+        "additionalProperties": false,
+        "properties": {
+          "field_key": {
+            "title": "Field Key",
+            "type": "string"
+          },
+          "normalized_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Normalized Value"
+          },
+          "raw_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Value"
+          },
+          "rule_id": {
+            "maxLength": 64,
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "title": "Rule Id",
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/QualitySeverity"
+          }
+        },
+        "required": [
+          "field_key",
+          "raw_value",
+          "normalized_value",
+          "rule_id",
+          "severity"
+        ],
+        "title": "AdapterQualityFinding",
+        "type": "object"
+      },
+      "AdapterRecord": {
+        "additionalProperties": false,
+        "description": "One record from ``SourceAdapter.iter_record_batches``, validated at the worker boundary.\n\n``raw_fields`` holds original values as text. Normalized values are nullable: an unknown\nunit stays null with a quality finding, and is never guessed.",
+        "properties": {
+          "administration": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Administration"
+          },
+          "analysis_eligibility": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RecordStatus"
+            },
+            "title": "Analysis Eligibility",
+            "type": "object"
+          },
+          "field_aliases": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Field Aliases",
+            "type": "object"
+          },
+          "frequency_end_mhz": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency End Mhz"
+          },
+          "frequency_start_mhz": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency Start Mhz"
+          },
+          "issue_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issue Key"
+          },
+          "network_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Id"
+          },
+          "notice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notice Id"
+          },
+          "quality_findings": {
+            "items": {
+              "$ref": "#/components/schemas/AdapterQualityFinding"
+            },
+            "title": "Quality Findings",
+            "type": "array"
+          },
+          "raw_fields": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "Raw Fields",
+            "type": "object"
+          },
+          "record_status": {
+            "$ref": "#/components/schemas/RecordStatus"
+          },
+          "reference_station": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Station"
+          },
+          "schema_version": {
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "source_row_or_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Row Or Key"
+          },
+          "source_table_or_sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Table Or Sheet"
+          },
+          "station_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Station Number"
+          }
+        },
+        "required": [
+          "source_table_or_sheet",
+          "source_row_or_key",
+          "source_page",
+          "notice_id",
+          "issue_key",
+          "station_number",
+          "network_id",
+          "administration",
+          "frequency_start_mhz",
+          "frequency_end_mhz",
+          "record_status",
+          "schema_version",
+          "raw_fields",
+          "field_aliases",
+          "analysis_eligibility",
+          "quality_findings",
+          "reference_station"
+        ],
+        "title": "AdapterRecord",
+        "type": "object"
+      },
       "AgentDraftResponse": {
         "additionalProperties": false,
         "description": "Structured agent output. The server still validates citations before using it.",
@@ -118,7 +364,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           }
@@ -370,7 +616,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -446,7 +692,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -512,7 +758,7 @@
             "title": "Quiet Hours Start Utc"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           }
@@ -673,7 +919,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -752,7 +998,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1030,7 +1276,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           }
@@ -1125,7 +1371,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1329,7 +1575,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1566,7 +1812,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1655,7 +1901,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2104,7 +2350,7 @@
             "$ref": "#/components/schemas/DevicePlatform"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2214,7 +2460,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2289,7 +2535,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2388,7 +2634,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2511,7 +2757,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2594,6 +2840,10 @@
           "VALIDATION_ERROR",
           "INSUFFICIENT_DATA",
           "UPLOAD_CHECKSUM_MISMATCH",
+          "UPLOAD_INCOMPLETE",
+          "UPLOAD_TOO_LARGE",
+          "PARSER_UNAVAILABLE",
+          "MANUAL_REQUIRED",
           "JOB_QUOTA_EXCEEDED",
           "RATE_LIMITED",
           "SOURCE_RESTRICTED",
@@ -2761,7 +3011,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           }
@@ -2865,7 +3115,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2908,7 +3158,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3024,7 +3274,7 @@
             "title": "Resource Id"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3084,7 +3334,8 @@
           "RF",
           "AI_DRAFT",
           "ALERT_DELIVERY",
-          "SOURCE_DISCOVERY"
+          "SOURCE_DISCOVERY",
+          "ACQUIRE"
         ],
         "title": "JobType",
         "type": "string"
@@ -3159,7 +3410,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3410,7 +3661,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           }
@@ -3843,7 +4094,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -4216,7 +4467,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -4749,7 +5000,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           }
@@ -5130,7 +5381,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5207,7 +5458,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5299,6 +5550,9 @@
             "title": "Source Id",
             "type": "string"
           },
+          "source_type": {
+            "$ref": "#/components/schemas/SourceType"
+          },
           "status": {
             "$ref": "#/components/schemas/SourceHealthStatus"
           },
@@ -5310,6 +5564,7 @@
           "source_id",
           "publisher",
           "domain",
+          "source_type",
           "discovery_mode",
           "rights_basis",
           "usage_classification",
@@ -5355,7 +5610,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5468,7 +5723,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5667,7 +5922,7 @@
             "title": "Raw Sha256",
             "type": "string"
           },
-          "schema_version": {
+          "record_schema_version": {
             "anyOf": [
               {
                 "type": "string"
@@ -5676,7 +5931,7 @@
                 "type": "null"
               }
             ],
-            "title": "Schema Version"
+            "title": "Record Schema Version"
           },
           "source_page": {
             "anyOf": [
@@ -5736,7 +5991,7 @@
           "notice_id",
           "raw_record_sha256",
           "parser_version",
-          "schema_version",
+          "record_schema_version",
           "is_synthetic"
         ],
         "title": "SourceLocation",
@@ -5799,7 +6054,7 @@
             "title": "Raw Sha256",
             "type": "string"
           },
-          "schema_version": {
+          "record_schema_version": {
             "anyOf": [
               {
                 "type": "string"
@@ -5808,7 +6063,12 @@
                 "type": "null"
               }
             ],
-            "title": "Schema Version"
+            "title": "Record Schema Version"
+          },
+          "schema_version": {
+            "const": "1.0.0-draft.3",
+            "title": "Schema Version",
+            "type": "string"
           },
           "source_page": {
             "anyOf": [
@@ -5870,6 +6130,7 @@
           "notice_id",
           "raw_record_sha256",
           "parser_version",
+          "record_schema_version",
           "is_synthetic"
         ],
         "title": "SourceLocationDetail",
@@ -5913,7 +6174,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           }
@@ -6077,7 +6338,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6173,7 +6434,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6360,7 +6621,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6448,6 +6709,7 @@
       },
       "UploadCreateRequest": {
         "additionalProperties": false,
+        "description": "``content_sha256`` is a digest supplied with a manifest. It is never publisher proof.",
         "properties": {
           "content_sha256": {
             "anyOf": [
@@ -6472,6 +6734,12 @@
             "title": "Filename Original",
             "type": "string"
           },
+          "source_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
           "source_type": {
             "$ref": "#/components/schemas/SourceType"
           },
@@ -6480,6 +6748,7 @@
           }
         },
         "required": [
+          "source_id",
           "source_type",
           "usage_classification",
           "filename_original",
@@ -6568,7 +6837,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6705,7 +6974,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.2",
+            "const": "1.0.0-draft.3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6773,7 +7042,7 @@
   },
   "info": {
     "title": "AstraSync API",
-    "version": "1.0.0-draft.2"
+    "version": "1.0.0-draft.3"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -7167,7 +7436,7 @@
           }
         },
         "summary": "Check Source",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ADMIN_SOURCE_CHECK"
       }
     },
@@ -9388,7 +9657,7 @@
           }
         },
         "summary": "Ingest Ific",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "INGEST_TRIGGER"
       }
     },
@@ -9838,7 +10107,7 @@
           }
         },
         "summary": "Get Job",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "JOB_READ"
       }
     },
@@ -10297,7 +10566,7 @@
           }
         },
         "summary": "List Source Artifacts",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
       }
     },
@@ -10421,8 +10690,133 @@
           }
         },
         "summary": "Get Source Artifact",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
+      }
+    },
+    "/api/v1/source-artifacts/{artifact_id}/content": {
+      "get": {
+        "description": "Re-checks identity and entitlement on every call. The original bytes, unchanged.",
+        "operationId": "download_source_artifact_api_v1_source_artifacts__artifact_id__content_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artifact_id",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "title": "Artifact Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Download Source Artifact",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "SOURCE_DOWNLOAD"
       }
     },
     "/api/v1/source-artifacts/{artifact_id}/download-link": {
@@ -10555,7 +10949,7 @@
           }
         },
         "summary": "Create Download Link",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_DOWNLOAD"
       }
     },
@@ -10679,7 +11073,7 @@
           }
         },
         "summary": "Get Source Artifact Integrity",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
       }
     },
@@ -10871,7 +11265,7 @@
           }
         },
         "summary": "Get Source Artifact Preview",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
       }
     },
@@ -11062,7 +11456,7 @@
           }
         },
         "summary": "List Source Publications",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
       }
     },
@@ -11271,7 +11665,7 @@
           }
         },
         "summary": "Search Source Records",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
       }
     },
@@ -11395,7 +11789,7 @@
           }
         },
         "summary": "Get Source Record",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
       }
     },
@@ -11519,7 +11913,7 @@
           }
         },
         "summary": "Get Source Record Location",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_READ"
       }
     },
@@ -11660,7 +12054,7 @@
           }
         },
         "summary": "List Sources",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_HEALTH_READ"
       }
     },
@@ -11784,7 +12178,7 @@
           }
         },
         "summary": "Get Source Health",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "SOURCE_HEALTH_READ"
       }
     },
@@ -11917,7 +12311,7 @@
           }
         },
         "summary": "Create Upload",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "UPLOAD_MANAGE"
       }
     },
@@ -12041,7 +12435,7 @@
           }
         },
         "summary": "Get Upload",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "JOB_READ"
       }
     },
@@ -12165,7 +12559,7 @@
           }
         },
         "summary": "Abort Upload",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "UPLOAD_MANAGE"
       }
     },
@@ -12310,7 +12704,7 @@
           }
         },
         "summary": "Complete Upload",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "UPLOAD_MANAGE"
       }
     },
@@ -12444,7 +12838,151 @@
           }
         },
         "summary": "Create Upload Part Urls",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "UPLOAD_MANAGE"
+      }
+    },
+    "/api/v1/uploads/{upload_id}/parts/{part_number}": {
+      "put": {
+        "description": "Local object store only. Streams to disk, so a part never sits in process memory.",
+        "operationId": "put_upload_part_api_v1_uploads__upload_id__parts__part_number__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "upload_id",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "title": "Upload Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "part_number",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "title": "Part Number",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadPartUrl"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Put Upload Part",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "UPLOAD_MANAGE"
       }
     }

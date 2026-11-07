@@ -7,7 +7,7 @@ what they return against ``MethodAssessment``, ``MethodCalculation`` and ``Agent
 
 from collections.abc import Iterable, Mapping
 from pathlib import Path
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, BinaryIO, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -39,7 +39,11 @@ class CriterionResolver(Protocol):
 
 @runtime_checkable
 class SourceAdapter(Protocol):
-    """Read-only, format-specific parser run by ingest workers in bounded batches. PROPOSED."""
+    """Read-only, format-specific parser run by ingest workers in bounded batches.
+
+    Records must match ``AdapterRecord``. Raise ``ValueError`` for an unreadable or unsafe file,
+    which quarantines it; a bad single record should instead yield ``record_status=INVALID``.
+    """
 
     source_type: str
     parser_version: str
@@ -48,6 +52,25 @@ class SourceAdapter(Protocol):
         self, artifact_path: Path, *, batch_rows: int
     ) -> Iterable[list[dict[str, Any]]]:
         """Yield records carrying raw values, source locator and quality findings."""
+        ...
+
+
+@runtime_checkable
+class SourceClient(Protocol):
+    """Authorised access to one source, written only once its terms and formats are confirmed.
+
+    Raises ``SourceAccessDenied`` or ``SourceUnavailable`` from ``acquisition.py``, and should
+    download through ``acquisition.download_to_file``. An outage must never read as a retraction.
+    """
+
+    def discover(self) -> Any:
+        """Return a list of ``acquisition.RemotePublication``."""
+        ...
+
+    def download(
+        self, provider_issue_key: str, provider_version: str | None, destination: BinaryIO
+    ) -> None:
+        """Write the original bytes, unchanged, to ``destination``."""
         ...
 
 

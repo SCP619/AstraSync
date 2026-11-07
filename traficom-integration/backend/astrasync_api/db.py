@@ -148,6 +148,8 @@ def run_migrations(engine: Engine) -> None:
 
 def schema_differences(engine: Engine) -> list[Any]:
     """Differences between the migrated database and these models. Empty means they agree."""
+    from . import library_tables  # noqa: F401 - registers the tables on Base.
+
     with engine.connect() as connection:
         context = MigrationContext.configure(connection, opts={"compare_type": True})
         return list(compare_metadata(context, Base.metadata))

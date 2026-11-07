@@ -173,11 +173,15 @@ def jwks_document(signing_key: rsa.RSAPrivateKey) -> dict[str, Any]:
 
 
 @pytest.fixture
-def secure_app(engine: Engine, users: Users, jwks_document: dict[str, Any]) -> FastAPI:
+def secure_app(
+    engine: Engine, users: Users, jwks_document: dict[str, Any], tmp_path: Path
+) -> FastAPI:
     settings = Settings(
         environment=Environment.DEMO,
         database_url=engine.url.render_as_string(hide_password=False),
         oidc=oidc_settings(),
+        object_store_path=tmp_path / "objects",
+        max_upload_bytes=1024 * 1024,
     )
     return create_app(settings, keys=JwksCache(lambda: jwks_document))
 

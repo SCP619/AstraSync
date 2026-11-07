@@ -426,6 +426,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/source-artifacts/{artifact_id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download Source Artifact
+         * @description Re-checks identity and entitlement on every call. The original bytes, unchanged.
+         */
+        get: operations["download_source_artifact_api_v1_source_artifacts__artifact_id__content_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/source-artifacts/{artifact_id}/download-link": {
         parameters: {
             query?: never;
@@ -664,10 +684,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/uploads/{upload_id}/parts/{part_number}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Put Upload Part
+         * @description Local object store only. Streams to disk, so a part never sits in process memory.
+         */
+        put: operations["put_upload_part_api_v1_uploads__upload_id__parts__part_number__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AdapterQualityFinding */
+        AdapterQualityFinding: {
+            /** Field Key */
+            field_key: string;
+            /** Normalized Value */
+            normalized_value: string | null;
+            /** Raw Value */
+            raw_value: string | null;
+            /** Rule Id */
+            rule_id: string;
+            severity: components["schemas"]["QualitySeverity"];
+        };
+        /**
+         * AdapterRecord
+         * @description One record from ``SourceAdapter.iter_record_batches``, validated at the worker boundary.
+         *
+         *     ``raw_fields`` holds original values as text. Normalized values are nullable: an unknown
+         *     unit stays null with a quality finding, and is never guessed.
+         */
+        AdapterRecord: {
+            /** Administration */
+            administration: string | null;
+            /** Analysis Eligibility */
+            analysis_eligibility: {
+                [key: string]: components["schemas"]["RecordStatus"];
+            };
+            /** Field Aliases */
+            field_aliases: {
+                [key: string]: string[];
+            };
+            /** Frequency End Mhz */
+            frequency_end_mhz: number | null;
+            /** Frequency Start Mhz */
+            frequency_start_mhz: number | null;
+            /** Issue Key */
+            issue_key: string | null;
+            /** Network Id */
+            network_id: string | null;
+            /** Notice Id */
+            notice_id: string | null;
+            /** Quality Findings */
+            quality_findings: components["schemas"]["AdapterQualityFinding"][];
+            /** Raw Fields */
+            raw_fields: {
+                [key: string]: string | null;
+            };
+            record_status: components["schemas"]["RecordStatus"];
+            /** Reference Station */
+            reference_station: {
+                [key: string]: unknown;
+            } | null;
+            /** Schema Version */
+            schema_version: string;
+            /** Source Page */
+            source_page: number | null;
+            /** Source Row Or Key */
+            source_row_or_key: string | null;
+            /** Source Table Or Sheet */
+            source_table_or_sheet: string | null;
+            /** Station Number */
+            station_number: string | null;
+        };
         /**
          * AgentDraftResponse
          * @description Structured agent output. The server still validates citations before using it.
@@ -719,7 +821,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
         };
         /** AlertAcknowledgment */
         AlertAcknowledgment: {
@@ -803,7 +905,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             severity: components["schemas"]["AlertSeverity"];
             status: components["schemas"]["AlertStatus"];
         };
@@ -829,7 +931,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -850,7 +952,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
         };
         /** AlertPreferencesUpdate */
         AlertPreferencesUpdate: {
@@ -900,7 +1002,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -930,7 +1032,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             severity: components["schemas"]["AlertSeverity"];
             trigger_kind: components["schemas"]["AlertTriggerKind"];
             /** Version */
@@ -1022,7 +1124,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
         };
         /**
          * AnalysisRun
@@ -1064,7 +1166,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Software Commit Sha */
             software_commit_sha: string;
         };
@@ -1130,7 +1232,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             status: components["schemas"]["ArtifactStatus"];
         };
         /**
@@ -1197,7 +1299,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Source Issue Id */
             source_issue_id: string;
             /**
@@ -1228,7 +1330,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1354,7 +1456,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             status: components["schemas"]["DeviceStatus"];
         };
         /**
@@ -1410,7 +1512,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Tenant Id */
             tenant_id: string;
         };
@@ -1441,7 +1543,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Url */
             url: string;
         };
@@ -1490,7 +1592,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             status: components["schemas"]["DraftStatus"];
@@ -1540,7 +1642,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             /**
@@ -1570,7 +1672,7 @@ export interface components {
          * ErrorCode
          * @enum {string}
          */
-        ErrorCode: "UNAUTHENTICATED" | "MFA_REQUIRED" | "FORBIDDEN" | "REVOKED_DEVICE" | "NOT_FOUND" | "ALERT_NOT_FOUND" | "CONFLICT" | "VALIDATION_ERROR" | "INSUFFICIENT_DATA" | "UPLOAD_CHECKSUM_MISMATCH" | "JOB_QUOTA_EXCEEDED" | "RATE_LIMITED" | "SOURCE_RESTRICTED" | "NOT_IMPLEMENTED" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
+        ErrorCode: "UNAUTHENTICATED" | "MFA_REQUIRED" | "FORBIDDEN" | "REVOKED_DEVICE" | "NOT_FOUND" | "ALERT_NOT_FOUND" | "CONFLICT" | "VALIDATION_ERROR" | "INSUFFICIENT_DATA" | "UPLOAD_CHECKSUM_MISMATCH" | "UPLOAD_INCOMPLETE" | "UPLOAD_TOO_LARGE" | "PARSER_UNAVAILABLE" | "MANUAL_REQUIRED" | "JOB_QUOTA_EXCEEDED" | "RATE_LIMITED" | "SOURCE_RESTRICTED" | "NOT_IMPLEMENTED" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
         /** ErrorResponse */
         ErrorResponse: {
             error: components["schemas"]["ApiErrorBody"];
@@ -1621,7 +1723,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
         };
         /**
          * FindingStatus
@@ -1664,7 +1766,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1681,7 +1783,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             status: components["schemas"]["PipelineStatus"];
         };
         /**
@@ -1716,7 +1818,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Started At Utc */
             started_at_utc: string | null;
             status: components["schemas"]["PipelineStatus"];
@@ -1727,7 +1829,7 @@ export interface components {
          * JobType
          * @enum {string}
          */
-        JobType: "INGEST" | "DIFF" | "RELEVANCE" | "RF" | "AI_DRAFT" | "ALERT_DELIVERY" | "SOURCE_DISCOVERY";
+        JobType: "INGEST" | "DIFF" | "RELEVANCE" | "RF" | "AI_DRAFT" | "ALERT_DELIVERY" | "SOURCE_DISCOVERY" | "ACQUIRE";
         /** LeadMetric */
         LeadMetric: {
             metric_kind: components["schemas"]["MetricKind"] | null;
@@ -1752,7 +1854,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Tenant Id */
             tenant_id: string;
             /** User Id */
@@ -1842,7 +1944,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
         };
         /**
          * MethodRole
@@ -1960,7 +2062,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2074,7 +2176,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2200,7 +2302,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
         };
         /**
          * ReviewStatus
@@ -2313,7 +2415,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["ArtifactStatus"];
@@ -2336,7 +2438,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2361,6 +2463,7 @@ export interface components {
             rights_basis: string;
             /** Source Id */
             source_id: string;
+            source_type: components["schemas"]["SourceType"];
             status: components["schemas"]["SourceHealthStatus"];
             usage_classification: components["schemas"]["UsageClassification"];
         };
@@ -2381,7 +2484,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2410,7 +2513,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["SourceHealthStatus"];
@@ -2462,8 +2565,8 @@ export interface components {
             raw_record_sha256: string | null;
             /** Raw Sha256 */
             raw_sha256: string;
-            /** Schema Version */
-            schema_version: string | null;
+            /** Record Schema Version */
+            record_schema_version: string | null;
             /** Source Page */
             source_page: number | null;
             /** Source Record Id */
@@ -2492,8 +2595,13 @@ export interface components {
             raw_record_sha256: string | null;
             /** Raw Sha256 */
             raw_sha256: string;
-            /** Schema Version */
-            schema_version: string | null;
+            /** Record Schema Version */
+            record_schema_version: string | null;
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.3";
             /** Source Page */
             source_page: number | null;
             /** Source Record Id */
@@ -2525,7 +2633,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
         };
         /** SourcePreviewRow */
         SourcePreviewRow: {
@@ -2580,7 +2688,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2617,7 +2725,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Source Record Id */
             source_record_id: string;
         };
@@ -2667,7 +2775,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2693,7 +2801,10 @@ export interface components {
             /** Part Number */
             part_number: number;
         };
-        /** UploadCreateRequest */
+        /**
+         * UploadCreateRequest
+         * @description ``content_sha256`` is a digest supplied with a manifest. It is never publisher proof.
+         */
         UploadCreateRequest: {
             /** Content Sha256 */
             content_sha256?: string | null;
@@ -2701,6 +2812,8 @@ export interface components {
             expected_size_bytes: number;
             /** Filename Original */
             filename_original: string;
+            /** Source Id */
+            source_id: string;
             source_type: components["schemas"]["SourceType"];
             usage_classification: components["schemas"]["UsageClassification"];
         };
@@ -2740,7 +2853,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             /** Upload Id */
             upload_id: string;
         };
@@ -2789,7 +2902,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.2";
+            schema_version: "1.0.0-draft.3";
             source_type: components["schemas"]["SourceType"];
             status: components["schemas"]["PipelineStatus"];
             /** Upload Id */
@@ -5547,6 +5660,109 @@ export interface operations {
             };
         };
     };
+    download_source_artifact_api_v1_source_artifacts__artifact_id__content_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                artifact_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     create_download_link_api_v1_source_artifacts__artifact_id__download_link_post: {
         parameters: {
             query?: never;
@@ -6937,6 +7153,114 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UploadPartUrls"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    put_upload_part_api_v1_uploads__upload_id__parts__part_number__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                upload_id: string;
+                part_number: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/octet-stream": string;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadPartUrl"];
                 };
             };
             /** @description Unauthorized */

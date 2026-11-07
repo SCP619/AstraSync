@@ -5,12 +5,16 @@ Every operation declares a required capability, enforced by ``AuthorizedRoute``.
 objects must also call ``ObjectAccessPolicy`` (see authz.py).
 """
 
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Header, Path, Query, Request, Response
+from fastapi import APIRouter, Depends, Header, Path, Query, Request, Response
 from fastapi.responses import StreamingResponse
+from sqlalchemy.orm import Session
+from starlette.concurrency import run_in_threadpool
 
+from . import library
 from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
@@ -71,13 +75,14 @@ from .contract.models import (
     SourceRecordList,
     UploadCompleteRequest,
     UploadCreateRequest,
+    UploadPartUrl,
     UploadPartUrls,
     UploadPartUrlsRequest,
     UploadSession,
 )
 from .contract.permissions import Capability
 from .errors import ApiError
-from .security import AuthorizedRoute, CurrentPrincipal
+from .security import AuthorizedRoute, CurrentPrincipal, current_principal
 
 _ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
     status: {"model": ErrorResponse} for status in (401, 403, 404, 409, 422, 429, 500, 501, 503)
@@ -94,6 +99,22 @@ Limit = Annotated[int, Query(ge=1, le=200)]
 Cursor = Annotated[str | None, Query(max_length=1024)]
 IdempotencyKey = Annotated[str, Header(alias="Idempotency-Key", min_length=8, max_length=128)]
 FrequencyMhz = Annotated[float | None, Query(ge=0, allow_inf_nan=False)]
+_IMPLEMENTED = ImplementationStatus.IMPLEMENTED
+
+
+def _library(request: Request) -> library.LibraryRuntime:
+    runtime: library.LibraryRuntime | None = request.app.state.library
+    if runtime is None:
+        raise ApiError(503, ErrorCode.SERVICE_UNAVAILABLE, "The service is not configured.")
+    return runtime
+
+
+def _session(request: Request) -> Iterator[Session]:
+    with _library(request).identities.session_factory() as session:
+        yield session
+
+
+DbSession = Annotated[Session, Depends(_session)]
 
 
 def _policy(
@@ -135,15 +156,21 @@ async def get_me(request: Request, principal: CurrentPrincipal) -> Any:
     "/ingest/ific",
     response_model=JobAccepted,
     status_code=202,
-    **_policy(Capability.INGEST_TRIGGER),
+    **_policy(Capability.INGEST_TRIGGER, _IMPLEMENTED),
 )
-async def ingest_ific(body: IngestRequest, idempotency_key: IdempotencyKey) -> Any:
-    raise _not_implemented()
+def ingest_ific(
+    request: Request,
+    body: IngestRequest,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return library.ingest_artifact(_library(request), request, session, principal, body.artifact_id)
 
 
-@router.get("/jobs/{job_id}", response_model=JobRun, **_policy(Capability.JOB_READ))
-async def get_job(job_id: ResourceId) -> Any:
-    raise _not_implemented()
+@router.get("/jobs/{job_id}", response_model=JobRun, **_policy(Capability.JOB_READ, _IMPLEMENTED))
+def get_job(job_id: ResourceId, principal: CurrentPrincipal, session: DbSession) -> Any:
+    return library.get_job(session, principal, job_id)
 
 
 @router.get("/issues", response_model=IssueList, **_policy(Capability.ISSUE_READ))
@@ -263,44 +290,126 @@ async def export_case(case_id: ResourceId) -> Any:
     "/uploads",
     response_model=UploadSession,
     status_code=201,
-    **_policy(Capability.UPLOAD_MANAGE),
+    **_policy(Capability.UPLOAD_MANAGE, _IMPLEMENTED),
 )
-async def create_upload(body: UploadCreateRequest, idempotency_key: IdempotencyKey) -> Any:
-    raise _not_implemented()
+def create_upload(
+    request: Request,
+    body: UploadCreateRequest,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return library.create_upload(
+        _library(request), request, session, principal, body, idempotency_key
+    )
 
 
-@router.get("/uploads/{upload_id}", response_model=UploadSession, **_policy(Capability.JOB_READ))
-async def get_upload(upload_id: ResourceId) -> Any:
-    raise _not_implemented()
+@router.get(
+    "/uploads/{upload_id}",
+    response_model=UploadSession,
+    **_policy(Capability.JOB_READ, _IMPLEMENTED),
+)
+def get_upload(upload_id: ResourceId, principal: CurrentPrincipal, session: DbSession) -> Any:
+    return library.get_upload(session, principal, upload_id)
 
 
 @router.post(
     "/uploads/{upload_id}/parts",
     response_model=UploadPartUrls,
-    **_policy(Capability.UPLOAD_MANAGE),
+    **_policy(Capability.UPLOAD_MANAGE, _IMPLEMENTED),
 )
-async def create_upload_part_urls(upload_id: ResourceId, body: UploadPartUrlsRequest) -> Any:
-    raise _not_implemented()
+def create_upload_part_urls(
+    upload_id: ResourceId,
+    body: UploadPartUrlsRequest,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return library.part_urls(session, principal, upload_id, body)
+
+
+@router.put(
+    "/uploads/{upload_id}/parts/{part_number}",
+    response_model=UploadPartUrl,
+    openapi_extra={
+        "x-required-capability": Capability.UPLOAD_MANAGE.value,
+        "x-implementation-status": _IMPLEMENTED.value,
+        "requestBody": {"content": {"application/octet-stream": {"schema": {"type": "string"}}}},
+    },
+)
+async def put_upload_part(
+    request: Request, upload_id: ResourceId, part_number: Annotated[int, Path(ge=1)]
+) -> Any:
+    """Local object store only. Streams to disk, so a part never sits in process memory."""
+    runtime = _library(request)
+    store = runtime.store
+    if store is None:
+        raise ApiError(503, ErrorCode.SERVICE_UNAVAILABLE, "Object storage is not configured.")
+    principal = current_principal(request)
+    factory = runtime.identities.session_factory
+
+    def prepare() -> int:
+        with factory() as session:
+            row = library.open_part_upload(session, principal, upload_id, part_number)
+            return library.expected_part_size(row, part_number)
+
+    expected = await run_in_threadpool(prepare)
+    writer = store.begin_part(upload_id, part_number)
+    try:
+        async for chunk in request.stream():
+            if writer.size_bytes + len(chunk) > expected:
+                raise ApiError(
+                    409, ErrorCode.UPLOAD_INCOMPLETE, "This part is larger than expected."
+                )
+            await run_in_threadpool(writer.write, chunk)
+        if writer.size_bytes != expected:
+            raise ApiError(
+                409,
+                ErrorCode.UPLOAD_INCOMPLETE,
+                "This part ended early. Send it again.",
+                {"expected_bytes": expected, "received_bytes": writer.size_bytes},
+            )
+    except BaseException:
+        writer.discard()
+        raise
+    etag = await run_in_threadpool(writer.commit)
+
+    def record() -> UploadPartUrl:
+        with factory() as session:
+            return library.record_part(session, upload_id, part_number, expected, etag)
+
+    saved = await run_in_threadpool(record)
+    return Response(
+        content=saved.model_dump_json(),
+        media_type="application/json",
+        headers={"ETag": etag},
+    )
 
 
 @router.post(
     "/uploads/{upload_id}/complete",
     response_model=UploadSession,
-    **_policy(Capability.UPLOAD_MANAGE),
+    **_policy(Capability.UPLOAD_MANAGE, _IMPLEMENTED),
 )
-async def complete_upload(
-    upload_id: ResourceId, body: UploadCompleteRequest, idempotency_key: IdempotencyKey
+def complete_upload(
+    request: Request,
+    upload_id: ResourceId,
+    body: UploadCompleteRequest,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
 ) -> Any:
-    raise _not_implemented()
+    return library.complete_upload(_library(request), session, principal, upload_id, body)
 
 
 @router.post(
     "/uploads/{upload_id}/abort",
     response_model=UploadSession,
-    **_policy(Capability.UPLOAD_MANAGE),
+    **_policy(Capability.UPLOAD_MANAGE, _IMPLEMENTED),
 )
-async def abort_upload(upload_id: ResourceId) -> Any:
-    raise _not_implemented()
+def abort_upload(
+    request: Request, upload_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return library.abort_upload(_library(request), session, principal, upload_id)
 
 
 # --- Alerts and devices -----------------------------------------------------------------------
@@ -387,50 +496,78 @@ async def save_alert_rule(body: AlertRuleUpsert) -> Any:
 
 
 @router.get(
-    "/sources", response_model=SourceConnectorList, **_policy(Capability.SOURCE_HEALTH_READ)
+    "/sources",
+    response_model=SourceConnectorList,
+    **_policy(Capability.SOURCE_HEALTH_READ, _IMPLEMENTED),
 )
-async def list_sources(limit: Limit = 50, cursor: Cursor = None) -> Any:
-    raise _not_implemented()
+def list_sources(
+    principal: CurrentPrincipal, session: DbSession, limit: Limit = 50, cursor: Cursor = None
+) -> Any:
+    return library.list_sources(session, principal, limit, cursor)
 
 
 @router.get(
     "/sources/{source_id}/health",
     response_model=SourceHealth,
-    **_policy(Capability.SOURCE_HEALTH_READ),
+    **_policy(Capability.SOURCE_HEALTH_READ, _IMPLEMENTED),
 )
-async def get_source_health(source_id: ResourceId) -> Any:
-    raise _not_implemented()
+def get_source_health(
+    source_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return library.source_health(session, principal, source_id)
 
 
 @router.post(
     "/admin/sources/{source_id}/check",
     response_model=JobAccepted,
     status_code=202,
-    **_policy(Capability.ADMIN_SOURCE_CHECK),
+    **_policy(Capability.ADMIN_SOURCE_CHECK, _IMPLEMENTED),
 )
-async def check_source(source_id: ResourceId, idempotency_key: IdempotencyKey) -> Any:
-    raise _not_implemented()
+def check_source(
+    source_id: ResourceId,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return library.check_source(session, principal, source_id)
 
 
 @router.get(
     "/source-publications",
     response_model=SourcePublicationList,
-    **_policy(Capability.SOURCE_READ),
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
 )
-async def list_source_publications(
+def list_source_publications(
+    request: Request,
+    principal: CurrentPrincipal,
+    session: DbSession,
     source_id: Annotated[str | None, Query(max_length=128)] = None,
     issue: Annotated[str | None, Query(max_length=128)] = None,
     status: ObservationStatus | None = None,
     limit: Limit = 50,
     cursor: Cursor = None,
 ) -> Any:
-    raise _not_implemented()
+    return library.list_publications(
+        _library(request),
+        session,
+        principal,
+        source_id=source_id,
+        issue=issue,
+        status=status,
+        limit=limit,
+        cursor=cursor,
+    )
 
 
 @router.get(
-    "/source-artifacts", response_model=SourceArtifactList, **_policy(Capability.SOURCE_READ)
+    "/source-artifacts",
+    response_model=SourceArtifactList,
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
 )
-async def list_source_artifacts(
+def list_source_artifacts(
+    request: Request,
+    principal: CurrentPrincipal,
+    session: DbSession,
     source_id: Annotated[str | None, Query(max_length=128)] = None,
     filename: Annotated[str | None, Query(max_length=512)] = None,
     sha256: Annotated[str | None, Query(pattern=r"^[0-9a-f]{64}$")] = None,
@@ -438,53 +575,123 @@ async def list_source_artifacts(
     limit: Limit = 50,
     cursor: Cursor = None,
 ) -> Any:
-    raise _not_implemented()
+    return library.list_artifacts(
+        _library(request),
+        session,
+        principal,
+        source_id=source_id,
+        filename=filename,
+        sha256=sha256,
+        status=status,
+        limit=limit,
+        cursor=cursor,
+    )
 
 
 @router.get(
     "/source-artifacts/{artifact_id}",
     response_model=SourceArtifactDetail,
-    **_policy(Capability.SOURCE_READ),
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
 )
-async def get_source_artifact(artifact_id: ResourceId) -> Any:
-    raise _not_implemented()
+def get_source_artifact(
+    request: Request, artifact_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return library.get_artifact(_library(request), request, session, principal, artifact_id)
 
 
 @router.get(
     "/source-artifacts/{artifact_id}/integrity",
     response_model=ArtifactIntegrityReport,
-    **_policy(Capability.SOURCE_READ),
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
 )
-async def get_source_artifact_integrity(artifact_id: ResourceId) -> Any:
-    raise _not_implemented()
+def get_source_artifact_integrity(
+    request: Request, artifact_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return library.get_integrity(_library(request), request, session, principal, artifact_id)
 
 
 @router.get(
     "/source-artifacts/{artifact_id}/preview",
     response_model=SourcePreview,
-    **_policy(Capability.SOURCE_READ),
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
 )
-async def get_source_artifact_preview(
+def get_source_artifact_preview(
+    request: Request,
     artifact_id: ResourceId,
+    principal: CurrentPrincipal,
+    session: DbSession,
     page: Annotated[int | None, Query(ge=1)] = None,
     table: Annotated[str | None, Query(max_length=256)] = None,
     row: Annotated[int | None, Query(ge=1)] = None,
     cursor: Cursor = None,
 ) -> Any:
-    raise _not_implemented()
+    return library.get_preview(
+        _library(request),
+        request,
+        session,
+        principal,
+        artifact_id,
+        page=page,
+        table=table,
+        row=row,
+        cursor=cursor,
+    )
+
+
+@router.get(
+    "/source-artifacts/{artifact_id}/content",
+    response_class=StreamingResponse,
+    responses={200: {"content": {"application/octet-stream": {"schema": {"type": "string"}}}}},
+    **_policy(Capability.SOURCE_DOWNLOAD, _IMPLEMENTED),
+)
+def download_source_artifact(
+    request: Request, artifact_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    """Re-checks identity and entitlement on every call. The original bytes, unchanged."""
+    artifact, content = library.open_artifact_content(
+        _library(request), request, session, principal, artifact_id
+    )
+
+    def chunks() -> Iterator[bytes]:
+        with content:
+            while chunk := content.read(1024 * 1024):
+                yield chunk
+
+    return StreamingResponse(
+        chunks(),
+        media_type="application/octet-stream",
+        headers={
+            "Content-Length": str(artifact.byte_length),
+            "Content-Disposition": "attachment",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
 
 
 @router.post(
     "/source-artifacts/{artifact_id}/download-link",
     response_model=DownloadLink,
-    **_policy(Capability.SOURCE_DOWNLOAD),
+    **_policy(Capability.SOURCE_DOWNLOAD, _IMPLEMENTED),
 )
-async def create_download_link(artifact_id: ResourceId, body: DownloadLinkRequest) -> Any:
-    raise _not_implemented()
+def create_download_link(
+    request: Request,
+    artifact_id: ResourceId,
+    body: DownloadLinkRequest,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return library.create_download_link(_library(request), request, session, principal, artifact_id)
 
 
-@router.get("/source-records", response_model=SourceRecordList, **_policy(Capability.SOURCE_READ))
-async def search_source_records(
+@router.get(
+    "/source-records",
+    response_model=SourceRecordList,
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
+)
+def search_source_records(
+    request: Request,
+    principal: CurrentPrincipal,
+    session: DbSession,
     query: Annotated[str | None, Query(max_length=256)] = None,
     station_number: Annotated[str | None, Query(max_length=64)] = None,
     frequency_start_mhz: FrequencyMhz = None,
@@ -492,22 +699,38 @@ async def search_source_records(
     limit: Limit = 50,
     cursor: Cursor = None,
 ) -> Any:
-    raise _not_implemented()
+    return library.search_records(
+        _library(request),
+        session,
+        principal,
+        query_text=query,
+        station_number=station_number,
+        frequency_start_mhz=frequency_start_mhz,
+        frequency_end_mhz=frequency_end_mhz,
+        limit=limit,
+        cursor=cursor,
+    )
 
 
 @router.get(
     "/source-records/{source_record_id}",
     response_model=SourceRecordDetail,
-    **_policy(Capability.SOURCE_READ),
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
 )
-async def get_source_record(source_record_id: ResourceId) -> Any:
-    raise _not_implemented()
+def get_source_record(
+    request: Request, source_record_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return library.get_record(_library(request), request, session, principal, source_record_id)
 
 
 @router.get(
     "/source-records/{source_record_id}/source-location",
     response_model=SourceLocationDetail,
-    **_policy(Capability.SOURCE_READ),
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
 )
-async def get_source_record_location(source_record_id: ResourceId) -> Any:
-    raise _not_implemented()
+def get_source_record_location(
+    request: Request, source_record_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return library.get_record_location(
+        _library(request), request, session, principal, source_record_id
+    )

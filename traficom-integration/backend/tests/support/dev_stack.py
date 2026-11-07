@@ -7,6 +7,7 @@ refuses plain-HTTP issuers elsewhere and off loopback.
     python tests/support/dev_stack.py idp
     python tests/support/dev_stack.py api
     python tests/support/dev_stack.py worker
+    python tests/support/dev_stack.py all
 """
 
 import base64
@@ -14,6 +15,8 @@ import hashlib
 import html
 import os
 import secrets
+import socket
+import subprocess  # noqa: S404 - only re-runs this script.
 import sys
 import time
 from dataclasses import dataclass
@@ -65,7 +68,7 @@ CLIENT_ID = "astrasync-dev-ui"
 AUDIENCE = "astrasync-api"
 NATIVE_REDIRECT = "fi.astrasync.app://auth/callback"
 REDIRECT_URIS = {f"{UI_ORIGIN}/auth/callback", NATIVE_REDIRECT}
-LOGOUT_URIS = {f"{UI_ORIGIN}/login"}
+LOGOUT_URIS = {f"{UI_ORIGIN}/login", "fi.astrasync.app://auth/logout"}
 KID = "dev-key-1"
 TENANT_A = "DEMO-TENANT-A"
 TENANT_B = "DEMO-TENANT-B"
@@ -499,12 +502,49 @@ def run_api() -> None:
     uvicorn.run("astrasync_api.app:create_app", factory=True, host=HOST, port=API_PORT)
 
 
+def run_all() -> int:
+    """Starts all three parts in order, because the API creates the tables the worker needs."""
+
+    def start(part: str) -> subprocess.Popen[bytes]:
+        return subprocess.Popen([sys.executable, __file__, part])  # noqa: S603
+
+    parts = [start("idp"), start("api")]
+    try:
+        for _ in range(120):
+            with socket.socket() as probe:
+                probe.settimeout(0.5)
+                if probe.connect_ex((HOST, API_PORT)) == 0:
+                    break
+            if any(part.poll() is not None for part in parts):
+                print("A part of the stack stopped during startup.")
+                return 1
+            time.sleep(0.5)
+        else:
+            print("The API did not start.")
+            return 1
+        parts.append(start("worker"))
+        print(
+            f"Ready. API http://{HOST}:{API_PORT}, identity http://{HOST}:{IDP_PORT}. Ctrl+C stops."
+        )
+        while all(part.poll() is None for part in parts):
+            time.sleep(1)
+        print("A part of the stack stopped.")
+        return 1
+    except KeyboardInterrupt:
+        return 0
+    finally:
+        for part in parts:
+            part.terminate()
+
+
 def main() -> int:
     target = sys.argv[1] if len(sys.argv) > 1 else ""
     if target == "idp":
         uvicorn.run(create_idp(), host=HOST, port=IDP_PORT)
     elif target == "api":
         run_api()
+    elif target == "all":
+        return run_all()
     elif target == "worker":
         os.environ.update(_dev_environment())
         runtime = build_runtime(Settings.from_env(os.environ))

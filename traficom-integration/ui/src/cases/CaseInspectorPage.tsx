@@ -16,7 +16,7 @@ import {
   METRIC_TEXT,
   REVIEW_TEXT,
 } from "./labels";
-import { FindingBadge, ReviewBadge, SyntheticBadge } from "../components/StatusBadge";
+import { ExecutionBadge, FindingBadge, ReviewBadge, SyntheticBadge } from "../components/StatusBadge";
 
 type Case = Schemas["CaseDetail"];
 type Run = Schemas["AnalysisRun"];
@@ -141,7 +141,8 @@ function MethodTable({ runs, checks }: { runs: MethodRun[]; checks: Check[] }) {
                   </span>
                 </th>
                 <td>
-                  {APPLICABILITY_TEXT[run.applicability]} · {EXECUTION_TEXT[run.execution_status]}
+                  <ExecutionBadge status={run.execution_status} />{" "}
+                  <span className="muted small">{APPLICABILITY_TEXT[run.applicability]}</span>
                   {run.missing_fields.length > 0 && (
                     <span className="muted small block">Missing: {run.missing_fields.join(", ")}</span>
                   )}

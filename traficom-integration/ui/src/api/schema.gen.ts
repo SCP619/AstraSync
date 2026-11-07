@@ -212,10 +212,28 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** List Drafts */
+        get: operations["list_drafts_api_v1_cases__case_id__drafts_get"];
         put?: never;
         /** Create Draft */
         post: operations["create_draft_api_v1_cases__case_id__drafts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/{case_id}/drafts/{draft_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Draft */
+        put: operations["update_draft_api_v1_cases__case_id__drafts__draft_id__put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -246,7 +264,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** List Reviews */
+        get: operations["list_reviews_api_v1_cases__case_id__reviews_get"];
         put?: never;
         /** Create Review */
         post: operations["create_review_api_v1_cases__case_id__reviews_post"];
@@ -821,7 +840,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
         };
         /** AlertAcknowledgment */
         AlertAcknowledgment: {
@@ -905,7 +924,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             severity: components["schemas"]["AlertSeverity"];
             status: components["schemas"]["AlertStatus"];
         };
@@ -931,7 +950,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -952,7 +971,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
         };
         /** AlertPreferencesUpdate */
         AlertPreferencesUpdate: {
@@ -1002,7 +1021,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1032,7 +1051,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             severity: components["schemas"]["AlertSeverity"];
             trigger_kind: components["schemas"]["AlertTriggerKind"];
             /** Version */
@@ -1124,7 +1143,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
         };
         /**
          * AnalysisRun
@@ -1166,7 +1185,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Software Commit Sha */
             software_commit_sha: string;
         };
@@ -1232,7 +1251,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             status: components["schemas"]["ArtifactStatus"];
         };
         /**
@@ -1244,7 +1263,49 @@ export interface components {
          * Capability
          * @enum {string}
          */
-        Capability: "AUTHENTICATED" | "CASE_READ" | "ISSUE_READ" | "ANALYSIS_READ" | "ANALYSIS_RUN" | "DRAFT_CREATE" | "REVIEW_DECIDE" | "CASE_EXPORT" | "UPLOAD_MANAGE" | "INGEST_TRIGGER" | "JOB_READ" | "REFERENCE_READ" | "SOURCE_HEALTH_READ" | "SOURCE_READ" | "SOURCE_DOWNLOAD" | "ALERT_READ" | "ALERT_ACKNOWLEDGE" | "ALERT_PREFERENCES" | "DEVICE_MANAGE" | "ADMIN_ALERT_RULES" | "ADMIN_SOURCE_CHECK";
+        Capability: "AUTHENTICATED" | "CASE_READ" | "ISSUE_READ" | "ANALYSIS_READ" | "ANALYSIS_RUN" | "DRAFT_CREATE" | "DRAFT_READ" | "REVIEW_DECIDE" | "CASE_EXPORT" | "UPLOAD_MANAGE" | "INGEST_TRIGGER" | "JOB_READ" | "REFERENCE_READ" | "SOURCE_HEALTH_READ" | "SOURCE_READ" | "SOURCE_DOWNLOAD" | "ALERT_READ" | "ALERT_ACKNOWLEDGE" | "ALERT_PREFERENCES" | "DEVICE_MANAGE" | "ADMIN_ALERT_RULES" | "ADMIN_SOURCE_CHECK";
+        /**
+         * CaseCandidate
+         * @description Passed to ``cases.upsert_candidate`` by the relevance pipeline, one per notice version.
+         */
+        CaseCandidate: {
+            /**
+             * Administration
+             * @default null
+             */
+            administration: string | null;
+            /**
+             * Case Id
+             * @default null
+             */
+            case_id: string | null;
+            change_type: components["schemas"]["ChangeType"];
+            domain: components["schemas"]["CaseDomain"];
+            /** Frequency End Mhz */
+            frequency_end_mhz: number;
+            /** Frequency Start Mhz */
+            frequency_start_mhz: number;
+            /** Notice Id */
+            notice_id: string;
+            /** Notice Uid */
+            notice_uid: string;
+            relevance: components["schemas"]["RelevanceGates"];
+            /** Scenario */
+            scenario: {
+                [key: string]: unknown;
+            };
+            /** Scenario Id */
+            scenario_id: string;
+            /** Source Id */
+            source_id: string;
+            /** Source Issue Id */
+            source_issue_id: string;
+            /**
+             * Source Record Id
+             * @default null
+             */
+            source_record_id: string | null;
+        };
         /**
          * CaseDetail
          * @description Method runs load from ``GET /analyses/{id}`` so values have one canonical source.
@@ -1299,7 +1360,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Source Issue Id */
             source_issue_id: string;
             /**
@@ -1330,7 +1391,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1456,7 +1517,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             status: components["schemas"]["DeviceStatus"];
         };
         /**
@@ -1512,7 +1573,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Tenant Id */
             tenant_id: string;
         };
@@ -1543,7 +1604,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Url */
             url: string;
         };
@@ -1592,7 +1653,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             status: components["schemas"]["DraftStatus"];
@@ -1642,7 +1703,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             /**
@@ -1652,6 +1713,27 @@ export interface components {
             status: "DRAFT";
             /** Warnings */
             warnings: string[];
+        };
+        /** DraftList */
+        DraftList: {
+            /**
+             * Generated At Utc
+             * Format: date-time
+             */
+            generated_at_utc: string;
+            /** Items */
+            items: components["schemas"]["Draft"][];
+            /** Limit */
+            limit: number;
+            /** Next Cursor */
+            next_cursor: string | null;
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.4";
+            /** Total If Known */
+            total_if_known: number | null;
         };
         /**
          * DraftStatus
@@ -1664,6 +1746,14 @@ export interface components {
          */
         DraftType: "REQUEST_INFORMATION" | "TECHNICAL_INQUIRY" | "COORDINATION_COMMENT" | "DRAFT_OBJECTION";
         /**
+         * DraftUpdateRequest
+         * @description Text only: an edit cannot change status or citations, so it can never approve.
+         */
+        DraftUpdateRequest: {
+            /** Content Markdown */
+            content_markdown: string;
+        };
+        /**
          * Environment
          * @enum {string}
          */
@@ -1672,7 +1762,7 @@ export interface components {
          * ErrorCode
          * @enum {string}
          */
-        ErrorCode: "UNAUTHENTICATED" | "MFA_REQUIRED" | "FORBIDDEN" | "REVOKED_DEVICE" | "NOT_FOUND" | "ALERT_NOT_FOUND" | "CONFLICT" | "VALIDATION_ERROR" | "INSUFFICIENT_DATA" | "UPLOAD_CHECKSUM_MISMATCH" | "UPLOAD_INCOMPLETE" | "UPLOAD_TOO_LARGE" | "PARSER_UNAVAILABLE" | "MANUAL_REQUIRED" | "JOB_QUOTA_EXCEEDED" | "RATE_LIMITED" | "SOURCE_RESTRICTED" | "NOT_IMPLEMENTED" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
+        ErrorCode: "UNAUTHENTICATED" | "MFA_REQUIRED" | "FORBIDDEN" | "REVOKED_DEVICE" | "NOT_FOUND" | "ALERT_NOT_FOUND" | "CONFLICT" | "VALIDATION_ERROR" | "INSUFFICIENT_DATA" | "UPLOAD_CHECKSUM_MISMATCH" | "UPLOAD_INCOMPLETE" | "UPLOAD_TOO_LARGE" | "PARSER_UNAVAILABLE" | "AI_UNAVAILABLE" | "MANUAL_REQUIRED" | "JOB_QUOTA_EXCEEDED" | "RATE_LIMITED" | "SOURCE_RESTRICTED" | "NOT_IMPLEMENTED" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
         /** ErrorResponse */
         ErrorResponse: {
             error: components["schemas"]["ApiErrorBody"];
@@ -1723,7 +1813,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
         };
         /**
          * FindingStatus
@@ -1766,7 +1856,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1783,7 +1873,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             status: components["schemas"]["PipelineStatus"];
         };
         /**
@@ -1818,7 +1908,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Started At Utc */
             started_at_utc: string | null;
             status: components["schemas"]["PipelineStatus"];
@@ -1854,7 +1944,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Tenant Id */
             tenant_id: string;
             /** User Id */
@@ -1944,7 +2034,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
         };
         /**
          * MethodRole
@@ -2062,7 +2152,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2176,7 +2266,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2302,7 +2392,28 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
+        };
+        /** ReviewEventList */
+        ReviewEventList: {
+            /**
+             * Generated At Utc
+             * Format: date-time
+             */
+            generated_at_utc: string;
+            /** Items */
+            items: components["schemas"]["ReviewEvent"][];
+            /** Limit */
+            limit: number;
+            /** Next Cursor */
+            next_cursor: string | null;
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.4";
+            /** Total If Known */
+            total_if_known: number | null;
         };
         /**
          * ReviewStatus
@@ -2415,7 +2526,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["ArtifactStatus"];
@@ -2438,7 +2549,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2484,7 +2595,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2513,7 +2624,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["SourceHealthStatus"];
@@ -2601,7 +2712,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Source Page */
             source_page: number | null;
             /** Source Record Id */
@@ -2633,7 +2744,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
         };
         /** SourcePreviewRow */
         SourcePreviewRow: {
@@ -2688,7 +2799,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2725,7 +2836,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Source Record Id */
             source_record_id: string;
         };
@@ -2775,7 +2886,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2853,7 +2964,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             /** Upload Id */
             upload_id: string;
         };
@@ -2902,7 +3013,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.3";
+            schema_version: "1.0.0-draft.4";
             source_type: components["schemas"]["SourceType"];
             status: components["schemas"]["PipelineStatus"];
             /** Upload Id */
@@ -4295,6 +4406,112 @@ export interface operations {
             };
         };
     };
+    list_drafts_api_v1_cases__case_id__drafts_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                case_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftList"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     create_draft_api_v1_cases__case_id__drafts_post: {
         parameters: {
             query?: never;
@@ -4404,6 +4621,114 @@ export interface operations {
             };
         };
     };
+    update_draft_api_v1_cases__case_id__drafts__draft_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                case_id: string;
+                draft_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DraftUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     export_case_api_v1_cases__case_id__export_get: {
         parameters: {
             query?: never;
@@ -4422,6 +4747,112 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EvidencePack"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_reviews_api_v1_cases__case_id__reviews_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                case_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewEventList"];
                 };
             };
             /** @description Unauthorized */

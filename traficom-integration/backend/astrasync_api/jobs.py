@@ -28,6 +28,7 @@ _TERMINAL = frozenset(
 TERMINAL_VALUES = frozenset(status.value for status in _TERMINAL)
 LANE_INGESTION = "ingestion"
 LANE_ACQUISITION = "acquisition"
+LANE_ANALYSIS = "analysis"
 DEFAULT_LEASE = timedelta(minutes=5)
 _BASE_BACKOFF_SECONDS = 30
 
@@ -97,7 +98,7 @@ def claim(
     sessions: sessionmaker[Session],
     worker_id: str,
     *,
-    lanes: Collection[str] = (LANE_INGESTION, LANE_ACQUISITION),
+    lanes: Collection[str] = (LANE_INGESTION, LANE_ACQUISITION, LANE_ANALYSIS),
     lease: timedelta = DEFAULT_LEASE,
     now: datetime | None = None,
 ) -> JobRunRow | None:

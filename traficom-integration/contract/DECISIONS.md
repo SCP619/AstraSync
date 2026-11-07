@@ -1,6 +1,6 @@
 # Contract decisions for joint review
 
-TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.3`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
+TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.4`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
 
 ## Documentation conflicts
 
@@ -38,6 +38,9 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | G16 | `acquisition_jobs` in BSD section 9 duplicates `job_runs` | One `job_runs` table with a new `ACQUIRE` type |
 | G17 | `part_manifest_json` would need rewriting on each part | A separate `upload_parts` table |
 | G18 | Alerts need a durable outbox from Stage 7, but events start now | `outbox_events` is written now and unconsumed until then |
+| G19 | No route to read or edit drafts or read review history, though the inspector requires them | Added `GET /cases/{id}/drafts`, `PUT /cases/{id}/drafts/{draft_id}` and `GET /cases/{id}/reviews` |
+| G20 | Nothing defined how a relevance result becomes a case | Added `CaseCandidate` and `cases.upsert_candidate`, for the relevance owner to call |
+| G21 | BSD has no rule for a case's lead metric, or for its finding from a set of method runs | See A17 and A18 |
 | G10 | Relevance labels and reason codes have no closed list beyond `FREQUENCY_MATCH` | Validated `UPPER_SNAKE_CASE` codes. The relevance owner should publish the list |
 
 ## Assumptions
@@ -59,6 +62,12 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A14 | The search index and raw record values are in PostgreSQL. Analytical Parquet and DuckDB stay with Data/AI. Tens of millions of rows are unproven | Stage 6 benchmarks |
 | A15 | Connector status is tenant metadata, visible with `SOURCE_HEALTH_READ` without an entitlement. It has no file names or credentials | Stage 2 review |
 | A16 | Adapters run inside the worker process. Sandboxing and malware scanning are not done yet | Stage 8; do not parse untrusted files in production before then |
+| A17 | **Lead metric:** highest role (regulatory, engineering, verification, screening), then method ID. It is never chosen by value. If any verified margin is positive, the case shows that run so its summary can't hide it | **Scientific review** |
+| A18 | **Findings:** no run succeeded gives `INSUFFICIENT_DATA`; any positive verified margin gives `POTENTIAL_LIMIT_EXCEEDANCE`; otherwise `EXPERT_REVIEW_REQUIRED`. `NO_IDENTIFIED_CONCERN`, `POTENTIAL_CONCERN` and `METHOD_DISAGREEMENT` are not produced until their rules are agreed | **Scientific review** |
+| A19 | The method catalogue comes from RF_METHODS sections 2 and 3, including its metric and role labels. `SPACE_PFD_TIME_SERIES` is used for D3 until the registry owner decides | **Data/AI review** |
+| A20 | Case access reuses source entitlements. Per-case assignment ("assigned/authorised" in Security) isn't modelled yet | Stage 8 |
+| A21 | Case export needs `CASE_EXPORT` plus an `EXPORT` right on restricted data, and a reviewer can approve a draft with no second approver | Deployment policy |
+| A22 | AI drafting is synchronous in the request. A slow provider holds one API thread | When a real agent exists |
 | A11 | Audit covers denials by signed-in users, permitted writes, exports and downloads. Anonymous and invalid-token failures are logged only, so they cannot fill the audit table | Stage 8 |
 
 ## Outside the contract: needs a team decision

@@ -501,6 +501,16 @@ class DraftCreated(Draft):
     status: Literal[DraftStatus.DRAFT]
 
 
+class DraftUpdateRequest(ContractModel):
+    """Text only: an edit cannot change status or citations, so it can never approve."""
+
+    content_markdown: Annotated[str, Field(min_length=1, max_length=200_000)]
+
+
+class DraftList(Page[Draft]):
+    pass
+
+
 class ReviewCreateRequest(ContractModel):
     action: ReviewAction
     decision_reason: Annotated[str, Field(min_length=1, max_length=4000)]
@@ -527,6 +537,10 @@ class ReviewEvent(Envelope):
     analysis_run_id: StableId | None
     draft_id: StableId | None
     occurred_at_utc: UtcDatetime
+
+
+class ReviewEventList(Page[ReviewEvent]):
+    pass
 
 
 class EvidencePack(Envelope):
@@ -1077,6 +1091,31 @@ class AdapterRecord(ContractModel):
     def _frequency_order(self) -> AdapterRecord:
         start, end = self.frequency_start_mhz, self.frequency_end_mhz
         if start is not None and end is not None and start > end:
+            raise ValueError("frequency_start_mhz must not exceed frequency_end_mhz")
+        return self
+
+
+class CaseCandidate(ContractModel):
+    """Passed to ``cases.upsert_candidate`` by the relevance pipeline, one per notice version."""
+
+    case_id: StableId | None = None
+    notice_uid: StableId
+    notice_id: StableId
+    source_id: StableId
+    source_issue_id: StableId
+    source_record_id: StableId | None = None
+    administration: str | None = None
+    domain: CaseDomain
+    change_type: ChangeType
+    frequency_start_mhz: NonNegativeFloat
+    frequency_end_mhz: NonNegativeFloat
+    relevance: RelevanceGates
+    scenario_id: StableId
+    scenario: dict[str, Any]
+
+    @model_validator(mode="after")
+    def _frequency_order(self) -> CaseCandidate:
+        if self.frequency_start_mhz > self.frequency_end_mhz:
             raise ValueError("frequency_start_mhz must not exceed frequency_end_mhz")
         return self
 

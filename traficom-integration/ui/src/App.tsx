@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ApiError, createApiClient, type CaseList, type Me } from "./api/client";
 import type { AuthAdapter } from "./auth/adapter";
 import {
@@ -14,6 +14,8 @@ import {
   type SessionState,
   type SignInNotice,
 } from "./shared";
+import { CaseInspectorPage } from "./cases/CaseInspectorPage";
+import { CaseListPage } from "./cases/CaseListPage";
 import { SourceLibraryPage } from "./sources/SourceLibraryPage";
 
 function SessionProvider({
@@ -228,6 +230,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
         <span className="brand">AstraSync</span>
         <nav aria-label="Main" className="main-nav">
           <NavLink to="/dashboard">Overview</NavLink>
+          {me.capabilities.includes("CASE_READ") && <NavLink to="/cases">Cases</NavLink>}
           {me.capabilities.includes("SOURCE_HEALTH_READ") && <NavLink to="/sources">Source library</NavLink>}
         </nav>
         <span className="environment" data-environment={me.environment}>
@@ -243,7 +246,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
 function CasesPanel() {
   const { api } = useSession();
-  const load = useCallback((signal: AbortSignal) => api.listCases(signal), [api]);
+  const load = useCallback((signal: AbortSignal) => api.listCases({}, undefined, signal), [api]);
   const { result, retry } = useLoad<CaseList>(load);
 
   let content: React.ReactNode;
@@ -267,7 +270,12 @@ function CasesPanel() {
   } else if (result.data?.items.length === 0) {
     content = <p className="muted">No cases yet.</p>;
   } else {
-    content = <p>{result.data?.items.length} cases loaded.</p>;
+    content = (
+      <p>
+        {result.data?.next_cursor === null ? "" : "At least "}
+        {result.data?.items.length} loaded. <Link to="/cases">Open cases</Link>
+      </p>
+    );
   }
 
   return (
@@ -312,6 +320,24 @@ function DashboardPage() {
   );
 }
 
+function RequireCapability({
+  capability,
+  children,
+}: {
+  capability: Me["capabilities"][number];
+  children: React.ReactNode;
+}) {
+  const me = useMe();
+  if (!me.capabilities.includes(capability)) {
+    return (
+      <main className="content">
+        <p role="alert">Your account is not authorised for this. Contact your AstraSync administrator.</p>
+      </main>
+    );
+  }
+  return <>{children}</>;
+}
+
 function SourcesRoute() {
   const me = useMe();
   if (!me.capabilities.includes("SOURCE_HEALTH_READ")) {
@@ -346,6 +372,26 @@ export function App({
         <Route
           path="/sources"
           element={<RequireSession><AppShell><SourcesRoute /></AppShell></RequireSession>}
+        />
+        <Route
+          path="/cases"
+          element={
+            <RequireSession>
+              <AppShell>
+                <RequireCapability capability="CASE_READ"><CaseListPage /></RequireCapability>
+              </AppShell>
+            </RequireSession>
+          }
+        />
+        <Route
+          path="/cases/:caseId"
+          element={
+            <RequireSession>
+              <AppShell>
+                <RequireCapability capability="CASE_READ"><CaseInspectorPage /></RequireCapability>
+              </AppShell>
+            </RequireSession>
+          }
         />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

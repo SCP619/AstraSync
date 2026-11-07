@@ -364,7 +364,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           }
@@ -616,7 +616,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -692,7 +692,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -758,7 +758,7 @@
             "title": "Quiet Hours Start Utc"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           }
@@ -919,7 +919,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -998,7 +998,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1276,7 +1276,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           }
@@ -1371,7 +1371,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1575,7 +1575,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1626,6 +1626,7 @@
           "ANALYSIS_READ",
           "ANALYSIS_RUN",
           "DRAFT_CREATE",
+          "DRAFT_READ",
           "REVIEW_DECIDE",
           "CASE_EXPORT",
           "UPLOAD_MANAGE",
@@ -1644,6 +1645,121 @@
         ],
         "title": "Capability",
         "type": "string"
+      },
+      "CaseCandidate": {
+        "additionalProperties": false,
+        "description": "Passed to ``cases.upsert_candidate`` by the relevance pipeline, one per notice version.",
+        "properties": {
+          "administration": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Administration"
+          },
+          "case_id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Case Id"
+          },
+          "change_type": {
+            "$ref": "#/components/schemas/ChangeType"
+          },
+          "domain": {
+            "$ref": "#/components/schemas/CaseDomain"
+          },
+          "frequency_end_mhz": {
+            "minimum": 0,
+            "title": "Frequency End Mhz",
+            "type": "number"
+          },
+          "frequency_start_mhz": {
+            "minimum": 0,
+            "title": "Frequency Start Mhz",
+            "type": "number"
+          },
+          "notice_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Notice Id",
+            "type": "string"
+          },
+          "notice_uid": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Notice Uid",
+            "type": "string"
+          },
+          "relevance": {
+            "$ref": "#/components/schemas/RelevanceGates"
+          },
+          "scenario": {
+            "additionalProperties": true,
+            "title": "Scenario",
+            "type": "object"
+          },
+          "scenario_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "source_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_issue_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Source Issue Id",
+            "type": "string"
+          },
+          "source_record_id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Source Record Id"
+          }
+        },
+        "required": [
+          "notice_uid",
+          "notice_id",
+          "source_id",
+          "source_issue_id",
+          "domain",
+          "change_type",
+          "frequency_start_mhz",
+          "frequency_end_mhz",
+          "relevance",
+          "scenario_id",
+          "scenario"
+        ],
+        "title": "CaseCandidate",
+        "type": "object"
       },
       "CaseDetail": {
         "additionalProperties": false,
@@ -1812,7 +1928,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1901,7 +2017,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2350,7 +2466,7 @@
             "$ref": "#/components/schemas/DevicePlatform"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2460,7 +2576,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2535,7 +2651,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2634,7 +2750,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2757,7 +2873,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2799,6 +2915,67 @@
         "title": "DraftCreated",
         "type": "object"
       },
+      "DraftList": {
+        "additionalProperties": false,
+        "properties": {
+          "generated_at_utc": {
+            "format": "date-time",
+            "title": "Generated At Utc",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Draft"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "maximum": 200.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "schema_version": {
+            "const": "1.0.0-draft.4",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "total_if_known": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total If Known"
+          }
+        },
+        "required": [
+          "schema_version",
+          "generated_at_utc",
+          "items",
+          "limit",
+          "next_cursor",
+          "total_if_known"
+        ],
+        "title": "DraftList",
+        "type": "object"
+      },
       "DraftStatus": {
         "enum": [
           "DRAFT",
@@ -2818,6 +2995,23 @@
         ],
         "title": "DraftType",
         "type": "string"
+      },
+      "DraftUpdateRequest": {
+        "additionalProperties": false,
+        "description": "Text only: an edit cannot change status or citations, so it can never approve.",
+        "properties": {
+          "content_markdown": {
+            "maxLength": 200000,
+            "minLength": 1,
+            "title": "Content Markdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content_markdown"
+        ],
+        "title": "DraftUpdateRequest",
+        "type": "object"
       },
       "Environment": {
         "enum": [
@@ -2843,6 +3037,7 @@
           "UPLOAD_INCOMPLETE",
           "UPLOAD_TOO_LARGE",
           "PARSER_UNAVAILABLE",
+          "AI_UNAVAILABLE",
           "MANUAL_REQUIRED",
           "JOB_QUOTA_EXCEEDED",
           "RATE_LIMITED",
@@ -3011,7 +3206,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           }
@@ -3115,7 +3310,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3158,7 +3353,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3274,7 +3469,7 @@
             "title": "Resource Id"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3410,7 +3605,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3661,7 +3856,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           }
@@ -4094,7 +4289,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -4467,7 +4662,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -4796,7 +4991,7 @@
           "overlap_end_mhz": {
             "anyOf": [
               {
-                "minimum": 0.0,
+                "minimum": 0,
                 "type": "number"
               },
               {
@@ -4808,7 +5003,7 @@
           "overlap_start_mhz": {
             "anyOf": [
               {
-                "minimum": 0.0,
+                "minimum": 0,
                 "type": "number"
               },
               {
@@ -5000,7 +5195,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           }
@@ -5018,6 +5213,67 @@
           "occurred_at_utc"
         ],
         "title": "ReviewEvent",
+        "type": "object"
+      },
+      "ReviewEventList": {
+        "additionalProperties": false,
+        "properties": {
+          "generated_at_utc": {
+            "format": "date-time",
+            "title": "Generated At Utc",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewEvent"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "maximum": 200.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "schema_version": {
+            "const": "1.0.0-draft.4",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "total_if_known": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total If Known"
+          }
+        },
+        "required": [
+          "schema_version",
+          "generated_at_utc",
+          "items",
+          "limit",
+          "next_cursor",
+          "total_if_known"
+        ],
+        "title": "ReviewEventList",
         "type": "object"
       },
       "ReviewStatus": {
@@ -5381,7 +5637,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5458,7 +5714,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5610,7 +5866,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5723,7 +5979,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6066,7 +6322,7 @@
             "title": "Record Schema Version"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6174,7 +6430,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           }
@@ -6338,7 +6594,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6434,7 +6690,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6621,7 +6877,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6837,7 +7093,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6974,7 +7230,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.3",
+            "const": "1.0.0-draft.4",
             "title": "Schema Version",
             "type": "string"
           },
@@ -7042,7 +7298,7 @@
   },
   "info": {
     "title": "AstraSync API",
-    "version": "1.0.0-draft.3"
+    "version": "1.0.0-draft.4"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -8232,7 +8488,7 @@
           }
         },
         "summary": "Get Analysis",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ANALYSIS_READ"
       }
     },
@@ -8356,7 +8612,7 @@
           }
         },
         "summary": "Get Analysis Methods",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ANALYSIS_READ"
       }
     },
@@ -8604,7 +8860,7 @@
           }
         },
         "summary": "List Cases",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "CASE_READ"
       }
     },
@@ -8728,7 +8984,7 @@
           }
         },
         "summary": "Get Case",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "CASE_READ"
       }
     },
@@ -8873,11 +9129,162 @@
           }
         },
         "summary": "Analyse Case",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ANALYSIS_RUN"
       }
     },
     "/api/v1/cases/{case_id}/drafts": {
+      "get": {
+        "operationId": "list_drafts_api_v1_cases__case_id__drafts_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "title": "Case Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 1024,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "List Drafts",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "DRAFT_READ"
+      },
       "post": {
         "operationId": "create_draft_api_v1_cases__case_id__drafts_post",
         "parameters": [
@@ -9018,7 +9425,153 @@
           }
         },
         "summary": "Create Draft",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "DRAFT_CREATE"
+      }
+    },
+    "/api/v1/cases/{case_id}/drafts/{draft_id}": {
+      "put": {
+        "operationId": "update_draft_api_v1_cases__case_id__drafts__draft_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "title": "Case Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "draft_id",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "title": "Draft Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Draft"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Update Draft",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "DRAFT_CREATE"
       }
     },
@@ -9142,11 +9695,162 @@
           }
         },
         "summary": "Export Case",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "CASE_EXPORT"
       }
     },
     "/api/v1/cases/{case_id}/reviews": {
+      "get": {
+        "operationId": "list_reviews_api_v1_cases__case_id__reviews_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "title": "Case Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 1024,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewEventList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "List Reviews",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "CASE_READ"
+      },
       "post": {
         "operationId": "create_review_api_v1_cases__case_id__reviews_post",
         "parameters": [
@@ -9287,7 +9991,7 @@
           }
         },
         "summary": "Create Review",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "REVIEW_DECIDE"
       }
     },
@@ -10358,7 +11062,7 @@
           }
         },
         "summary": "List References",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "REFERENCE_READ"
       }
     },

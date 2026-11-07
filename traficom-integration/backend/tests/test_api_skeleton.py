@@ -61,6 +61,9 @@ ADDED_OPERATIONS = {
     ("get", "/api/v1/source-records/{source_record_id}"),
     ("put", "/api/v1/uploads/{upload_id}/parts/{part_number}"),
     ("get", "/api/v1/source-artifacts/{artifact_id}/content"),
+    ("get", "/api/v1/cases/{case_id}/drafts"),
+    ("put", "/api/v1/cases/{case_id}/drafts/{draft_id}"),
+    ("get", "/api/v1/cases/{case_id}/reviews"),
 }
 
 

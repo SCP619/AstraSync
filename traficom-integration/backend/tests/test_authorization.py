@@ -85,8 +85,9 @@ def test_analyst_cannot_approve_but_reviewer_can_reach_approval(
     assert denied.status_code == 403
 
     reached = secure_client.post(path, json=body, headers={**bearer("reviewer-a"), **idempotency})
-    assert reached.status_code == 501
-    assert ErrorResponse.model_validate(reached.json()).error.code is ErrorCode.NOT_IMPLEMENTED
+    # Past the role check: the case in this test does not exist.
+    assert reached.status_code == 404
+    assert ErrorResponse.model_validate(reached.json()).error.code is ErrorCode.NOT_FOUND
 
 
 def test_user_without_roles_reaches_only_me(

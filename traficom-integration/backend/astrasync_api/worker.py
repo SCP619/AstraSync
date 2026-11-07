@@ -5,15 +5,13 @@ from their owners' packages; this process only orchestrates them.
 """
 
 import argparse
-import importlib
 import logging
 import os
 import socket
 import sys
 import time
 from collections.abc import Mapping
-from dataclasses import dataclass
-from typing import Any
+from dataclasses import dataclass, field
 from uuid import uuid4
 
 import httpx
@@ -25,9 +23,11 @@ from .acquisition import (
     discover,
     enqueue_due_checks,
 )
-from .config import Settings, SettingsError
-from .contract.enums import ErrorCode, JobType, PipelineStatus
-from .contract.interfaces import SourceAdapter, SourceClient
+from .analysis import AnalysisPlugins, run_analysis
+from .case_tables import AnalysisRunRow
+from .config import Settings, SettingsError, load_named
+from .contract.enums import AnalysisStatus, ErrorCode, JobType, PipelineStatus
+from .contract.interfaces import CriterionResolver, RFMethod, SourceAdapter, SourceClient
 from .db import build_engine, build_session_factory
 from .ingest import PipelineContext, process_artifact, process_upload
 from .jobs import PermanentJobError, claim, finish, retry_or_fail
@@ -43,6 +43,7 @@ class WorkerRuntime:
     context: PipelineContext
     clients: Mapping[str, SourceClient]
     worker_id: str
+    analysis: AnalysisPlugins = field(default_factory=AnalysisPlugins)
 
 
 def _dispatch(runtime: WorkerRuntime, job: JobRunRow) -> PipelineStatus:
@@ -54,6 +55,10 @@ def _dispatch(runtime: WorkerRuntime, job: JobRunRow) -> PipelineStatus:
         return process_artifact(context, job.job_id, payload["artifact_id"])
     if job.job_type == JobType.SOURCE_DISCOVERY.value:
         return discover(context.sessions, runtime.clients, payload["source_id"])
+    if job.job_type == JobType.RF.value:
+        return run_analysis(
+            context.sessions, runtime.analysis, job.job_id, payload["analysis_run_id"]
+        )
     if job.job_type == JobType.ACQUIRE.value:
         return acquire(context, runtime.clients, job.job_id, payload["observation_id"])
     raise PermanentJobError(
@@ -93,6 +98,12 @@ def _retry(runtime: WorkerRuntime, job: JobRunRow, detail: str) -> None:
 def _close_failed_upload(
     runtime: WorkerRuntime, job: JobRunRow, status: PipelineStatus, code: ErrorCode
 ) -> None:
+    run_id = job.payload.get("analysis_run_id")
+    if run_id is not None:
+        with runtime.context.sessions() as session:
+            session.get_one(AnalysisRunRow, run_id).analysis_status = AnalysisStatus.FAILED.value
+            session.commit()
+        return
     upload_id = job.payload.get("upload_id")
     if upload_id is None:
         return
@@ -110,17 +121,10 @@ def run_until_idle(runtime: WorkerRuntime) -> int:
     return count
 
 
-def _load_named(spec: str) -> Any:
-    module_name, _, attribute = spec.partition(":")
-    if not module_name or not attribute:
-        raise SettingsError(f"Expected module:attribute, got {spec!r}")
-    return getattr(importlib.import_module(module_name), attribute)
-
-
 def load_adapters(specs: tuple[str, ...]) -> dict[str, SourceAdapter]:
     adapters: dict[str, SourceAdapter] = {}
     for spec in specs:
-        adapter = _load_named(spec)()
+        adapter = load_named(spec)()
         if not isinstance(adapter, SourceAdapter):
             raise SettingsError(f"{spec} does not implement SourceAdapter")
         adapters[adapter.source_type] = adapter
@@ -131,11 +135,28 @@ def load_clients(specs: tuple[str, ...]) -> dict[str, SourceClient]:
     clients: dict[str, SourceClient] = {}
     for spec in specs:
         name, _, target = spec.partition("=")
-        client = _load_named(target)()
+        client = load_named(target)()
         if not isinstance(client, SourceClient):
             raise SettingsError(f"{target} does not implement SourceClient")
         clients[name] = client
     return clients
+
+
+def load_analysis_plugins(settings: Settings) -> AnalysisPlugins:
+    methods: dict[str, RFMethod] = {}
+    for spec in settings.rf_methods:
+        method = load_named(spec)()
+        if not isinstance(method, RFMethod):
+            raise SettingsError(f"{spec} does not implement RFMethod")
+        methods[method.method_id] = method
+    resolver: CriterionResolver | None = None
+    if settings.criterion_resolver:
+        resolver = load_named(settings.criterion_resolver)()
+        if not isinstance(resolver, CriterionResolver):
+            raise SettingsError("The criterion resolver does not implement CriterionResolver")
+    return AnalysisPlugins(
+        methods=methods, criterion_resolver=resolver, build_sha=settings.build_sha
+    )
 
 
 def build_runtime(settings: Settings) -> WorkerRuntime:
@@ -149,6 +170,7 @@ def build_runtime(settings: Settings) -> WorkerRuntime:
         ),
         clients=load_clients(settings.source_clients),
         worker_id=f"{socket.gethostname()}-{uuid4().hex[:8]}",
+        analysis=load_analysis_plugins(settings),
     )
 
 

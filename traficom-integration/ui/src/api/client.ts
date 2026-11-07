@@ -8,6 +8,15 @@ export type Me = Schemas["Me"];
 export type CaseList = Schemas["CaseList"];
 export type SourceRecordList = Schemas["SourceRecordList"];
 
+export interface CaseFilters {
+  query?: string;
+  domain?: Schemas["CaseDomain"];
+  change_type?: Schemas["ChangeType"];
+  finding_status?: Schemas["FindingStatus"];
+  review_status?: Schemas["ReviewStatus"];
+  sort?: Schemas["CaseSort"];
+}
+
 export interface RecordSearch {
   query?: string;
   station_number?: string;
@@ -37,7 +46,20 @@ export interface ApiClientOptions {
 
 export interface ApiClient {
   getMe(signal?: AbortSignal): Promise<Me>;
-  listCases(signal?: AbortSignal): Promise<CaseList>;
+  listCases(filters?: CaseFilters, cursor?: string, signal?: AbortSignal): Promise<CaseList>;
+  getCase(caseId: string, signal?: AbortSignal): Promise<Schemas["CaseDetail"]>;
+  getAnalysis(runId: string, signal?: AbortSignal): Promise<Schemas["AnalysisRun"]>;
+  requestAnalysis(caseId: string): Promise<Schemas["AnalysisAccepted"]>;
+  listDrafts(caseId: string, signal?: AbortSignal): Promise<Schemas["DraftList"]>;
+  createDraft(
+    caseId: string,
+    draftType: Schemas["DraftType"],
+    analysisRunId: string,
+  ): Promise<Schemas["DraftCreated"]>;
+  updateDraft(caseId: string, draftId: string, content: string): Promise<Schemas["Draft"]>;
+  listReviews(caseId: string, signal?: AbortSignal): Promise<Schemas["ReviewEventList"]>;
+  createReview(caseId: string, body: Schemas["ReviewCreateRequest"]): Promise<Schemas["ReviewEvent"]>;
+  exportCase(caseId: string): Promise<Schemas["EvidencePack"]>;
   listSources(signal?: AbortSignal): Promise<Schemas["SourceConnectorList"]>;
   searchRecords(search: RecordSearch, cursor?: string, signal?: AbortSignal): Promise<SourceRecordList>;
   getRecord(recordId: string, signal?: AbortSignal): Promise<Schemas["SourceRecordDetail"]>;
@@ -114,9 +136,54 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     return body as T;
   }
 
+  async function write<T>(method: "POST" | "PUT", path: string, body: unknown): Promise<T> {
+    const response = await send(path, "application/json", {
+      method,
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        // One key per user action, so a retry after a lost response cannot act twice.
+        "Idempotency-Key": crypto.randomUUID(),
+      },
+    });
+    const parsed = await readJson(response);
+    if (!response.ok) {
+      throw failure(response, parsed);
+    }
+    return parsed as T;
+  }
+
+  const casePath = (caseId: string) => `/api/v1/cases/${encodeURIComponent(caseId)}`;
+
   return {
     getMe: (signal) => get<Me>("/api/v1/me", signal),
-    listCases: (signal) => get<CaseList>("/api/v1/cases", signal),
+    listCases: (filters = {}, cursor, signal) => {
+      const params = new URLSearchParams();
+      for (const [name, value] of Object.entries(filters)) {
+        params.set(name, String(value));
+      }
+      params.set("limit", "50");
+      if (cursor !== undefined) {
+        params.set("cursor", cursor);
+      }
+      return get<CaseList>(`/api/v1/cases?${params}`, signal);
+    },
+    getCase: (caseId, signal) => get(casePath(caseId), signal),
+    getAnalysis: (runId, signal) => get(`/api/v1/analyses/${encodeURIComponent(runId)}`, signal),
+    requestAnalysis: (caseId) => write("POST", `${casePath(caseId)}/analyse`, {}),
+    listDrafts: (caseId, signal) => get(`${casePath(caseId)}/drafts`, signal),
+    createDraft: (caseId, draftType, analysisRunId) =>
+      write("POST", `${casePath(caseId)}/drafts`, {
+        draft_type: draftType,
+        analysis_run_id: analysisRunId,
+      }),
+    updateDraft: (caseId, draftId, content) =>
+      write("PUT", `${casePath(caseId)}/drafts/${encodeURIComponent(draftId)}`, {
+        content_markdown: content,
+      }),
+    listReviews: (caseId, signal) => get(`${casePath(caseId)}/reviews`, signal),
+    createReview: (caseId, body) => write("POST", `${casePath(caseId)}/reviews`, body),
+    exportCase: (caseId) => get(`${casePath(caseId)}/export`),
     listSources: (signal) => get("/api/v1/sources", signal),
     searchRecords: (search, cursor, signal) => {
       const params = new URLSearchParams();

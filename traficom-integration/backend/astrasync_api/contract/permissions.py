@@ -22,6 +22,7 @@ class Capability(StrEnum):
     ANALYSIS_READ = "ANALYSIS_READ"
     ANALYSIS_RUN = "ANALYSIS_RUN"
     DRAFT_CREATE = "DRAFT_CREATE"
+    DRAFT_READ = "DRAFT_READ"
     REVIEW_DECIDE = "REVIEW_DECIDE"
     CASE_EXPORT = "CASE_EXPORT"
     UPLOAD_MANAGE = "UPLOAD_MANAGE"
@@ -49,6 +50,7 @@ _READ_ONLY_WORKSPACE = frozenset(
         Capability.SOURCE_HEALTH_READ,
         Capability.SOURCE_READ,
         Capability.ALERT_READ,
+        Capability.DRAFT_READ,
     }
 )
 

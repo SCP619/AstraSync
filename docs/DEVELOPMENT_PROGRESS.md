@@ -41,12 +41,13 @@ Frontend-to-backend coverage (production React app, real API client, no sample d
 | D Expert review | Case inspector draft and review | Verified in UI tests (Stage 5); drafts come from the demo template agent, not an AI |
 | E Alerts | `/alerts` | Verified in UI tests and on devices (Stage 7) |
 | Operations | Overview → Processing | Browser-verified (PR #21) |
+| Administration | `/admin/users` (Administrator only) | Browser-verified against the dev stack: list, roles, entitlement grant and revoke, own-account lock; every persona probed live |
 
 Next tasks:
 
 1. Port the Lovable case-detail method table and provenance timeline into `CaseInspectorPage`.
-2. Administration screens: the API has no user/role management endpoints (Lovable map notes
-   the same), so none are built.
+2. Administration follow-ups needing a policy decision: moving users between tenants, and
+   per-case grants (case access follows source entitlements today).
 3. Scientific: no teammate modules in the repo (`traficom-integration/agent` is empty);
    `RegistryCriterionResolver` ships no criteria; service, geometry and technical relevance
    gates need IFIC field definitions.
@@ -55,11 +56,32 @@ Next tasks:
 
 From the repository root, with the backend virtualenv and UI dependencies installed:
 
-1. Backend stack (local test identity provider, API on 8800, worker; synthetic demo data, the
-   Parquet record store on by default): `traficom-integration/backend/.venv/Scripts/python
+1. Backend stack (local test identity provider on 8801, API on 8800, worker; synthetic demo
+   data, the Parquet record store on by default): `traficom-integration/backend/.venv/Scripts/python
    traficom-integration/backend/tests/support/dev_stack.py all`
 2. UI: `npm --prefix traficom-integration/ui run dev`, then open `http://127.0.0.1:5173` and
    choose a test persona (no passwords; local only).
+
+**Other ports.** Where Windows reserves 8800/8801 (socket error 10048; see `netsh interface
+ipv4 show excludedportrange protocol=tcp`), copy
+`traficom-integration/backend/dev_stack.local.env.example` to `dev_stack.local.env` and set
+`ASTRASYNC_DEV_API_PORT`/`ASTRASYNC_DEV_IDP_PORT` (environment variables override the file), then
+put the matching `VITE_API_BASE_URL` and `VITE_OIDC_AUTHORITY` in
+`traficom-integration/ui/.env.development.local`. Both files are git-ignored. The stack checks
+the ports (1024–65535, all different, bindable on 127.0.0.1) before starting and says what to
+change; issuer, discovery, JWKS, token `iss`, CORS and redirect URIs all derive from these values.
+
+**Access denied after choosing a persona (fixed 2026-11-07).** Users are keyed by issuer plus
+subject. The dev database had its personas under `http://127.0.0.1:8801`; after the IdP moved to
+18801 its tokens carried a new issuer, no user matched, and the API answered 403
+`USER_NOT_PROVISIONED`. The stack now moves only its own seeded personas to the current loopback
+dev issuer at start (keeping their user IDs and grants) and provisions any missing ones. No
+other identity is ever created or moved.
+
+**Accounts.** There is no self-registration or automatic grant. Outside the dev stack the first
+administrator is provisioned with `python -m astrasync_api.admin provision-user --tenant <t>
+--issuer <iss> --subject <sub> --role ADMINISTRATOR`; after that, administrators use
+**Users and access** (`/admin/users`, G26).
 3. Real Traficom M4 data: configure the worker with the M4 source client and adapter (see
    "Enabling the real components"), register the source, and run the worker.
 
@@ -106,7 +128,9 @@ Worker and API settings:
 | #20 | merged | Verified backup/restore, operations runbook |
 | #21 | merged | Finland relevance screen, overview processing panel, shell accessibility |
 | #22 | merged | TR-NFR-006 case-list benchmark (50,000 cases, p95 ≤ 657 ms), records |
-| #23 | see PR | Source upload and processing status |
+| #23 | `19b5660` | Source upload and processing status |
+| #24 | `3f3136e` | Records and frontend coverage |
+| branch `scp619/dev-auth-admin` | not committed | Dev sign-in root cause and fix, configurable dev ports, user administration API and screen (G26) |
 
 Seven commits up to `65997b2` carry a Claude co-author trailer; they are left unchanged (no
 history rewrite). New commits carry no attribution.

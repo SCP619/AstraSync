@@ -34,3 +34,7 @@ traficom-integration/ui/e2e/*.xml
 
 # Personal Claude Code settings (attribution off for this repo)
 .claude/settings.local.json
+
+# Per-machine development overrides (ports and similar).
+traficom-integration/backend/dev_stack.local.env
+traficom-integration/ui/.env*.local

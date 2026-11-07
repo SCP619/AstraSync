@@ -28,6 +28,8 @@ import jwt
 import uvicorn
 from cryptography.hazmat.primitives.asymmetric import rsa
 from demo_adapter import FORMAT_HEADER, DemoAdapter
+from dev_ports import HOST as DEV_HOST
+from dev_ports import load_ports, require_bindable, setting
 from fastapi import FastAPI, Form, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -70,11 +72,14 @@ from astrasync_api.objectstore import LocalObjectStore
 from astrasync_api.record_store import ParquetRecordStore
 from astrasync_api.worker import WorkerRuntime, build_runtime, run_one, run_until_idle
 
-HOST = "127.0.0.1"
-IDP_PORT = 8801
-API_PORT = 8800
-UI_ORIGIN = f"http://{HOST}:5173"
-ISSUER = f"http://{HOST}:{IDP_PORT}"
+# Ports come from dev_ports: defaults 8800/8801/5173, overridable per machine without editing
+# this file. The issuer and every origin below are derived from them.
+PORTS = load_ports()
+HOST = DEV_HOST
+IDP_PORT = PORTS.idp
+API_PORT = PORTS.api
+UI_ORIGIN = PORTS.ui_origin
+ISSUER = PORTS.issuer
 NATIVE_ORIGINS = ("http://tauri.localhost", "tauri://localhost", "https://localhost")
 CLIENT_ID = "astrasync-dev-ui"
 AUDIENCE = "astrasync-api"
@@ -302,18 +307,55 @@ def create_idp() -> FastAPI:
     return app
 
 
+def _follow_dev_issuer(sessions: Any) -> None:
+    """Moves this dev database's seeded personas to the current dev issuer.
+
+    The dev identity provider's issuer is its loopback URL, so changing its port changes the
+    issuer. Users are keyed by (issuer, subject), so without this every seeded persona signs in
+    as an unknown identity and is refused (the access-denied problem of 2026-11-07). Only the
+    fixed seed subjects, only on loopback http issuers, only in this local dev database.
+    """
+    loopback = f"http://{HOST}:"
+    with sessions() as session:
+        stale = session.scalars(
+            select(User).where(
+                User.issuer != ISSUER,
+                User.issuer.startswith(loopback),
+                User.oidc_subject.in_(list(_SEED_ACCOUNTS)),
+            )
+        ).all()
+        current = set(
+            session.scalars(select(User.oidc_subject).where(User.issuer == ISSUER)).all()
+        )
+        moved = []
+        for user in stale:
+            if user.oidc_subject not in current:
+                moved.append(f"{user.oidc_subject} ({user.issuer})")
+                user.issuer = ISSUER
+                current.add(user.oidc_subject)
+        session.commit()
+    if moved:
+        print(f"Dev personas moved to issuer {ISSUER}: {', '.join(moved)}")
+
+
 def seed_accounts(database_url: str) -> None:
     engine = build_engine(database_url)
     run_migrations(engine)
     sessions = build_session_factory(engine)
     with sessions() as session:
         tenants = set(session.scalars(select(Tenant.tenant_id)).all())
-        subjects = set(session.scalars(select(User.oidc_subject)).all())
     for tenant in (TENANT_A, TENANT_B):
         if tenant not in tenants:
             admin.create_tenant(sessions, tenant, "1")
+    _follow_dev_issuer(sessions)
+    with sessions() as session:
+        # Identity is (issuer, subject), as the API resolves it. Keying on the subject alone made
+        # a moved dev issuer leave every persona unprovisioned.
+        known = set(
+            session.scalars(select(User.oidc_subject).where(User.issuer == ISSUER)).all()
+        )
     for subject, (tenant, roles) in _SEED_ACCOUNTS.items():
-        if subject not in subjects:
+        if subject not in known:
             admin.provision_user(
                 sessions, tenant_id=tenant, issuer=ISSUER, subject=subject, roles=roles
             )
@@ -544,7 +586,7 @@ def _dev_environment() -> dict[str, str]:
     environment = _dev_defaults()
     # Benchmarks (benchmarks/stage6.py) point the stack at PostgreSQL, another store or parsers.
     for name in _DEV_OVERRIDES:
-        value = os.environ.get(f"ASTRASYNC_DEV_{name}")
+        value = setting(f"ASTRASYNC_DEV_{name}")
         if value:
             environment[f"ASTRASYNC_{name}"] = value
     return environment
@@ -582,6 +624,7 @@ def run_api() -> None:
     DEV_DIR.mkdir(exist_ok=True)
     environment = _dev_environment()
     os.environ.update(environment)
+    require_bindable(API_PORT, "API", "ASTRASYNC_DEV_API_PORT")
     seed_accounts(environment["ASTRASYNC_DATABASE_URL"])
     uvicorn.run("astrasync_api.app:create_app", factory=True, host=HOST, port=API_PORT)
 
@@ -592,6 +635,9 @@ def run_all() -> int:
     def start(part: str) -> subprocess.Popen[bytes]:
         return subprocess.Popen([sys.executable, __file__, part])  # noqa: S603
 
+    require_bindable(IDP_PORT, "identity provider", "ASTRASYNC_DEV_IDP_PORT")
+    require_bindable(API_PORT, "API", "ASTRASYNC_DEV_API_PORT")
+    print(f"Ports: API {API_PORT}, identity provider {IDP_PORT}, UI origin {UI_ORIGIN}")
     parts = [start("idp"), start("api")]
     try:
         for _ in range(120):
@@ -624,6 +670,7 @@ def run_all() -> int:
 def main() -> int:
     target = sys.argv[1] if len(sys.argv) > 1 else ""
     if target == "idp":
+        require_bindable(IDP_PORT, "identity provider", "ASTRASYNC_DEV_IDP_PORT")
         uvicorn.run(create_idp(), host=HOST, port=IDP_PORT)
     elif target == "api":
         run_api()
@@ -644,3 +691,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+

@@ -692,6 +692,65 @@ class SourceConnectorList(Page[SourceConnector]):
     pass
 
 
+SourceRight = Literal["READ", "DOWNLOAD", "IMPORT"]
+
+
+class AdminEntitlement(ContractModel):
+    """A source entitlement. Its classification is the source's, set by the server."""
+
+    grant_id: StableId
+    object_type: Literal["source"]
+    object_id: StableId
+    classification: UsageClassification
+    rights: list[SourceRight]
+    expires_at_utc: UtcDatetime | None
+
+
+class AdminUser(ContractModel):
+    user_id: StableId
+    issuer: Annotated[str, Field(min_length=1, max_length=512)]
+    oidc_subject: Annotated[str, Field(min_length=1, max_length=255)]
+    active: bool
+    roles: list[Role]
+    sessions_revoked_before_utc: UtcDatetime | None
+    last_verified_at_utc: UtcDatetime | None
+
+
+class AdminUserList(Page[AdminUser]):
+    pass
+
+
+class AdminUserDetail(Envelope):
+    """A user in the administrator's tenant with what the server would grant them now."""
+
+    user: AdminUser
+    effective_capabilities: list[Capability]
+    entitlements: list[AdminEntitlement]
+
+
+class AdminUserCreateRequest(ContractModel):
+    """Provisions an identity in the administrator's own tenant. Issuer plus subject is the key;
+    an email address is never used as the identity."""
+
+    issuer: Annotated[str, Field(min_length=1, max_length=512, pattern=r"^https?://\S+$")]
+    oidc_subject: Annotated[str, Field(min_length=1, max_length=255)]
+    roles: Annotated[list[Role], Field(max_length=4)]
+
+
+class AdminRolesUpdate(ContractModel):
+    roles: Annotated[list[Role], Field(max_length=4)]
+
+
+class AdminStatusUpdate(ContractModel):
+    active: bool
+
+
+class AdminEntitlementGrantRequest(ContractModel):
+    source_id: StableId
+    rights: Annotated[list[SourceRight], Field(min_length=1, max_length=3)]
+    expires_at_utc: UtcDatetime | None = None
+
+
 class QueueBacklog(ContractModel):
     lane: Annotated[str, Field(min_length=1, max_length=32)]
     status: StableCode

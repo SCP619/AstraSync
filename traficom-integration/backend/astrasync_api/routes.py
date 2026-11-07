@@ -14,7 +14,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
-from . import alert_api, cases, library, operations, relevance
+from . import admin_api, alert_api, cases, library, operations, relevance
 from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
@@ -31,6 +31,12 @@ from .contract.enums import (
     ReviewStatus,
 )
 from .contract.models import (
+    AdminEntitlementGrantRequest,
+    AdminRolesUpdate,
+    AdminStatusUpdate,
+    AdminUserCreateRequest,
+    AdminUserDetail,
+    AdminUserList,
     AlertAcknowledged,
     AlertAcknowledgeRequest,
     AlertDetail,
@@ -87,7 +93,7 @@ from .contract.models import (
     UploadSession,
 )
 from .contract.permissions import Capability
-from .errors import ApiError
+from .errors import ApiError, request_id_for
 from .security import AuthorizedRoute, CurrentPrincipal, current_principal
 
 _ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
@@ -680,6 +686,127 @@ def list_alert_rules(
 )
 def save_alert_rule(body: AlertRuleUpsert, principal: CurrentPrincipal, session: DbSession) -> Any:
     return alert_api.save_rule(session, principal, body)
+
+
+# --- User and access administration (DECISIONS G26) -------------------------------------------
+
+
+def _identities(request: Request) -> Any:
+    return _library(request).identities
+
+
+@router.get(
+    "/admin/users", response_model=AdminUserList, **_policy(Capability.ADMIN_USERS, _IMPLEMENTED)
+)
+def admin_list_users(
+    principal: CurrentPrincipal, session: DbSession, limit: Limit = 50, cursor: Cursor = None
+) -> Any:
+    return admin_api.list_users(session, principal, limit, cursor)
+
+
+@router.post(
+    "/admin/users",
+    response_model=AdminUserDetail,
+    status_code=201,
+    **_policy(Capability.ADMIN_USERS, _IMPLEMENTED),
+)
+def admin_create_user(
+    request: Request, body: AdminUserCreateRequest, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return admin_api.create_user(
+        session, _identities(request), principal, body, request_id_for(request)
+    )
+
+
+@router.get(
+    "/admin/users/{user_id}",
+    response_model=AdminUserDetail,
+    **_policy(Capability.ADMIN_USERS, _IMPLEMENTED),
+)
+def admin_get_user(user_id: ResourceId, principal: CurrentPrincipal, session: DbSession) -> Any:
+    return admin_api.get_user(session, principal, user_id)
+
+
+@router.put(
+    "/admin/users/{user_id}/roles",
+    response_model=AdminUserDetail,
+    **_policy(Capability.ADMIN_USERS, _IMPLEMENTED),
+)
+def admin_set_roles(
+    request: Request,
+    user_id: ResourceId,
+    body: AdminRolesUpdate,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return admin_api.set_roles(
+        session, _identities(request), principal, user_id, body.roles, request_id_for(request)
+    )
+
+
+@router.put(
+    "/admin/users/{user_id}/status",
+    response_model=AdminUserDetail,
+    **_policy(Capability.ADMIN_USERS, _IMPLEMENTED),
+)
+def admin_set_status(
+    request: Request,
+    user_id: ResourceId,
+    body: AdminStatusUpdate,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return admin_api.set_status(
+        session, _identities(request), principal, user_id, body.active, request_id_for(request)
+    )
+
+
+@router.post(
+    "/admin/users/{user_id}/revoke-sessions",
+    response_model=AdminUserDetail,
+    **_policy(Capability.ADMIN_USERS, _IMPLEMENTED),
+)
+def admin_revoke_sessions(
+    request: Request, user_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return admin_api.revoke_sessions(
+        session, _identities(request), principal, user_id, request_id_for(request)
+    )
+
+
+@router.post(
+    "/admin/users/{user_id}/entitlements",
+    response_model=AdminUserDetail,
+    status_code=201,
+    **_policy(Capability.ADMIN_USERS, _IMPLEMENTED),
+)
+def admin_grant_entitlement(
+    request: Request,
+    user_id: ResourceId,
+    body: AdminEntitlementGrantRequest,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return admin_api.grant_entitlement(
+        session, _identities(request), principal, user_id, body, request_id_for(request)
+    )
+
+
+@router.delete(
+    "/admin/users/{user_id}/entitlements/{grant_id}",
+    response_model=AdminUserDetail,
+    **_policy(Capability.ADMIN_USERS, _IMPLEMENTED),
+)
+def admin_revoke_entitlement(
+    request: Request,
+    user_id: ResourceId,
+    grant_id: ResourceId,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return admin_api.revoke_entitlement(
+        session, _identities(request), principal, user_id, grant_id, request_id_for(request)
+    )
 
 
 # --- Source library and monitoring ------------------------------------------------------------

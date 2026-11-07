@@ -1,0 +1,283 @@
+{
+  "rows": 200000,
+  "artifacts": 50,
+  "source_bytes": 22123501,
+  "generated_last_artifact": {
+    "rows": 4000,
+    "bytes_written": 441412,
+    "missing_tx": 5,
+    "unitless_tx": 7,
+    "negative_agl": 7
+  },
+  "postgresql": {
+    "status": "READY",
+    "index_seconds": 238.01,
+    "peak_rss_mib": 139.5,
+    "rss_growth_mib": 14.7,
+    "records_per_s": 840,
+    "storage": {
+      "postgresql_record_tables_bytes": {
+        "source_record_locations": 454008832,
+        "source_library_search_index": 87130112,
+        "record_quality_findings": 159653888,
+        "reference_station_records": 168247296,
+        "record_datasets": 32768
+      },
+      "postgresql_database_bytes": 878936591,
+      "parquet_files_bytes": {},
+      "record_bytes_total": 869072896
+    },
+    "queries": {
+      "station_lookup": {
+        "n": 30,
+        "p50_ms": 8.8,
+        "p95_ms": 9.8,
+        "max_ms": 11.2,
+        "answers_sha256": "72c8dc2fbece7927a9597775b197603621ca036891495963418fe0641b82b505"
+      },
+      "frequency_window_page": {
+        "n": 30,
+        "p50_ms": 76.4,
+        "p95_ms": 82.7,
+        "max_ms": 88.1,
+        "answers_sha256": "e1de474834a5b4a2e8ad41ef079da2ea0ed60441ab876f195137d96977337f9c"
+      },
+      "frequency_wide_page": {
+        "n": 30,
+        "p50_ms": 4.6,
+        "p95_ms": 5.0,
+        "max_ms": 5.3,
+        "answers_sha256": "d0afb2f77779b428f13d7127b9e6367945edd1d103d33a23a73235ebe3127007"
+      },
+      "text_search_page": {
+        "n": 30,
+        "p50_ms": 63.5,
+        "p95_ms": 67.7,
+        "max_ms": 67.8,
+        "answers_sha256": "f513ae675c1c96be98082075159ab48de173aea8ff12096033319c614f5a13a5"
+      },
+      "record_detail": {
+        "n": 30,
+        "p50_ms": 5.2,
+        "p95_ms": 5.9,
+        "max_ms": 6.5,
+        "answers_sha256": "105d9e68dd025b30771e7f1ccb5f1c80b8a8b46c9c9193d1218f44b9fa47d425"
+      },
+      "preview_first_page": {
+        "n": 30,
+        "p50_ms": 6.0,
+        "p95_ms": 6.7,
+        "max_ms": 6.8,
+        "answers_sha256": "80cfd5fb2f1932093cb412e04120b28c88364a8b74dd057fbfee837f275cceea"
+      },
+      "preview_deep_page": {
+        "n": 30,
+        "p50_ms": 6.2,
+        "p95_ms": 6.6,
+        "max_ms": 58.4,
+        "answers_sha256": "e55d09e2a5fabaee4408f8739778d5ae84aec05b135f5df10a5b26c206214f4f"
+      },
+      "aggregate_by_status": {
+        "n": 30,
+        "p50_ms": 3.1,
+        "p95_ms": 3.6,
+        "max_ms": 3.8,
+        "answers_sha256": "1295d0944978e183022547ca38703a66e9a30a539b0ba63d9b4096d826d9f261"
+      }
+    }
+  },
+  "parquet": {
+    "status": "READY",
+    "index_seconds": 45.9,
+    "peak_rss_mib": 194.3,
+    "rss_growth_mib": 55.8,
+    "records_per_s": 4357,
+    "storage": {
+      "postgresql_record_tables_bytes": {
+        "source_record_locations": 32768,
+        "source_library_search_index": 57344,
+        "record_quality_findings": 24576,
+        "reference_station_records": 16384,
+        "record_datasets": 114688
+      },
+      "postgresql_database_bytes": 10052111,
+      "parquet_files_bytes": {
+        "datasets/BENCH-TENANT/00b788ddcf024df38b40b3b08e535487/8124d286e2db4210a0cf9c23fc3a8852/findings.parquet": 32492,
+        "datasets/BENCH-TENANT/00b788ddcf024df38b40b3b08e535487/8124d286e2db4210a0cf9c23fc3a8852/records.parquet": 708722,
+        "datasets/BENCH-TENANT/03603e48591f4c06a314b15c75ecf855/cb63c08e4b5345fda85bb92bc4c2b3d5/findings.parquet": 33462,
+        "datasets/BENCH-TENANT/03603e48591f4c06a314b15c75ecf855/cb63c08e4b5345fda85bb92bc4c2b3d5/records.parquet": 709911,
+        "datasets/BENCH-TENANT/0679ac9137f34dc3a73961b509e1c94e/8bf1b3296b684435ba44710817c7a293/findings.parquet": 32627,
+        "datasets/BENCH-TENANT/0679ac9137f34dc3a73961b509e1c94e/8bf1b3296b684435ba44710817c7a293/records.parquet": 709156,
+        "datasets/BENCH-TENANT/13d0e0e4cd2140208bce2853da7a6515/3f69cc1b91164c4ab795868b782b1ae7/findings.parquet": 32285,
+        "datasets/BENCH-TENANT/13d0e0e4cd2140208bce2853da7a6515/3f69cc1b91164c4ab795868b782b1ae7/records.parquet": 711039,
+        "datasets/BENCH-TENANT/1712960d3b314a919dc7a244df73ddbe/cc1e6053be8a4f578879c057b0d9f23c/findings.parquet": 33534,
+        "datasets/BENCH-TENANT/1712960d3b314a919dc7a244df73ddbe/cc1e6053be8a4f578879c057b0d9f23c/records.parquet": 712093,
+        "datasets/BENCH-TENANT/17a5703e6fb8467db59fafbf993146c6/a6bd2fe344bf4b598902ba57987d10e6/findings.parquet": 34073,
+        "datasets/BENCH-TENANT/17a5703e6fb8467db59fafbf993146c6/a6bd2fe344bf4b598902ba57987d10e6/records.parquet": 712146,
+        "datasets/BENCH-TENANT/1a48099b4be44e7e87b2e9bd48adf8ce/8718dc6c236c44a4aae843dcaeb67bc3/findings.parquet": 31982,
+        "datasets/BENCH-TENANT/1a48099b4be44e7e87b2e9bd48adf8ce/8718dc6c236c44a4aae843dcaeb67bc3/records.parquet": 707200,
+        "datasets/BENCH-TENANT/27a7fef47f9442f88baee338ec371f5b/cd6de79df66b47e388f8221492a8d2ec/findings.parquet": 31886,
+        "datasets/BENCH-TENANT/27a7fef47f9442f88baee338ec371f5b/cd6de79df66b47e388f8221492a8d2ec/records.parquet": 707571,
+        "datasets/BENCH-TENANT/28106d8537824710b74b8778c2abc149/9d72802f23914fa8841dfbe026274460/findings.parquet": 32490,
+        "datasets/BENCH-TENANT/28106d8537824710b74b8778c2abc149/9d72802f23914fa8841dfbe026274460/records.parquet": 711015,
+        "datasets/BENCH-TENANT/2bd17ac8547a47f9bf74106759edbffc/a5122ccf75c54e9dbb64c2cc0f4f5545/findings.parquet": 32452,
+        "datasets/BENCH-TENANT/2bd17ac8547a47f9bf74106759edbffc/a5122ccf75c54e9dbb64c2cc0f4f5545/records.parquet": 708982,
+        "datasets/BENCH-TENANT/2d2594903da44fa693ba4fd238e96fe5/f4ce557a07d44770bd5292c264b94846/findings.parquet": 33715,
+        "datasets/BENCH-TENANT/2d2594903da44fa693ba4fd238e96fe5/f4ce557a07d44770bd5292c264b94846/records.parquet": 709172,
+        "datasets/BENCH-TENANT/2ed68a93001e480881a73f7239fcd6fa/bddcb63c09b74849bff0b652cba254f1/findings.parquet": 34064,
+        "datasets/BENCH-TENANT/2ed68a93001e480881a73f7239fcd6fa/bddcb63c09b74849bff0b652cba254f1/records.parquet": 713195,
+        "datasets/BENCH-TENANT/2fe58aad3759469fb6a715449bacd29a/ad225679041b48a6a9594bb30bcd7b28/findings.parquet": 32191,
+        "datasets/BENCH-TENANT/2fe58aad3759469fb6a715449bacd29a/ad225679041b48a6a9594bb30bcd7b28/records.parquet": 710900,
+        "datasets/BENCH-TENANT/3094a0f8eae84a87ae73de686111034f/63238ba0b65c4a719d67c7233b6a9b2e/findings.parquet": 32452,
+        "datasets/BENCH-TENANT/3094a0f8eae84a87ae73de686111034f/63238ba0b65c4a719d67c7233b6a9b2e/records.parquet": 711721,
+        "datasets/BENCH-TENANT/3443904403e240ff8693bfc020013b7c/0040d5fce2d3418385d1e52c4f1c7b43/findings.parquet": 31970,
+        "datasets/BENCH-TENANT/3443904403e240ff8693bfc020013b7c/0040d5fce2d3418385d1e52c4f1c7b43/records.parquet": 712020,
+        "datasets/BENCH-TENANT/3696a7a47e6d49d982bfb7a74dd134b6/40c1c8b364684ef5bab57987b31646c9/findings.parquet": 32509,
+        "datasets/BENCH-TENANT/3696a7a47e6d49d982bfb7a74dd134b6/40c1c8b364684ef5bab57987b31646c9/records.parquet": 708625,
+        "datasets/BENCH-TENANT/37fc48d30566402387a1202420581cb6/e00fceb0824841d59b343b2176d3f791/findings.parquet": 32767,
+        "datasets/BENCH-TENANT/37fc48d30566402387a1202420581cb6/e00fceb0824841d59b343b2176d3f791/records.parquet": 712689,
+        "datasets/BENCH-TENANT/39621f9a3b6e49a79d24f36086892e46/167e64dcf7b94096a0623c494ea95c50/findings.parquet": 32278,
+        "datasets/BENCH-TENANT/39621f9a3b6e49a79d24f36086892e46/167e64dcf7b94096a0623c494ea95c50/records.parquet": 709535,
+        "datasets/BENCH-TENANT/3a28b46613784b38a408594503533e58/92f1fd2be134459980b6f0c341777bb4/findings.parquet": 32435,
+        "datasets/BENCH-TENANT/3a28b46613784b38a408594503533e58/92f1fd2be134459980b6f0c341777bb4/records.parquet": 708779,
+        "datasets/BENCH-TENANT/428418877722476c9a275c4e6369b55c/bb2fe4b45ace45a5930f7aac0cef9890/findings.parquet": 32173,
+        "datasets/BENCH-TENANT/428418877722476c9a275c4e6369b55c/bb2fe4b45ace45a5930f7aac0cef9890/records.parquet": 709095,
+        "datasets/BENCH-TENANT/4e7ad192928f4198ad07fafbc6d6b1a1/aeffb313f16f42f7897c918f566ebaf4/findings.parquet": 32482,
+        "datasets/BENCH-TENANT/4e7ad192928f4198ad07fafbc6d6b1a1/aeffb313f16f42f7897c918f566ebaf4/records.parquet": 708031,
+        "datasets/BENCH-TENANT/51bd0db4a3f84023b4fb6a593ce4d113/fbc0843fca6a4075a7bcc13f01b6fea5/findings.parquet": 32032,
+        "datasets/BENCH-TENANT/51bd0db4a3f84023b4fb6a593ce4d113/fbc0843fca6a4075a7bcc13f01b6fea5/records.parquet": 714707,
+        "datasets/BENCH-TENANT/5a118fcdd6344e7fb459bf009a4d3f8e/3df6a74fa660495c83a9c7d7c03c6324/findings.parquet": 32571,
+        "datasets/BENCH-TENANT/5a118fcdd6344e7fb459bf009a4d3f8e/3df6a74fa660495c83a9c7d7c03c6324/records.parquet": 708497,
+        "datasets/BENCH-TENANT/5c75f9bd36804df7a37fb11621e97953/0b47179e4b454dd5b404948e607946e9/findings.parquet": 33058,
+        "datasets/BENCH-TENANT/5c75f9bd36804df7a37fb11621e97953/0b47179e4b454dd5b404948e607946e9/records.parquet": 714760,
+        "datasets/BENCH-TENANT/684789a392f34c288707440f165d3b00/6178986cc36e45c58d504e501d5ea9c8/findings.parquet": 32831,
+        "datasets/BENCH-TENANT/684789a392f34c288707440f165d3b00/6178986cc36e45c58d504e501d5ea9c8/records.parquet": 708574,
+        "datasets/BENCH-TENANT/70297ff9833144a195826ab8cdffd5bc/665caf035ad84c43bf3320ce8d50b0f3/findings.parquet": 33217,
+        "datasets/BENCH-TENANT/70297ff9833144a195826ab8cdffd5bc/665caf035ad84c43bf3320ce8d50b0f3/records.parquet": 709914,
+        "datasets/BENCH-TENANT/705c57469e334a85aa3549a3f468dd33/a5fb9dd72a2f4d9c81033d7802265e9b/findings.parquet": 32748,
+        "datasets/BENCH-TENANT/705c57469e334a85aa3549a3f468dd33/a5fb9dd72a2f4d9c81033d7802265e9b/records.parquet": 710793,
+        "datasets/BENCH-TENANT/75bb455d2aba4453b33488dde832f596/5003ac77f56b4dd8a71fd2cfffc1ef3f/findings.parquet": 33315,
+        "datasets/BENCH-TENANT/75bb455d2aba4453b33488dde832f596/5003ac77f56b4dd8a71fd2cfffc1ef3f/records.parquet": 714023,
+        "datasets/BENCH-TENANT/7f56b93131554584a13edbfdbcc7782b/3686554521534298878c60fc1e989367/findings.parquet": 32029,
+        "datasets/BENCH-TENANT/7f56b93131554584a13edbfdbcc7782b/3686554521534298878c60fc1e989367/records.parquet": 714665,
+        "datasets/BENCH-TENANT/8eb40cbae1cd4787974c3637e8d06468/a3b55a40a76d4903b043fac81a355b15/findings.parquet": 33879,
+        "datasets/BENCH-TENANT/8eb40cbae1cd4787974c3637e8d06468/a3b55a40a76d4903b043fac81a355b15/records.parquet": 707218,
+        "datasets/BENCH-TENANT/96f73c57834e4ad5a14a628626cd22e8/3d45c5673b464e609815d924777fa041/findings.parquet": 32465,
+        "datasets/BENCH-TENANT/96f73c57834e4ad5a14a628626cd22e8/3d45c5673b464e609815d924777fa041/records.parquet": 714399,
+        "datasets/BENCH-TENANT/97e8efe07bbb4529b0f4540a20199d28/2eedd681793e4aa3a361dd3ea27ebd34/findings.parquet": 32454,
+        "datasets/BENCH-TENANT/97e8efe07bbb4529b0f4540a20199d28/2eedd681793e4aa3a361dd3ea27ebd34/records.parquet": 709484,
+        "datasets/BENCH-TENANT/a445386e905e4842bc4d0c23f06146d9/07092e3e122a46c58ccb5827de57cb44/findings.parquet": 32562,
+        "datasets/BENCH-TENANT/a445386e905e4842bc4d0c23f06146d9/07092e3e122a46c58ccb5827de57cb44/records.parquet": 712383,
+        "datasets/BENCH-TENANT/aa0ac7dfe7f14d37ac8008966c59493b/f2b5f32a7a0e4169abf9c88c6bd3f9c5/findings.parquet": 33495,
+        "datasets/BENCH-TENANT/aa0ac7dfe7f14d37ac8008966c59493b/f2b5f32a7a0e4169abf9c88c6bd3f9c5/records.parquet": 715242,
+        "datasets/BENCH-TENANT/aa6e25c7800f484dba47dcb360122771/4ea2e39afaae4596ab09d0e93b7e3002/findings.parquet": 32338,
+        "datasets/BENCH-TENANT/aa6e25c7800f484dba47dcb360122771/4ea2e39afaae4596ab09d0e93b7e3002/records.parquet": 711191,
+        "datasets/BENCH-TENANT/aa85991fff5c4f9192d1300aece38da3/0c16633a08374a4a8d4cda4c84cb0d23/findings.parquet": 33090,
+        "datasets/BENCH-TENANT/aa85991fff5c4f9192d1300aece38da3/0c16633a08374a4a8d4cda4c84cb0d23/records.parquet": 708426,
+        "datasets/BENCH-TENANT/ad4bcd928ed645f0b4ba0b64a6f9e922/b52d7554d7304c3cb4382ba92a05287c/findings.parquet": 31966,
+        "datasets/BENCH-TENANT/ad4bcd928ed645f0b4ba0b64a6f9e922/b52d7554d7304c3cb4382ba92a05287c/records.parquet": 715931,
+        "datasets/BENCH-TENANT/b7d93594b80141e69b34bcbc89046974/a35fddc8bb8049789128339a9b91d4a8/findings.parquet": 32717,
+        "datasets/BENCH-TENANT/b7d93594b80141e69b34bcbc89046974/a35fddc8bb8049789128339a9b91d4a8/records.parquet": 711119,
+        "datasets/BENCH-TENANT/b9b69d1fe3074bc3ba6f0dbc6329dc34/b8d557a9faf24b8c8db620b80eb41c50/findings.parquet": 31705,
+        "datasets/BENCH-TENANT/b9b69d1fe3074bc3ba6f0dbc6329dc34/b8d557a9faf24b8c8db620b80eb41c50/records.parquet": 712863,
+        "datasets/BENCH-TENANT/bd327fc8419848a7a78c002e82d45dd3/5532e409458f4401855088bb467d9d3f/findings.parquet": 31479,
+        "datasets/BENCH-TENANT/bd327fc8419848a7a78c002e82d45dd3/5532e409458f4401855088bb467d9d3f/records.parquet": 711261,
+        "datasets/BENCH-TENANT/cecd53f0e2434d4aa51e5d2f90f8233b/9f5dff47c5014305a0737cd393965847/findings.parquet": 33506,
+        "datasets/BENCH-TENANT/cecd53f0e2434d4aa51e5d2f90f8233b/9f5dff47c5014305a0737cd393965847/records.parquet": 711292,
+        "datasets/BENCH-TENANT/d0c38b41844f4da89ab55f3eb23456fd/cab0ad3fa8f1453195672c9c243d253b/findings.parquet": 32320,
+        "datasets/BENCH-TENANT/d0c38b41844f4da89ab55f3eb23456fd/cab0ad3fa8f1453195672c9c243d253b/records.parquet": 710871,
+        "datasets/BENCH-TENANT/d55b356b6f194fdd87b377c96a5fb484/03cdbe28308a4952a17e6839a4a51c75/findings.parquet": 32510,
+        "datasets/BENCH-TENANT/d55b356b6f194fdd87b377c96a5fb484/03cdbe28308a4952a17e6839a4a51c75/records.parquet": 708992,
+        "datasets/BENCH-TENANT/d8a9db158aef4b40bf907fac686fa4c8/4aeefa82da634abf9ccc99ca03a52643/findings.parquet": 32397,
+        "datasets/BENCH-TENANT/d8a9db158aef4b40bf907fac686fa4c8/4aeefa82da634abf9ccc99ca03a52643/records.parquet": 709625,
+        "datasets/BENCH-TENANT/e32f25770d71498da208b6894633129c/06711346ef164202ab84584fae56e737/findings.parquet": 32367,
+        "datasets/BENCH-TENANT/e32f25770d71498da208b6894633129c/06711346ef164202ab84584fae56e737/records.parquet": 709259,
+        "datasets/BENCH-TENANT/eaaccba7e55e4c85a7a0ce461c276352/0914e06e00df425880b8f766551277d1/findings.parquet": 32681,
+        "datasets/BENCH-TENANT/eaaccba7e55e4c85a7a0ce461c276352/0914e06e00df425880b8f766551277d1/records.parquet": 711038,
+        "datasets/BENCH-TENANT/f49f440864524c7fbc5fce2ceacccb08/ad2073041db145b7affc9ff4dd194c2a/findings.parquet": 32591,
+        "datasets/BENCH-TENANT/f49f440864524c7fbc5fce2ceacccb08/ad2073041db145b7affc9ff4dd194c2a/records.parquet": 711243,
+        "datasets/BENCH-TENANT/fbd9716386b040c790b7ff4c86698c1e/a26c9d0bc9c3438b892ee6d0debda72a/findings.parquet": 32449,
+        "datasets/BENCH-TENANT/fbd9716386b040c790b7ff4c86698c1e/a26c9d0bc9c3438b892ee6d0debda72a/records.parquet": 707861,
+        "datasets/BENCH-TENANT/fd23ca96a554446ea2aca7241fbe5a9d/2c7d9bda702d4d6bbae3d5ff6393150a/findings.parquet": 33949,
+        "datasets/BENCH-TENANT/fd23ca96a554446ea2aca7241fbe5a9d/2c7d9bda702d4d6bbae3d5ff6393150a/records.parquet": 708062,
+        "datasets/BENCH-TENANT/fdb3bded5f544722ba993439433e7184/25cf69ff9dea4707b793416b01439c7e/findings.parquet": 32708,
+        "datasets/BENCH-TENANT/fdb3bded5f544722ba993439433e7184/25cf69ff9dea4707b793416b01439c7e/records.parquet": 710765
+      },
+      "record_bytes_total": 37415563
+    },
+    "queries": {
+      "station_lookup": {
+        "n": 30,
+        "p50_ms": 162.8,
+        "p95_ms": 165.7,
+        "max_ms": 172.6,
+        "answers_sha256": "372a295edf6a7b96593343a87e81f2313d8e61e9680ba9174640f2f42ca3eabc"
+      },
+      "frequency_window_page": {
+        "n": 30,
+        "p50_ms": 145.3,
+        "p95_ms": 151.0,
+        "max_ms": 170.8,
+        "answers_sha256": "9cf7dc0761b159765f87f945aba0fe9e0616b8fe88f6f4c7c419d0c356075438"
+      },
+      "frequency_wide_page": {
+        "n": 30,
+        "p50_ms": 168.5,
+        "p95_ms": 176.0,
+        "max_ms": 191.9,
+        "answers_sha256": "3c167cb429b80f856b1610a56c76bd63080d9819e680a4018f0757e4580acb56"
+      },
+      "text_search_page": {
+        "n": 30,
+        "p50_ms": 160.7,
+        "p95_ms": 167.3,
+        "max_ms": 179.9,
+        "answers_sha256": "42bb5aa8729bb3d9562a71f74191deb3faeede9869777305ce34528fd4c77131"
+      },
+      "record_detail": {
+        "n": 30,
+        "p50_ms": 25.5,
+        "p95_ms": 27.6,
+        "max_ms": 28.1,
+        "answers_sha256": "105d9e68dd025b30771e7f1ccb5f1c80b8a8b46c9c9193d1218f44b9fa47d425"
+      },
+      "preview_first_page": {
+        "n": 30,
+        "p50_ms": 21.8,
+        "p95_ms": 24.1,
+        "max_ms": 26.0,
+        "answers_sha256": "80cfd5fb2f1932093cb412e04120b28c88364a8b74dd057fbfee837f275cceea"
+      },
+      "preview_deep_page": {
+        "n": 30,
+        "p50_ms": 21.8,
+        "p95_ms": 23.5,
+        "max_ms": 24.7,
+        "answers_sha256": "e55d09e2a5fabaee4408f8739778d5ae84aec05b135f5df10a5b26c206214f4f"
+      },
+      "aggregate_by_status": {
+        "n": 30,
+        "p50_ms": 6.5,
+        "p95_ms": 6.9,
+        "max_ms": 7.4,
+        "answers_sha256": "1295d0944978e183022547ca38703a66e9a30a539b0ba63d9b4096d826d9f261"
+      }
+    }
+  },
+  "comparison": {
+    "storage_ratio_postgresql_over_parquet": 23.2,
+    "postgresql_over_source": 39.28,
+    "parquet_over_source": 1.69,
+    "index_speedup": 5.19,
+    "identical_answers": {
+      "station_lookup": false,
+      "frequency_window_page": false,
+      "frequency_wide_page": false,
+      "text_search_page": false,
+      "record_detail": true,
+      "preview_first_page": true,
+      "preview_deep_page": true,
+      "aggregate_by_status": true
+    }
+  }
+}

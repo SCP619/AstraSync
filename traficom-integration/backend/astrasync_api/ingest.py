@@ -432,6 +432,8 @@ def _write_batch(
     batch: list[dict[str, Any]],
     counts: dict[str, int],
     writer: DatasetWriter | None = None,
+    *,
+    record_checks: bool = True,
 ) -> None:
     rows = _BatchRows()
     with sessions() as session:
@@ -455,6 +457,8 @@ def _write_batch(
                 )
             except ValidationError as exc:
                 counts["rejected"] += 1
+                if not record_checks:
+                    continue
                 # Field locations only: rejected values may be restricted source content.
                 locations = sorted({".".join(map(str, e["loc"])) for e in exc.errors()})
                 _add_check(
@@ -608,28 +612,7 @@ def _finish_index(
         artifact.row_reconciliation = counts
         if published is not None:
             # Committed with the indexed status: the dataset becomes visible with it, or not at all.
-            connector = session.get_one(SourceConnectorRow, artifact.source_id)
-            session.add(
-                RecordDatasetRow(
-                    artifact_id=artifact_id,
-                    tenant_id=artifact.tenant_id,
-                    source_id=artifact.source_id,
-                    classification=artifact.usage_classification,
-                    is_synthetic=artifact.is_synthetic,
-                    publisher=connector.publisher,
-                    filename_original=artifact.filename_original,
-                    relative_path=published.relative_path,
-                    format_version=FORMAT_VERSION,
-                    parser_version=adapter.parser_version,
-                    record_count=published.record_count,
-                    finding_count=published.finding_count,
-                    records_sha256=published.records_sha256,
-                    records_bytes=published.records_bytes,
-                    findings_sha256=published.findings_sha256,
-                    findings_bytes=published.findings_bytes,
-                    published_at_utc=utc_now(),
-                )
-            )
+            session.add(_dataset_row(session, artifact, adapter, published))
         _add_check(
             session,
             artifact_id,
@@ -648,6 +631,105 @@ def _finish_index(
         )
         session.commit()
     return PipelineStatus.READY
+
+
+def _dataset_row(
+    session: Session,
+    artifact: SourceArtifactRow,
+    adapter: SourceAdapter,
+    published: PublishedDataset,
+) -> RecordDatasetRow:
+    connector = session.get_one(SourceConnectorRow, artifact.source_id)
+    return RecordDatasetRow(
+        artifact_id=artifact.artifact_id,
+        tenant_id=artifact.tenant_id,
+        source_id=artifact.source_id,
+        classification=artifact.usage_classification,
+        is_synthetic=artifact.is_synthetic,
+        publisher=connector.publisher,
+        filename_original=artifact.filename_original,
+        relative_path=published.relative_path,
+        format_version=FORMAT_VERSION,
+        parser_version=adapter.parser_version,
+        record_count=published.record_count,
+        finding_count=published.finding_count,
+        records_sha256=published.records_sha256,
+        records_bytes=published.records_bytes,
+        findings_sha256=published.findings_sha256,
+        findings_bytes=published.findings_bytes,
+        published_at_utc=utc_now(),
+    )
+
+
+class DatasetBuildRefused(RuntimeError):
+    """The record dataset of an indexed artifact cannot be built faithfully."""
+
+
+def build_record_dataset(context: PipelineContext, artifact_id: str) -> RecordDatasetRow:
+    """Writes the Parquet dataset of an artifact indexed before the record store was enabled.
+
+    The immutable master is parsed again with the same parser version, so the records are the
+    ones the PostgreSQL index holds. Publication is refused unless every reconciliation count
+    equals the artifact's recorded counts. Idempotent: an existing dataset is returned as it is.
+    The PostgreSQL index rows are left in place.
+    """
+    if context.records is None:
+        raise DatasetBuildRefused("No record store is configured.")
+    with context.sessions() as session:
+        existing = session.get(RecordDatasetRow, artifact_id)
+        if existing is not None:
+            return existing
+        artifact = session.get_one(SourceArtifactRow, artifact_id)
+        connector = session.get_one(SourceConnectorRow, artifact.source_id)
+        if artifact.status not in (
+            ArtifactStatus.INDEXED.value,
+            ArtifactStatus.INDEXED_WITH_WARNINGS.value,
+        ):
+            raise DatasetBuildRefused(f"The artifact is {artifact.status}, not indexed.")
+        adapter = context.adapters.get(connector.source_type)
+        if adapter is None:
+            raise DatasetBuildRefused(f"No parser is registered for {connector.source_type}.")
+        if adapter.parser_version != artifact.parser_version:
+            raise DatasetBuildRefused(
+                f"Indexed with {artifact.parser_version}, but {adapter.parser_version} is loaded."
+            )
+        expected = dict(artifact.row_reconciliation or {})
+        object_key = artifact.object_key
+    writer = context.records.begin(connector.tenant_id, artifact_id)
+    counts = {"parsed": 0, "accepted": 0, "flagged": 0, "rejected": 0}
+    try:
+        path = context.store.local_path(object_key)
+        for batch in adapter.iter_record_batches(path, batch_rows=BATCH_ROWS):
+            _write_batch(
+                context.sessions,
+                artifact_id,
+                connector,
+                adapter,
+                batch,
+                counts,
+                writer,
+                record_checks=False,
+            )
+        if counts != expected:
+            raise DatasetBuildRefused(f"Counts {counts} differ from the recorded {expected}.")
+        published = writer.publish()
+    except BaseException:
+        writer.discard()
+        raise
+    with context.sessions() as session:
+        artifact = session.get_one(SourceArtifactRow, artifact_id)
+        row = _dataset_row(session, artifact, adapter, published)
+        session.add(row)
+        _add_check(
+            session,
+            artifact_id,
+            "RECORD_DATASET",
+            IntegrityCheckResult.PASS,
+            expected=json.dumps(expected, sort_keys=True),
+            observed=json.dumps(counts, sort_keys=True),
+        )
+        session.commit()
+    return row
 
 
 def _quarantine_after_parse(

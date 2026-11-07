@@ -19,6 +19,7 @@ _HTTP_STATUS_CODES = {
     409: ErrorCode.CONFLICT,
     429: ErrorCode.RATE_LIMITED,
     501: ErrorCode.NOT_IMPLEMENTED,
+    503: ErrorCode.SERVICE_UNAVAILABLE,
 }
 
 
@@ -29,12 +30,14 @@ class ApiError(Exception):
         code: ErrorCode,
         message: str,
         details: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
     ) -> None:
         super().__init__(message)
         self.status_code = status_code
         self.code = code
         self.message = message
         self.details = details or {}
+        self.headers = headers or {}
 
 
 def request_id_for(request: Request) -> str:
@@ -52,6 +55,7 @@ def _error_response(
     code: ErrorCode,
     message: str,
     details: dict[str, Any] | None = None,
+    headers: dict[str, str] | None = None,
 ) -> JSONResponse:
     request_id = request_id_for(request)
     body = ErrorResponse(
@@ -62,7 +66,7 @@ def _error_response(
     return JSONResponse(
         status_code=status_code,
         content=body.model_dump(mode="json"),
-        headers={"X-Request-ID": request_id},
+        headers={"X-Request-ID": request_id, **(headers or {})},
     )
 
 
@@ -72,11 +76,15 @@ def install_error_handlers(app: FastAPI) -> None:
         request_id = request_id_for(request)
         response = await call_next(request)
         response.headers["X-Request-ID"] = request_id
+        # Responses can hold restricted data and must not stay in shared or device caches.
+        response.headers["Cache-Control"] = "no-store"
         return response
 
     @app.exception_handler(ApiError)
     async def _api_error(request: Request, exc: ApiError) -> JSONResponse:
-        return _error_response(request, exc.status_code, exc.code, exc.message, exc.details)
+        return _error_response(
+            request, exc.status_code, exc.code, exc.message, exc.details, exc.headers
+        )
 
     @app.exception_handler(HTTPException)
     async def _http_error(request: Request, exc: HTTPException) -> JSONResponse:

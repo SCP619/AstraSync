@@ -1,0 +1,24 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "astrasync-dev-idp",
+      "runtimeExecutable": "traficom-integration/backend/.venv/Scripts/python.exe",
+      "runtimeArgs": ["traficom-integration/backend/tests/support/dev_stack.py", "idp"],
+      "port": 8801
+    },
+    {
+      "name": "astrasync-dev-api",
+      "runtimeExecutable": "traficom-integration/backend/.venv/Scripts/python.exe",
+      "runtimeArgs": ["traficom-integration/backend/tests/support/dev_stack.py", "api"],
+      "port": 8800
+    },
+    {
+      "name": "astrasync-ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "traficom-integration/ui", "run", "dev"],
+      "port": 5173,
+      "url": "http://127.0.0.1:5173"
+    }
+  ]
+}

@@ -12,7 +12,7 @@ from astrasync_api.contract.enums import ErrorCode, MethodApplicability, MethodE
 from astrasync_api.contract.export import render_openapi
 from astrasync_api.contract.models import ErrorResponse, MethodRun
 from astrasync_api.contract.permissions import Capability
-from astrasync_api.security import require_authenticated_principal
+from astrasync_api.identity import Principal
 
 # BSD sections 5, 6.4 and 9. Keeps a route from being dropped or renamed unnoticed.
 DOCUMENTED_OPERATIONS = {
@@ -83,7 +83,8 @@ def test_every_operation_declares_a_known_capability(openapi: dict[str, Any]) ->
     known = {capability.value for capability in Capability}
     for method, path, operation in _operations(openapi):
         assert operation.get("x-required-capability") in known, f"{method} {path}"
-        assert operation.get("x-implementation-status") == "DESIGNED", f"{method} {path}"
+        expected = "IMPLEMENTED" if path == "/api/v1/me" else "DESIGNED"
+        assert operation.get("x-implementation-status") == expected, f"{method} {path}"
 
 
 def test_anonymous_requests_are_denied_everywhere(
@@ -97,8 +98,8 @@ def test_anonymous_requests_are_denied_everywhere(
         assert body.error.request_id == response.headers["X-Request-ID"]
 
 
-def test_forged_identity_claims_do_not_bypass_denial(client: TestClient) -> None:
-    response = client.get(
+def test_forged_identity_claims_do_not_bypass_denial(secure_client: TestClient) -> None:
+    response = secure_client.get(
         "/api/v1/cases",
         params={"tenant_id": "OTHER", "role": "ADMINISTRATOR"},
         headers={"Authorization": "Bearer forged", "X-Role": "ADMINISTRATOR"},
@@ -106,11 +107,24 @@ def test_forged_identity_claims_do_not_bypass_denial(client: TestClient) -> None
     assert response.status_code == 401
 
 
+def _all_capabilities_app(app: FastAPI) -> TestClient:
+    """A guard that grants everything, to exercise what sits behind authorization."""
+
+    class AllowAll:
+        environment = None
+        identities = None
+
+        def authorize(self, *_args: Any) -> Principal:
+            return Principal("DEMO-USER", "DEMO-TENANT", frozenset(), frozenset(Capability))
+
+    app.state.security = AllowAll()
+    return TestClient(app, raise_server_exceptions=False)
+
+
 def test_routes_never_answer_with_sample_data(app: FastAPI, openapi: dict[str, Any]) -> None:
-    app.dependency_overrides[require_authenticated_principal] = lambda: None
-    client = TestClient(app, raise_server_exceptions=False)
+    client = _all_capabilities_app(app)
     for method, path, operation in _operations(openapi):
-        if "requestBody" in operation:
+        if "requestBody" in operation or path == "/api/v1/me":
             continue
         headers = {"Idempotency-Key": "demo-key-1"}
         response = client.request(method.upper(), _concrete(path), headers=headers)
@@ -119,8 +133,7 @@ def test_routes_never_answer_with_sample_data(app: FastAPI, openapi: dict[str, A
 
 
 def test_request_validation_uses_standard_error_without_echoing_input(app: FastAPI) -> None:
-    app.dependency_overrides[require_authenticated_principal] = lambda: None
-    client = TestClient(app, raise_server_exceptions=False)
+    client = _all_capabilities_app(app)
     response = client.post(
         "/api/v1/uploads",
         json={"filename_original": "x", "tenant_id": "SECRET-TENANT-VALUE"},

@@ -118,7 +118,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -370,7 +370,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -446,7 +446,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -512,7 +512,7 @@
             "title": "Quiet Hours Start Utc"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -673,7 +673,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -752,7 +752,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1030,7 +1030,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -1125,7 +1125,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1329,7 +1329,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1566,7 +1566,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1655,7 +1655,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2104,7 +2104,7 @@
             "$ref": "#/components/schemas/DevicePlatform"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2214,7 +2214,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2289,7 +2289,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2388,7 +2388,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2511,7 +2511,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2585,6 +2585,7 @@
       "ErrorCode": {
         "enum": [
           "UNAUTHENTICATED",
+          "MFA_REQUIRED",
           "FORBIDDEN",
           "REVOKED_DEVICE",
           "NOT_FOUND",
@@ -2597,6 +2598,7 @@
           "RATE_LIMITED",
           "SOURCE_RESTRICTED",
           "NOT_IMPLEMENTED",
+          "SERVICE_UNAVAILABLE",
           "INTERNAL_ERROR"
         ],
         "title": "ErrorCode",
@@ -2759,7 +2761,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -2863,7 +2865,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2906,7 +2908,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3022,7 +3024,7 @@
             "title": "Resource Id"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3157,7 +3159,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3408,7 +3410,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -3841,7 +3843,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -4214,7 +4216,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -4747,7 +4749,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -5128,7 +5130,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5205,7 +5207,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5353,7 +5355,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5466,7 +5468,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5911,7 +5913,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -6075,7 +6077,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6171,7 +6173,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6358,7 +6360,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6566,7 +6568,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6703,7 +6705,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.1",
+            "const": "1.0.0-draft.2",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6771,7 +6773,7 @@
   },
   "info": {
     "title": "AstraSync API",
-    "version": "1.0.0-draft.1"
+    "version": "1.0.0-draft.2"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -6899,6 +6901,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Alert Rules",
@@ -7007,6 +7019,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Save Alert Rule",
@@ -7132,6 +7154,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Check Source",
@@ -7295,6 +7327,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Alerts",
@@ -7405,6 +7447,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Update Alert Preferences",
@@ -7505,6 +7557,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Stream Alerts",
@@ -7619,6 +7681,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Alert",
@@ -7754,6 +7826,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Acknowledge Alert",
@@ -7868,6 +7950,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Analysis",
@@ -7982,6 +8074,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Analysis Methods",
@@ -8220,6 +8322,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Cases",
@@ -8334,6 +8446,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Case",
@@ -8469,6 +8591,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Analyse Case",
@@ -8604,6 +8736,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Create Draft",
@@ -8718,6 +8860,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Export Case",
@@ -8853,6 +9005,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Create Review",
@@ -8963,6 +9125,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Register Device",
@@ -9070,6 +9242,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Revoke Device",
@@ -9193,6 +9375,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Ingest Ific",
@@ -9340,6 +9532,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Issues",
@@ -9499,6 +9701,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Issue Changes",
@@ -9613,6 +9825,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Job",
@@ -9713,10 +9935,20 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Me",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "AUTHENTICATED"
       }
     },
@@ -9844,6 +10076,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List References",
@@ -10042,6 +10284,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Source Artifacts",
@@ -10156,6 +10408,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Source Artifact",
@@ -10280,6 +10542,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Create Download Link",
@@ -10394,6 +10666,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Source Artifact Integrity",
@@ -10576,6 +10858,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Source Artifact Preview",
@@ -10757,6 +11049,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Source Publications",
@@ -10956,6 +11258,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Search Source Records",
@@ -11070,6 +11382,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Source Record",
@@ -11184,6 +11506,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Source Record Location",
@@ -11315,6 +11647,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "List Sources",
@@ -11429,6 +11771,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Source Health",
@@ -11552,6 +11904,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Create Upload",
@@ -11666,6 +12028,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get Upload",
@@ -11780,6 +12152,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Abort Upload",
@@ -11915,6 +12297,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Complete Upload",
@@ -12039,6 +12431,16 @@
               }
             },
             "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Create Upload Part Urls",

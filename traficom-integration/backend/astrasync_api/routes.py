@@ -1,14 +1,17 @@
 """REST API v1 surface (BSD sections 5, 6.4 and 9).
 
-Every operation declares a required capability. Handlers return 501 until implemented: a route
-must never answer with sample data.
+Every operation declares a required capability, enforced by ``AuthorizedRoute``. Handlers return
+501 until implemented: a route must never answer with sample data. Routes that touch stored
+objects must also call ``ObjectAccessPolicy`` (see authz.py).
 """
 
+from datetime import UTC, datetime
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, Header, Path, Query, Response
+from fastapi import APIRouter, Header, Path, Query, Request, Response
 from fastapi.responses import StreamingResponse
 
+from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
     AlertStatus,
@@ -74,15 +77,15 @@ from .contract.models import (
 )
 from .contract.permissions import Capability
 from .errors import ApiError
-from .security import require_authenticated_principal
+from .security import AuthorizedRoute, CurrentPrincipal
 
 _ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
-    status: {"model": ErrorResponse} for status in (401, 403, 404, 409, 422, 429, 500, 501)
+    status: {"model": ErrorResponse} for status in (401, 403, 404, 409, 422, 429, 500, 501, 503)
 }
 
 router = APIRouter(
     prefix="/api/v1",
-    dependencies=[Depends(require_authenticated_principal)],
+    route_class=AuthorizedRoute,
     responses=_ERROR_RESPONSES,
 )
 
@@ -93,11 +96,13 @@ IdempotencyKey = Annotated[str, Header(alias="Idempotency-Key", min_length=8, ma
 FrequencyMhz = Annotated[float | None, Query(ge=0, allow_inf_nan=False)]
 
 
-def _policy(capability: Capability) -> dict[str, Any]:
+def _policy(
+    capability: Capability, status: ImplementationStatus = ImplementationStatus.DESIGNED
+) -> dict[str, Any]:
     return {
         "openapi_extra": {
             "x-required-capability": capability.value,
-            "x-implementation-status": ImplementationStatus.DESIGNED.value,
+            "x-implementation-status": status.value,
         }
     }
 
@@ -106,9 +111,21 @@ def _not_implemented() -> ApiError:
     return ApiError(501, ErrorCode.NOT_IMPLEMENTED, "This operation is not implemented yet.")
 
 
-@router.get("/me", response_model=Me, **_policy(Capability.AUTHENTICATED))
-async def get_me() -> Any:
-    raise _not_implemented()
+@router.get(
+    "/me",
+    response_model=Me,
+    **_policy(Capability.AUTHENTICATED, ImplementationStatus.IMPLEMENTED),
+)
+async def get_me(request: Request, principal: CurrentPrincipal) -> Any:
+    return Me(
+        schema_version=CONTRACT_VERSION,
+        generated_at_utc=datetime.now(UTC),
+        user_id=principal.user_id,
+        tenant_id=principal.tenant_id,
+        environment=request.app.state.security.environment,
+        roles=sorted(principal.roles),
+        capabilities=sorted(principal.capabilities),
+    )
 
 
 # --- Ingestion, jobs, issues ------------------------------------------------------------------

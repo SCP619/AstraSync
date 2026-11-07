@@ -1,6 +1,6 @@
 # Contract decisions for joint review
 
-TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.1`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
+TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.2`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
 
 ## Documentation conflicts
 
@@ -40,7 +40,13 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A2 | Administrators get no case or source-content capability by default. Security says "scope-controlled", so wider access needs another role | Stage 1 policy |
 | A3 | Case export is reviewer-only by default | Stage 5 |
 | A4 | `SourceAdapter` and `CriterionResolver` signatures go beyond what the BSD states and are proposals | Data/AI review |
-| A5 | No identity provider is chosen. All API routes return `401` until OIDC is added | Stage 1 ADR |
+| A5 | No identity provider is chosen. The API validates any standards-compliant OIDC provider from settings. The choice stays open | Before staging |
+| A6 | `users.sessions_revoked_before_utc` is added to the BSD `users` entity, to make session revocation enforceable | BSD update |
+| A7 | `resource_entitlements` also has `tenant_id`, so an entitlement cannot apply across tenants | BSD update |
+| A8 | Any provisioned user with no role can call `GET /me` and nothing else, so the client can explain the state | Stage 1 review |
+| A9 | Client tokens stay in memory in the web preview, so a reload requires sign-in. Native storage comes in Stage 7 | Stage 7 |
+| A10 | Reviewer reruns ("if granted" in Security) stay denied: no extra-capability grant exists yet | Stage 5 |
+| A11 | Audit covers denials by signed-in users, permitted writes, exports and downloads. Anonymous and invalid-token failures are logged only, so they cannot fill the audit table | Stage 8 |
 
 ## Outside the contract: needs a team decision
 

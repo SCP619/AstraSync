@@ -1,11 +1,15 @@
-"""FastAPI application factory."""
+"""FastAPI application factory. Run with ``uvicorn astrasync_api.app:create_app --factory``."""
 
+import os
 from typing import Any
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from pydantic.json_schema import models_json_schema
 
+from .authz import ObjectAccessPolicy
+from .config import Settings
 from .contract import CONTRACT_VERSION
 from .contract.models import (
     AgentDraftResponse,
@@ -14,8 +18,12 @@ from .contract.models import (
     MethodCalculation,
     PushPayload,
 )
+from .db import build_engine, build_session_factory
 from .errors import install_error_handlers
+from .identity import IdentityStore
+from .oidc import JwksCache, TokenValidator, fetch_jwks_over_http
 from .routes import router
+from .security import SecurityRuntime
 
 # Payloads exchanged outside REST, published so workers and clients share one generated contract.
 _INTEGRATION_MODELS = (
@@ -43,7 +51,23 @@ def build_openapi(app: FastAPI) -> dict[str, Any]:
     return schema
 
 
-def create_app() -> FastAPI:
+def _build_security(settings: Settings, keys: JwksCache | None) -> SecurityRuntime:
+    if not settings.configured:
+        return SecurityRuntime()
+    assert settings.oidc is not None  # noqa: S101 - guaranteed by ``configured``.
+    assert settings.database_url is not None  # noqa: S101 - guaranteed by ``configured``.
+    oidc = settings.oidc
+    keys = keys or JwksCache(lambda: fetch_jwks_over_http(oidc.jwks_uri))
+    sessions = build_session_factory(build_engine(settings.database_url))
+    return SecurityRuntime(
+        environment=settings.environment,
+        validator=TokenValidator(oidc, keys),
+        identities=IdentityStore(sessions),
+    )
+
+
+def create_app(settings: Settings | None = None, *, keys: JwksCache | None = None) -> FastAPI:
+    settings = settings if settings is not None else Settings.from_env(os.environ)
     # Interactive docs and the live spec stay off: the contract ships as a reviewed file.
     app = FastAPI(
         title="AstraSync API",
@@ -52,9 +76,20 @@ def create_app() -> FastAPI:
         redoc_url=None,
         openapi_url=None,
     )
+    app.state.security = _build_security(settings, keys)
+    identities = app.state.security.identities
+    app.state.object_access = (
+        ObjectAccessPolicy(identities.session_factory) if identities is not None else None
+    )
     install_error_handlers(app)
     app.include_router(router)
+    if settings.cors_origins:
+        # Bearer tokens only, so no cookies and no credentialed CORS.
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=list(settings.cors_origins),
+            allow_methods=["GET", "POST", "PUT", "DELETE"],
+            allow_headers=["Authorization", "Content-Type", "Idempotency-Key"],
+            expose_headers=["X-Request-ID"],
+        )
     return app
-
-
-app = create_app()

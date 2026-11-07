@@ -31,12 +31,24 @@ verified only on challenge or made-up data. *Blocked*: needs an external input, 
 
 ## Active work and next tasks
 
-1. Merge open PRs: #20 (backup/restore), #21 (Finland screen, overview processing panel), and
-   the case-list benchmark PR.
-2. UI: an upload screen (workflow A has backend endpoints but no production screen yet), the
-   case-detail method table and provenance timeline from the Lovable design, accessibility checks.
+Frontend-to-backend coverage (production React app, real API client, no sample data):
+
+| Workflow | Screen | Status |
+| --- | --- | --- |
+| A Source acquisition | `/uploads` → `/sources` | Browser-verified against the dev stack (PR #23) |
+| B Finland relevance | `/finland` → record inspector | Browser-verified (PR #21); service/geometry/technical stages not assessed (IFIC fields) |
+| C Case investigation | `/cases`, `/cases/:id` | Verified in UI tests and on devices (Stage 5/7); methods are demo plugins plus `SPACE_PFD_FREE_SPACE` |
+| D Expert review | Case inspector draft and review | Verified in UI tests (Stage 5); drafts come from the demo template agent, not an AI |
+| E Alerts | `/alerts` | Verified in UI tests and on devices (Stage 7) |
+| Operations | Overview → Processing | Browser-verified (PR #21) |
+
+Next tasks:
+
+1. Port the Lovable case-detail method table and provenance timeline into `CaseInspectorPage`.
+2. Administration screens: the API has no user/role management endpoints (Lovable map notes
+   the same), so none are built.
 3. Scientific: no teammate modules in the repo (`traficom-integration/agent` is empty);
-   `RegistryCriterionResolver` ships no criteria. Service, geometry and technical relevance
+   `RegistryCriterionResolver` ships no criteria; service, geometry and technical relevance
    gates need IFIC field definitions.
 
 ## Launching the application (local demonstration)
@@ -91,6 +103,10 @@ Worker and API settings:
 | #17 | merged | UI increment 2: status badges |
 | #18 | merged | Parser isolation (A16) |
 | #19 | merged | Operations metrics and probes; PostgreSQL connection-lifecycle fix (peak 99 → 4 connections) |
+| #20 | merged | Verified backup/restore, operations runbook |
+| #21 | merged | Finland relevance screen, overview processing panel, shell accessibility |
+| #22 | merged | TR-NFR-006 case-list benchmark (50,000 cases, p95 ≤ 657 ms), records |
+| #23 | see PR | Source upload and processing status |
 
 Seven commits up to `65997b2` carry a Claude co-author trailer; they are left unchanged (no
 history rewrite). New commits carry no attribution.

@@ -156,3 +156,5 @@ npm --prefix traficom-integration/ui run dev
 ```
 
 Then open `http://127.0.0.1:5173`.
+
+Ports default to API 8800, identity provider 8801 and UI 5173. To use others (for example where Windows reserves 8800/8801), set `ASTRASYNC_DEV_API_PORT`, `ASTRASYNC_DEV_IDP_PORT` and `ASTRASYNC_DEV_UI_PORT` in the environment or in the git-ignored `dev_stack.local.env` (start from `dev_stack.local.env.example`), and the matching UI values in the git-ignored `../ui/.env.development.local`. Invalid, duplicate or unavailable ports stop the stack with the fix. The seeded personas follow the configured issuer; see `docs/DEVELOPMENT_PROGRESS.md`.

@@ -22,6 +22,7 @@ import {
   type SessionState,
   type SignInNotice,
 } from "./shared";
+import { AdminUsersPage } from "./admin/AdminUsersPage";
 import { AlertDetailPage, AlertsPage } from "./alerts/AlertsPage";
 import { CaseInspectorPage } from "./cases/CaseInspectorPage";
 import { CaseListPage } from "./cases/CaseListPage";
@@ -543,6 +544,10 @@ export function App({
         <Route
           path="/finland"
           element={shell(<RequireCapability capability="SOURCE_READ"><FinlandRelevancePage /></RequireCapability>)}
+        />
+        <Route
+          path="/admin/users"
+          element={shell(<RequireCapability capability="ADMIN_USERS"><AdminUsersPage /></RequireCapability>)}
         />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

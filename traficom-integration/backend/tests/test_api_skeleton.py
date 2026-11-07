@@ -67,6 +67,14 @@ ADDED_OPERATIONS = {
     ("get", "/api/v1/alerts/preferences"),
     ("get", "/api/v1/finland-relevance/frequency-screen"),
     ("get", "/api/v1/operations/metrics"),
+    ("get", "/api/v1/admin/users"),
+    ("post", "/api/v1/admin/users"),
+    ("get", "/api/v1/admin/users/{user_id}"),
+    ("put", "/api/v1/admin/users/{user_id}/roles"),
+    ("put", "/api/v1/admin/users/{user_id}/status"),
+    ("post", "/api/v1/admin/users/{user_id}/revoke-sessions"),
+    ("post", "/api/v1/admin/users/{user_id}/entitlements"),
+    ("delete", "/api/v1/admin/users/{user_id}/entitlements/{grant_id}"),
 }
 
 

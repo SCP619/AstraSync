@@ -94,6 +94,18 @@ export interface ApiClient {
   getIntegrity(artifactId: string, signal?: AbortSignal): Promise<Schemas["ArtifactIntegrityReport"]>;
   /** Transfers the whole original. Only ever called after the user confirms the size. */
   downloadArtifact(artifactId: string): Promise<Blob>;
+  // User administration (ADMIN_USERS). The server enforces tenant scope and refuses self-changes.
+  listUsers(cursor?: string, signal?: AbortSignal): Promise<Schemas["AdminUserList"]>;
+  getUser(userId: string, signal?: AbortSignal): Promise<Schemas["AdminUserDetail"]>;
+  createUser(body: Schemas["AdminUserCreateRequest"]): Promise<Schemas["AdminUserDetail"]>;
+  setUserRoles(userId: string, roles: Schemas["Role"][]): Promise<Schemas["AdminUserDetail"]>;
+  setUserStatus(userId: string, active: boolean): Promise<Schemas["AdminUserDetail"]>;
+  revokeUserSessions(userId: string): Promise<Schemas["AdminUserDetail"]>;
+  grantEntitlement(
+    userId: string,
+    body: Schemas["AdminEntitlementGrantRequest"],
+  ): Promise<Schemas["AdminUserDetail"]>;
+  revokeEntitlement(userId: string, grantId: string): Promise<Schemas["AdminUserDetail"]>;
 }
 
 function isErrorResponse(body: unknown): body is Schemas["ErrorResponse"] {
@@ -163,10 +175,14 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     return body as T;
   }
 
-  async function write<T>(method: "POST" | "PUT", path: string, body: unknown): Promise<T> {
+  async function write<T>(
+    method: "POST" | "PUT" | "DELETE",
+    path: string,
+    body?: unknown,
+  ): Promise<T> {
     const response = await send(path, "application/json", {
       method,
-      body: JSON.stringify(body),
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       headers: {
         "Content-Type": "application/json",
         // One key per user action, so a retry after a lost response cannot act twice.
@@ -180,6 +196,7 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     return parsed as T;
   }
 
+  const userPath = (userId: string) => `/api/v1/admin/users/${encodeURIComponent(userId)}`;
   const casePath = (caseId: string) => `/api/v1/cases/${encodeURIComponent(caseId)}`;
 
   return {
@@ -312,5 +329,20 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
       }
       return response.blob();
     },
+    listUsers: (cursor, signal) => {
+      const params = new URLSearchParams({ limit: "50" });
+      if (cursor !== undefined) {
+        params.set("cursor", cursor);
+      }
+      return get(`/api/v1/admin/users?${params}`, signal);
+    },
+    getUser: (userId, signal) => get(userPath(userId), signal),
+    createUser: (body) => write("POST", "/api/v1/admin/users", body),
+    setUserRoles: (userId, roles) => write("PUT", `${userPath(userId)}/roles`, { roles }),
+    setUserStatus: (userId, active) => write("PUT", `${userPath(userId)}/status`, { active }),
+    revokeUserSessions: (userId) => write("POST", `${userPath(userId)}/revoke-sessions`),
+    grantEntitlement: (userId, body) => write("POST", `${userPath(userId)}/entitlements`, body),
+    revokeEntitlement: (userId, grantId) =>
+      write("DELETE", `${userPath(userId)}/entitlements/${encodeURIComponent(grantId)}`),
   };
 }

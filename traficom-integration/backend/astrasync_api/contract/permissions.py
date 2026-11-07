@@ -38,6 +38,9 @@ class Capability(StrEnum):
     DEVICE_MANAGE = "DEVICE_MANAGE"
     ADMIN_ALERT_RULES = "ADMIN_ALERT_RULES"
     ADMIN_SOURCE_CHECK = "ADMIN_SOURCE_CHECK"
+    # Manage users, roles and source entitlements in the administrator's own tenant. It grants
+    # no access to case or source content (DECISIONS G26).
+    ADMIN_USERS = "ADMIN_USERS"
 
 
 _READ_ONLY_WORKSPACE = frozenset(
@@ -87,6 +90,7 @@ ROLE_CAPABILITIES: dict[Role, frozenset[Capability]] = {
         Capability.ALERT_READ,
         Capability.ADMIN_ALERT_RULES,
         Capability.ADMIN_SOURCE_CHECK,
+        Capability.ADMIN_USERS,
     },
     # Runs only against the separate demo environment with synthetic or redacted data.
     Role.DEMO_VIEWER: _READ_ONLY_WORKSPACE,

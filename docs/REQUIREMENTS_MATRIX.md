@@ -23,11 +23,11 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-PLAT-006 | NAT, BE | IMPLEMENTED_UNVERIFIED | In-app inbox with catch-up; Windows local notifications | Android push blocked (no gateway) |
 | TR-PLAT-007 | NAT | IMPLEMENTED_UNVERIFIED | Clients never download masters except by explicit signed download | No client storage inspection report |
 | TR-IDENT-001 | BE | IMPLEMENTED_UNVERIFIED | OIDC issuer/audience/scope/MFA claims validated (`test_authentication.py`) | Real approved IdP not configured |
-| TR-IDENT-002 | BE | VERIFIED | Deny by default, tenant, classification, entitlement, case access (`test_authorization.py`, `test_permissions.py`, `test_source_library.py`) | Synthetic fixtures |
-| TR-IDENT-003 | BE | VERIFIED | Role matrix tests; Analyst cannot approve; Admin has no data bypass | |
+| TR-IDENT-002 | BE, UI | VERIFIED | Deny by default, tenant, classification, entitlement, case access (`test_authorization.py`, `test_permissions.py`, `test_source_library.py`); user, role and source-entitlement administration with tenant scope and no self-changes (G26, `test_admin_users.py`, `AdminUsersPage.test.tsx`; browser-checked against the dev stack) | Synthetic fixtures; no tenant moves or per-case grants (policy decision) |
+| TR-IDENT-003 | BE | VERIFIED | Role matrix tests; Analyst cannot approve; Admin has no data bypass (also checked on the live dev stack: Administrator gets 403 on cases); non-administrators cannot escalate | |
 | TR-IDENT-004 | NAT | IMPLEMENTED_UNVERIFIED | Tokens in OS secure storage on native builds | No packaged-app security scan |
-| TR-IDENT-005 | BE | IMPLEMENTED_UNVERIFIED | Session revocation; device revocation stops pushes (A26) | Device-bound tokens not implemented |
-| TR-IDENT-006 | BE | VERIFIED | Audit events for denials, writes, exports, downloads (`test_source_library.py`) | Anonymous failures logged only (A11) |
+| TR-IDENT-005 | BE, UI | IMPLEMENTED_UNVERIFIED | Session revocation and deactivation from the admin screen apply to tokens already issued (401/403 on the next request; `test_admin_users.py`, live dev stack); device revocation stops pushes (A26) | Device-bound tokens not implemented |
+| TR-IDENT-006 | BE | VERIFIED | Audit events for denials, writes, exports, downloads (`test_source_library.py`); every administration change twice (authorised request, committed change) with actor, tenant and request ID (`test_admin_users.py`) | Anonymous failures logged only (A11) |
 
 ## Sources, integrity and library
 

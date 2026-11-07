@@ -2,6 +2,15 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "astrasync-dev-stack",
+      "runtimeExecutable": "traficom-integration/backend/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "traficom-integration/backend/tests/support/dev_stack.py",
+        "all"
+      ],
+      "port": 8800
+    },
+    {
       "name": "astrasync-dev-idp",
       "runtimeExecutable": "traficom-integration/backend/.venv/Scripts/python.exe",
       "runtimeArgs": [

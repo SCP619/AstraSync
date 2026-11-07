@@ -45,6 +45,7 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | G22 | `PUT /alerts/preferences` had no way to read current values | Added `GET /alerts/preferences` |
 | G23 | ALERT_ENGINE has a reviewer escalation trigger, but nothing can raise it | Added `ReviewAction.ESCALATE` and `DomainEventKind.CASE_ESCALATED` |
 | G10 | Relevance labels and reason codes have no closed list beyond `FREQUENCY_MATCH` | Validated `UPPER_SNAKE_CASE` codes. The relevance owner should publish the list |
+| G24 | Nothing produced the frequency stage of TR-REL-004, and no IFIC notices exist yet to drive it | Added `GET /finland-relevance/frequency-screen` (`SOURCE_READ`) and `relevance.screen_range`, which the IFIC pipeline will reuse. Labels are `FREQUENCY_MATCH`, `NO_FREQUENCY_MATCH` and `NO_REFERENCE_DATA`. Reasons: `M4_ALLOCATION_OVERLAP`, `SPECIAL_INTEREST_STATION_OVERLAP`, `NO_FINNISH_REFERENCE_OVERLAP`, `NO_FINNISH_REFERENCE_INDEXED`, `SERVICE_NOT_EVALUATED`, `GEOMETRY_NOT_EVALUATED` (see A37) |
 
 ## Assumptions
 
@@ -86,6 +87,7 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A34 | Ingest counts a record as flagged only for a WARNING or BLOCKING finding or a non-valid status. INFO notes, such as an optional field left blank, don't count | Stage 2 review |
 | A35 | `SPACE_PFD_FREE_SPACE` reads `scenario.space_pfd_free_space` with `eirp_toward_receiver_dbw` and `slant_range_m` stated directly. It derives neither from orbit or pattern data. The result stays in the EIRP's reference bandwidth, or the total channel, with no `10 log10(B)` rescaling. Additional loss defaults to 0 dB (the idealised case) and may not be negative | **Data/AI review**; the notice-to-scenario mapping comes with real IFIC data |
 | A36 | Traficom allocation table (`opendata.traficom.fi/api/v13/Taajuusjakotaulukko`, CC BY 4.0, checked 2026-11-07). The ETag is the provider version; identical bytes still give one artifact if the cache issues a new ETag. `Transmitter_power = 0` is the API's blank, so it stays raw text and is never 0 W. Band limits come from the Hz fields and are checked against the text limits. The API doesn't name the M4 edition, so none is recorded | Confirm with Traficom which M4 edition the API serves |
+| A37 | The frequency screen uses closed intervals, so touching band edges count as a zero-width overlap (conservative for screening). A station's interval is centre ± half the channel bandwidth, or the centre alone, named per match as `interval_basis`. Only the newest indexed revision of each readable reference source is screened, at most 500 matches with a truncation flag. Station rows are read per artifact, which is fine for the workbook but unproven at tens of millions of rows | Relevance owner; Stage 6 for scale |
 
 ## Outside the contract: needs a team decision
 

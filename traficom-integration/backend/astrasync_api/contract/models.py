@@ -873,6 +873,44 @@ class SourceRecordList(Page[SourceRecordHit]):
     pass
 
 
+class FrequencyReferenceMatch(ContractModel):
+    """One Finnish reference interval that a screened range overlaps. A screening signal only."""
+
+    source_record_id: StableId
+    source_id: StableId
+    artifact_id: StableId
+    reference_kind: Literal["M4_ALLOCATION", "SPECIAL_INTEREST_STATION"]
+    reference_field: Literal["SUB_BAND", "TX_FREQUENCY", "RX_FREQUENCY"]
+    # How the reference interval was formed. Station intervals are an assumption, named here.
+    interval_basis: StableCode
+    reference_start_mhz: NonNegativeFloat
+    reference_end_mhz: NonNegativeFloat
+    overlap_start_mhz: NonNegativeFloat
+    overlap_end_mhz: NonNegativeFloat
+    label: str | None
+    is_synthetic: bool
+
+
+class ScreenedReferenceSource(ContractModel):
+    source_id: StableId
+    source_type: str
+    artifact_id: StableId
+    revision: int
+    is_synthetic: bool
+
+
+class FrequencyRelevanceScreen(Envelope):
+    """Stage one of TR-REL-004 (frequency). Service, geometry and technical stages stay null."""
+
+    query_start_mhz: NonNegativeFloat
+    query_end_mhz: NonNegativeFloat
+    gates: RelevanceGates
+    matches: list[FrequencyReferenceMatch]
+    matches_truncated: bool
+    sources_screened: list[ScreenedReferenceSource]
+    is_synthetic: bool
+
+
 class RecordQualityFinding(ContractModel):
     finding_id: StableId
     source_record_id: StableId

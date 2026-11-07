@@ -1,6 +1,8 @@
 """FastAPI application factory. Run with ``uvicorn astrasync_api.app:create_app --factory``."""
 
 import os
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI
@@ -8,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 from pydantic.json_schema import models_json_schema
-from sqlalchemy import text
+from sqlalchemy import Engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
 from .alerts import TokenCipher
@@ -64,19 +66,30 @@ def build_openapi(app: FastAPI) -> dict[str, Any]:
     return schema
 
 
-def _build_security(settings: Settings, keys: JwksCache | None) -> SecurityRuntime:
+def _build_security(
+    settings: Settings, keys: JwksCache | None
+) -> tuple[SecurityRuntime, Engine | None]:
     if not settings.configured:
-        return SecurityRuntime()
+        return SecurityRuntime(), None
     assert settings.oidc is not None  # noqa: S101 - guaranteed by ``configured``.
     assert settings.database_url is not None  # noqa: S101 - guaranteed by ``configured``.
     oidc = settings.oidc
     keys = keys or JwksCache(lambda: fetch_jwks_over_http(oidc.jwks_uri))
-    sessions = build_session_factory(build_engine(settings.database_url))
-    return SecurityRuntime(
+    engine = build_engine(settings.database_url)
+    sessions = build_session_factory(engine)
+    security = SecurityRuntime(
         environment=settings.environment,
         validator=TokenValidator(oidc, keys),
         identities=IdentityStore(sessions),
     )
+    return security, engine
+
+
+def dispose_app(app: FastAPI) -> None:
+    """Closes the app's pooled database connections (on shutdown, and after each test)."""
+    engine: Engine | None = getattr(app.state, "engine", None)
+    if engine is not None:
+        engine.dispose()
 
 
 def _load_draft_agent(settings: Settings) -> EvidenceDraftAgent | None:
@@ -111,14 +124,24 @@ def _install_probes(app: FastAPI) -> None:
 def create_app(settings: Settings | None = None, *, keys: JwksCache | None = None) -> FastAPI:
     settings = settings if settings is not None else Settings.from_env(os.environ)
     # Interactive docs and the live spec stay off: the contract ships as a reviewed file.
+    security, engine = _build_security(settings, keys)
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+        yield
+        dispose_app(app)
+
     app = FastAPI(
         title="AstraSync API",
         version=CONTRACT_VERSION,
         docs_url=None,
         redoc_url=None,
         openapi_url=None,
+        lifespan=lifespan,
     )
-    app.state.security = _build_security(settings, keys)
+    # The app owns its database engine: ``dispose_app`` closes its pooled connections.
+    app.state.engine = engine
+    app.state.security = security
     identities = app.state.security.identities
     app.state.object_access = None
     app.state.library = None

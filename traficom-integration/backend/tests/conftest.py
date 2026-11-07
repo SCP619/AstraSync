@@ -16,7 +16,7 @@ from sqlalchemy import Engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from astrasync_api import admin
-from astrasync_api.app import build_openapi, create_app
+from astrasync_api.app import build_openapi, create_app, dispose_app
 from astrasync_api.config import OidcSettings, Settings
 from astrasync_api.contract.enums import Environment
 from astrasync_api.contract.permissions import Role
@@ -175,7 +175,7 @@ def jwks_document(signing_key: rsa.RSAPrivateKey) -> dict[str, Any]:
 @pytest.fixture
 def secure_app(
     engine: Engine, users: Users, jwks_document: dict[str, Any], tmp_path: Path
-) -> FastAPI:
+) -> Iterator[FastAPI]:
     settings = Settings(
         environment=Environment.DEMO,
         database_url=engine.url.render_as_string(hide_password=False),
@@ -193,7 +193,10 @@ def secure_app(
     # Route sweeps call every route, so the stream must end on its own.
     app.state.alert_stream_poll_seconds = 0.02
     app.state.alert_stream_max_seconds = 0.1
-    return app
+    yield app
+    # Without this every test leaves a pool of open connections until garbage collection,
+    # which exhausted PostgreSQL's max_connections in CI.
+    dispose_app(app)
 
 
 @pytest.fixture

@@ -125,14 +125,14 @@ What it can't do:
 
 ## Results, 2026-11-07
 
-Made-up data on the local stack. Windows 11 with the CI test package; Android 15 emulator (Pixel 6, WebView 124) with a local debug build.
+Made-up data on the local stack. Windows 11 with the CI test package from PR #7; Android 15 emulator (Pixel 6, WebView 124) with a local debug build.
 
 | Tests | Result |
 | --- | --- |
 | W1 to W7 | Pass by hand |
-| W1 to W3, W5, W6, W8 to W12 | Pass, automated |
+| W1 to W3, W5 to W12 | Pass, automated, on the PR #7 package |
 | W4 notification | Pass by hand only |
-| W7 | Found a bug: "Decision recorded." disappeared after the lists reloaded. Fixed, and confirmed in the web build; the installed package predates the fix |
+| W7 | First run found a bug: "Decision recorded." disappeared after the lists reloaded. Fixed in PR #7; passes on its package |
 | A1 to A8 | Pass, automated, twice in a row |
 | Android push | Not tested: no gateway |
 

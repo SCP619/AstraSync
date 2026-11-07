@@ -1,2 +1,0 @@
-# Stage 6 benchmark harness only (not the API or worker). Install next to requirements-dev.lock.
-psutil==7.1.3

@@ -1,0 +1,55 @@
+{
+  "hardware": {
+    "cpu": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "logical_cpus": 16,
+    "ram_gib": 15.4,
+    "os": "Windows-10-10.0.26300-SP0",
+    "python": "3.11.0"
+  },
+  "file": "l1-4gib.csv",
+  "expected_rows": 38302000,
+  "upload": {
+    "parts": 65,
+    "part_size_bytes": 67108864,
+    "resume": {
+      "parts_before_interruption": 20,
+      "parts_reported_by_server": 20,
+      "parts_resent": 45,
+      "received_bytes_reported": 1342177280
+    },
+    "bytes": 4295071517,
+    "sha256": "37e27338467fb07e028b8431ffc6bdb95db4f0c820fb74f1dfd17e96c161891b",
+    "transfer_seconds": 32.12,
+    "transfer_mib_per_s": 127.5,
+    "client_hash_seconds": 3.93,
+    "complete_call_seconds": 0.092
+  },
+  "ingest": {
+    "final_status": "PARTIAL",
+    "attempt": 2,
+    "seconds_from_complete_to_final": 309.8,
+    "processed_records": null,
+    "records_per_s_while_parsing": null,
+    "crash": {
+      "killed_in_status": "VERIFYING",
+      "killed_at_records": 0,
+      "killed_at_s": 1.0,
+      "attempt_after_crash": 2,
+      "reclaimed_at_s": 301.7
+    }
+  },
+  "reconciliation": {
+    "artifact_id": "2487128316ca4e94be412d779b01b3fe",
+    "status": "VERIFIED_BYTES",
+    "server_sha256_matches": true,
+    "row_reconciliation": null,
+    "expected_rows": 38302000,
+    "rows_match": null
+  },
+  "token_renewals": 0,
+  "peak_rss_mib": {
+    "idp": 98,
+    "api": 118,
+    "worker": 104
+  }
+}

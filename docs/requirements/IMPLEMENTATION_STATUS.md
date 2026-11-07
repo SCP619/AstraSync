@@ -16,7 +16,7 @@ Last updated: 2026-11-07. Update this file in the PR that changes the status. Re
 | 3 Space RF | In progress | `SPACE_PFD_FREE_SPACE` (`astrasync_physics.space_pfd`): Tier 1 validation against 40-digit reference values, linear vs dB agreement, the −6.02 dB doubling rule, refusal of missing and invalid inputs; runs through the real analysis runner with no margin and no criterion | Directional/time-series PFD, EPFD, criterion resolver with cited limits, the notice-to-scenario mapping (needs real IFIC data) |
 | 4 Terrestrial RF | Not started | | Two real IFIC issues, P.1546 if validated |
 | 5 Case UI and evidence | Verified with demo plugins | Case workflow, reviewer API, inspector, 91 UI tests | Real relevance detection, RF methods and AI agent wired in |
-| 6 Large data | Not started | | 4/10 GB benchmarks, 10M/50M rows, recovery report |
+| 6 Large data | In progress, synthetic only; record store proposed for joint review | 4 GiB upload: resume after 20/65 parts, SHA-256 match, worker killed in verification and recovered after the 5-min lease (L1). 50 MB on the PostgreSQL index: 39.5× storage expansion, cause measured. Parquet/DuckDB record store behind `ASTRASYNC_RECORD_STORE_PATH`: identical API answers, full suite passes on it. Report: [`docs/architecture/STAGE6_RECORD_STORE.md`](../architecture/STAGE6_RECORD_STORE.md) | Joint review of DECISIONS A38–A42, 10 GiB run, 10M/50M rows indexed, checkpoint resume, many-artifact search |
 | 7 Native and alerts | Verified on devices (PR #7) | Windows W1–W3, W5–W12 automated on the CI package; W4 by hand; Android A1–A8 automated on an Android 15 emulator | Android push (no gateway), signed packages |
 | 8 Security and operations | Not started | | Scans, backups, monitoring, sandboxed parsing (A16) |
 | 9 Extended methods | Not started | | P.1812/P.452, NGSO, EPFD |
@@ -28,7 +28,7 @@ Last updated: 2026-11-07. Update this file in the PR that changes the status. Re
 2. **Stage 3 baseline space PFD.** Free-space PFD from EIRP and distance, as an `RFMethod` plugin with hand-checked and independently computed vectors. It needs notice inputs, which come from real IFIC data (blocked). It can be validated and wired in with labelled synthetic notices.
 3. **Criterion resolver** with cited, edition-dated limits (ITU Radio Regulations). No threshold may be entered without its source document and table reference. Until then a margin stays null.
 4. **Finland relevance**: frequency stage done (`astrasync_api.relevance`, `GET /finland-relevance/frequency-screen`). It screens a range against the M4 allocations and the special-interest stations separately, under the same access rules as search. Real data (live M4 table plus the challenge workbook): 87.9 MHz matches 13 M4 broadcasting entries and 7 station intervals; 10.7–10.95 GHz matches 35 M4 entries. Service, geometry and technical stages need IFIC notice fields (blocked).
-5. **Stage 6 benchmarks**: synthetic scale generator (tens of millions of rows, labelled), 4/10 GB resumable ingest and recovery report. Independent of external access.
+5. **Stage 6**: generator, L1 4 GiB benchmark, storage analysis and the Parquet/DuckDB record store are done (uncommitted, awaiting review). Next: review A38–A42, then checkpointed parsing and a 10M-row records run on the record store.
 6. **Stage 8 hardening**: CI security scans, dependency and licence checks, parser sandboxing, backups/restore drill.
 7. **Stage 4 terrestrial and Stage 9 methods**: need real IFIC issues and validated reference implementations.
 

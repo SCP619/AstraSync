@@ -206,6 +206,37 @@ class ReferenceStationRow(Base):
     fields: Mapped[dict[str, Any]] = mapped_column(JSON)
 
 
+class RecordDatasetRow(Base):
+    """The manifest of one artifact's parsed records in the Parquet record store.
+
+    A dataset exists for readers only through this row, committed in the same transaction that
+    marks the artifact indexed. Access columns are copied from the artifact when it is indexed,
+    exactly as the search index copies them, so permission filtering is unchanged.
+    """
+
+    __tablename__ = "record_datasets"
+
+    artifact_id: Mapped[str] = mapped_column(
+        ForeignKey("source_artifacts.artifact_id"), primary_key=True
+    )
+    tenant_id: Mapped[str] = mapped_column(ForeignKey("tenants.tenant_id"), index=True)
+    source_id: Mapped[str] = mapped_column(ForeignKey("source_connectors.source_id"), index=True)
+    classification: Mapped[str] = mapped_column(String(32))
+    is_synthetic: Mapped[bool] = mapped_column(Boolean)
+    publisher: Mapped[str] = mapped_column(String(256))
+    filename_original: Mapped[str] = mapped_column(String(512))
+    relative_path: Mapped[str] = mapped_column(String(512))
+    format_version: Mapped[str] = mapped_column(String(32))
+    parser_version: Mapped[str] = mapped_column(String(64))
+    record_count: Mapped[int] = mapped_column(BigInteger)
+    finding_count: Mapped[int] = mapped_column(BigInteger)
+    records_sha256: Mapped[str] = mapped_column(String(64))
+    records_bytes: Mapped[int] = mapped_column(BigInteger)
+    findings_sha256: Mapped[str] = mapped_column(String(64))
+    findings_bytes: Mapped[int] = mapped_column(BigInteger)
+    published_at_utc: Mapped[datetime] = mapped_column(UtcDateTime)
+
+
 class UploadSessionRow(Base):
     __tablename__ = "upload_sessions"
     __table_args__ = (

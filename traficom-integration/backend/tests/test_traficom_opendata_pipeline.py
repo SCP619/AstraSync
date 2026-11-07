@@ -64,6 +64,7 @@ def m4_runtime(
     sessions: sessionmaker[Session],
     store: LocalObjectStore,  # noqa: F811
     users: Any,
+    record_store: Any,
 ) -> WorkerRuntime:
     admin.register_source(
         sessions,
@@ -85,6 +86,7 @@ def m4_runtime(
             sessions=sessions,
             store=store,
             adapters={m4.SOURCE_TYPE: m4.TraficomM4TableAdapter()},
+            records=record_store,
         ),
         clients={"traficom-m4": client},
         worker_id="test-worker",

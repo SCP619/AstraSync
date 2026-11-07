@@ -1,0 +1,184 @@
+{
+  "rows": 200000,
+  "source_bytes": 22080217,
+  "generated": {
+    "rows": 200000,
+    "bytes_written": 22080217,
+    "missing_tx": 421,
+    "unitless_tx": 207,
+    "negative_agl": 221
+  },
+  "postgresql": {
+    "status": "READY",
+    "index_seconds": 177.79,
+    "peak_rss_mib": 139.7,
+    "rss_growth_mib": 14.5,
+    "records_per_s": 1125,
+    "storage": {
+      "postgresql_record_tables_bytes": {
+        "source_record_locations": 444268544,
+        "source_library_search_index": 89497600,
+        "record_quality_findings": 169959424,
+        "reference_station_records": 168427520,
+        "record_datasets": 32768
+      },
+      "postgresql_database_bytes": 881828367,
+      "parquet_files_bytes": {},
+      "record_bytes_total": 872185856
+    },
+    "queries": {
+      "station_lookup": {
+        "n": 30,
+        "p50_ms": 2.8,
+        "p95_ms": 3.4,
+        "max_ms": 3.6,
+        "answers_sha256": "5cb4beea91f7101d9de5ba4d3dc9aa48ff3408f187b058427ddb106142761be0"
+      },
+      "frequency_window_page": {
+        "n": 30,
+        "p50_ms": 65.9,
+        "p95_ms": 85.0,
+        "max_ms": 123.8,
+        "answers_sha256": "25a4cbedc034b326e62a2cc57317a51d866eaa112fb765a90622c061567266f0"
+      },
+      "frequency_wide_page": {
+        "n": 30,
+        "p50_ms": 5.4,
+        "p95_ms": 6.4,
+        "max_ms": 7.3,
+        "answers_sha256": "1c1fff50caee2be05731258eaef5336808d8c1ab9b887fae15237686aa77ac66"
+      },
+      "text_search_page": {
+        "n": 30,
+        "p50_ms": 59.0,
+        "p95_ms": 70.3,
+        "max_ms": 114.6,
+        "answers_sha256": "17af7d877228a2929e39c08cd1bbfef927bb343ff64769d7e360ec9a9cad2c38"
+      },
+      "record_detail": {
+        "n": 30,
+        "p50_ms": 3.2,
+        "p95_ms": 3.8,
+        "max_ms": 5.3,
+        "answers_sha256": "1d81698edd4ac9ac667b3c7774f53c692b1f0d3cae374ebeea866484700ff0af"
+      },
+      "preview_first_page": {
+        "n": 30,
+        "p50_ms": 6.2,
+        "p95_ms": 6.9,
+        "max_ms": 6.9,
+        "answers_sha256": "e0a4fcfab84b550c3d4ada2179e83b333d6bf30e7d18fe55e9523b3df008d4c6"
+      },
+      "preview_deep_page": {
+        "n": 30,
+        "p50_ms": 5.0,
+        "p95_ms": 5.8,
+        "max_ms": 6.2,
+        "answers_sha256": "e211ff866bf475b6be7376bbefe6e4ef04fbee4abe2ab8c07ab533802bd0efb5"
+      },
+      "aggregate_by_status": {
+        "n": 30,
+        "p50_ms": 58.2,
+        "p95_ms": 60.6,
+        "max_ms": 62.2,
+        "answers_sha256": "93614055c2aa1f2cf8fccbc56f794cf2c1be3ba2766f8a5d7dfc7b20d514e747"
+      }
+    }
+  },
+  "parquet": {
+    "status": "READY",
+    "index_seconds": 38.95,
+    "peak_rss_mib": 219.1,
+    "rss_growth_mib": 80.6,
+    "records_per_s": 5135,
+    "storage": {
+      "postgresql_record_tables_bytes": {
+        "source_record_locations": 32768,
+        "source_library_search_index": 57344,
+        "record_quality_findings": 24576,
+        "reference_station_records": 16384,
+        "record_datasets": 98304
+      },
+      "postgresql_database_bytes": 9822735,
+      "parquet_files_bytes": {
+        "datasets/BENCH-TENANT/41cc18aef9ac491b9f7e3b5f26e3fbf0/04fa6965a3c44a4dabc0069a0a47711f/findings.parquet": 1611980,
+        "datasets/BENCH-TENANT/41cc18aef9ac491b9f7e3b5f26e3fbf0/04fa6965a3c44a4dabc0069a0a47711f/records.parquet": 35328981
+      },
+      "record_bytes_total": 37170337
+    },
+    "queries": {
+      "station_lookup": {
+        "n": 30,
+        "p50_ms": 18.6,
+        "p95_ms": 19.7,
+        "max_ms": 29.0,
+        "answers_sha256": "5cb4beea91f7101d9de5ba4d3dc9aa48ff3408f187b058427ddb106142761be0"
+      },
+      "frequency_window_page": {
+        "n": 30,
+        "p50_ms": 23.0,
+        "p95_ms": 26.0,
+        "max_ms": 28.3,
+        "answers_sha256": "25a4cbedc034b326e62a2cc57317a51d866eaa112fb765a90622c061567266f0"
+      },
+      "frequency_wide_page": {
+        "n": 30,
+        "p50_ms": 44.9,
+        "p95_ms": 51.4,
+        "max_ms": 54.9,
+        "answers_sha256": "1c1fff50caee2be05731258eaef5336808d8c1ab9b887fae15237686aa77ac66"
+      },
+      "text_search_page": {
+        "n": 30,
+        "p50_ms": 21.8,
+        "p95_ms": 23.7,
+        "max_ms": 25.3,
+        "answers_sha256": "17af7d877228a2929e39c08cd1bbfef927bb343ff64769d7e360ec9a9cad2c38"
+      },
+      "record_detail": {
+        "n": 30,
+        "p50_ms": 33.0,
+        "p95_ms": 38.5,
+        "max_ms": 40.7,
+        "answers_sha256": "1d81698edd4ac9ac667b3c7774f53c692b1f0d3cae374ebeea866484700ff0af"
+      },
+      "preview_first_page": {
+        "n": 30,
+        "p50_ms": 33.3,
+        "p95_ms": 35.4,
+        "max_ms": 86.6,
+        "answers_sha256": "e0a4fcfab84b550c3d4ada2179e83b333d6bf30e7d18fe55e9523b3df008d4c6"
+      },
+      "preview_deep_page": {
+        "n": 30,
+        "p50_ms": 34.5,
+        "p95_ms": 36.4,
+        "max_ms": 36.8,
+        "answers_sha256": "e211ff866bf475b6be7376bbefe6e4ef04fbee4abe2ab8c07ab533802bd0efb5"
+      },
+      "aggregate_by_status": {
+        "n": 30,
+        "p50_ms": 10.4,
+        "p95_ms": 10.9,
+        "max_ms": 11.2,
+        "answers_sha256": "93614055c2aa1f2cf8fccbc56f794cf2c1be3ba2766f8a5d7dfc7b20d514e747"
+      }
+    }
+  },
+  "comparison": {
+    "storage_ratio_postgresql_over_parquet": 23.5,
+    "postgresql_over_source": 39.5,
+    "parquet_over_source": 1.68,
+    "index_speedup": 4.56,
+    "identical_answers": {
+      "station_lookup": true,
+      "frequency_window_page": true,
+      "frequency_wide_page": true,
+      "text_search_page": true,
+      "record_detail": true,
+      "preview_first_page": true,
+      "preview_deep_page": true,
+      "aggregate_by_status": true
+    }
+  }
+}

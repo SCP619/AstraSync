@@ -68,6 +68,7 @@ from .jobs import LANE_INGESTION, TERMINAL_VALUES, enqueue, utc_now
 from .library_tables import (
     ArtifactIntegrityCheckRow,
     JobRunRow,
+    RecordDatasetRow,
     RecordQualityFindingRow,
     ReferenceStationRow,
     SourceArtifactRow,
@@ -79,6 +80,7 @@ from .library_tables import (
     UploadSessionRow,
 )
 from .objectstore import ObjectStore
+from .record_store import ParquetRecordStore, dataset_for_record, readable_datasets
 
 PART_SIZE_BYTES = 64 * 1024 * 1024
 UPLOAD_LIFETIME = timedelta(hours=24)
@@ -105,6 +107,8 @@ class LibraryRuntime:
     identities: IdentityStore
     store: ObjectStore | None
     max_upload_bytes: int
+    # When set, parsed records are read from Parquet datasets instead of the index tables.
+    records: ParquetRecordStore | None = None
 
 
 def _envelope() -> dict[str, Any]:
@@ -510,20 +514,25 @@ def get_preview(
             "No preview is available: this file has not been indexed. The original is preserved.",
             {"status": artifact.status},
         )
-    locations = SourceRecordLocationRow
-    query = select(locations).where(locations.artifact_id == artifact_id)
-    if page is not None:
-        query = query.where(locations.source_page == page)
-    if table is not None:
-        query = query.where(locations.source_table_or_sheet == table)
-    if row is not None:
-        query = query.where(locations.source_row_or_key == str(row))
     after = _cursor_decode(cursor)
-    if after is not None:
-        if not after.isdecimal():
-            raise ApiError(422, ErrorCode.VALIDATION_ERROR, "Invalid cursor.")
-        query = query.where(locations.ordinal > int(after))
-    rows = list(session.scalars(query.order_by(locations.ordinal).limit(PREVIEW_ROWS + 1)))
+    if after is not None and not after.isdecimal():
+        raise ApiError(422, ErrorCode.VALIDATION_ERROR, "Invalid cursor.")
+    if runtime.records is not None:
+        dataset = session.get(RecordDatasetRow, artifact_id)
+        rows = (
+            runtime.records.preview(
+                dataset,
+                page=page,
+                table=table,
+                row=row,
+                after_ordinal=int(after) if after is not None else None,
+                limit=PREVIEW_ROWS + 1,
+            )
+            if dataset is not None
+            else []
+        )
+    else:
+        rows = _preview_rows(session, artifact_id, page=page, table=table, row=row, after=after)
     kept, next_cursor = _page(rows, PREVIEW_ROWS, "ordinal")
     return SourcePreview(
         **_envelope(),
@@ -535,6 +544,28 @@ def get_preview(
         next_cursor=next_cursor,
         is_synthetic=artifact.is_synthetic,
     )
+
+
+def _preview_rows(
+    session: Session,
+    artifact_id: str,
+    *,
+    page: int | None,
+    table: str | None,
+    row: int | None,
+    after: str | None,
+) -> list[SourceRecordLocationRow]:
+    locations = SourceRecordLocationRow
+    query = select(locations).where(locations.artifact_id == artifact_id)
+    if page is not None:
+        query = query.where(locations.source_page == page)
+    if table is not None:
+        query = query.where(locations.source_table_or_sheet == table)
+    if row is not None:
+        query = query.where(locations.source_row_or_key == str(row))
+    if after is not None:
+        query = query.where(locations.ordinal > int(after))
+    return list(session.scalars(query.order_by(locations.ordinal).limit(PREVIEW_ROWS + 1)))
 
 
 def create_download_link(
@@ -598,30 +629,28 @@ def search_records(
     limit: int,
     cursor: str | None,
 ) -> SourceRecordList:
-    table = SourceSearchRow
-    query = select(table).where(
-        runtime.policy.readable_clause(
-            principal,
-            RIGHT_READ,
-            tenant_column=table.tenant_id,
-            source_column=table.source_id,
-            classification_column=table.classification,
-            synthetic_column=table.is_synthetic,
+    if runtime.records is not None:
+        rows = runtime.records.search(
+            readable_datasets(session, runtime.policy, principal),
+            query_text=query_text,
+            station_number=station_number,
+            frequency_start_mhz=frequency_start_mhz,
+            frequency_end_mhz=frequency_end_mhz,
+            after=_cursor_decode(cursor),
+            limit=limit + 1,
         )
-    )
-    if query_text:
-        query = query.where(table.text_terms.contains(query_text.lower(), autoescape=True))
-    if station_number is not None:
-        query = query.where(table.station_number == station_number)
-    # Interval overlap. A record without a usable frequency cannot match a frequency filter.
-    if frequency_start_mhz is not None:
-        query = query.where(table.frequency_end_mhz >= frequency_start_mhz)
-    if frequency_end_mhz is not None:
-        query = query.where(table.frequency_start_mhz <= frequency_end_mhz)
-    after = _cursor_decode(cursor)
-    if after is not None:
-        query = query.where(table.source_record_id > after)
-    rows = list(session.scalars(query.order_by(table.source_record_id).limit(limit + 1)))
+    else:
+        rows = _search_index(
+            runtime,
+            session,
+            principal,
+            query_text=query_text,
+            station_number=station_number,
+            frequency_start_mhz=frequency_start_mhz,
+            frequency_end_mhz=frequency_end_mhz,
+            after=_cursor_decode(cursor),
+            limit=limit,
+        )
     kept, next_cursor = _page(rows, limit, "source_record_id")
     return SourceRecordList(
         **_envelope(),
@@ -650,6 +679,43 @@ def search_records(
     )
 
 
+def _search_index(
+    runtime: LibraryRuntime,
+    session: Session,
+    principal: Principal,
+    *,
+    query_text: str | None,
+    station_number: str | None,
+    frequency_start_mhz: float | None,
+    frequency_end_mhz: float | None,
+    after: str | None,
+    limit: int,
+) -> list[SourceSearchRow]:
+    table = SourceSearchRow
+    query = select(table).where(
+        runtime.policy.readable_clause(
+            principal,
+            RIGHT_READ,
+            tenant_column=table.tenant_id,
+            source_column=table.source_id,
+            classification_column=table.classification,
+            synthetic_column=table.is_synthetic,
+        )
+    )
+    if query_text:
+        query = query.where(table.text_terms.contains(query_text.lower(), autoescape=True))
+    if station_number is not None:
+        query = query.where(table.station_number == station_number)
+    # Interval overlap. A record without a usable frequency cannot match a frequency filter.
+    if frequency_start_mhz is not None:
+        query = query.where(table.frequency_end_mhz >= frequency_start_mhz)
+    if frequency_end_mhz is not None:
+        query = query.where(table.frequency_start_mhz <= frequency_end_mhz)
+    if after is not None:
+        query = query.where(table.source_record_id > after)
+    return list(session.scalars(query.order_by(table.source_record_id).limit(limit + 1)))
+
+
 def _readable_record(
     runtime: LibraryRuntime,
     request: Request,
@@ -657,11 +723,36 @@ def _readable_record(
     principal: Principal,
     source_record_id: str,
 ) -> tuple[SourceRecordLocationRow, SourceArtifactRow, SourceSearchRow]:
+    if runtime.records is not None:
+        found = dataset_for_record(session, source_record_id, principal.tenant_id)
+        if found is None:
+            raise not_found()
+        artifact = _readable_artifact(runtime, request, session, principal, found[0].artifact_id)
+        record = runtime.records.record(*found)
+        if record is None:
+            raise not_found()
+        return record[0], artifact, record[1]
     location = session.get(SourceRecordLocationRow, source_record_id)
     if location is None or location.tenant_id != principal.tenant_id:
         raise not_found()
     artifact = _readable_artifact(runtime, request, session, principal, location.artifact_id)
     return location, artifact, session.get_one(SourceSearchRow, source_record_id)
+
+
+def _findings_and_station(
+    runtime: LibraryRuntime, session: Session, location: SourceRecordLocationRow
+) -> tuple[list[RecordQualityFindingRow], ReferenceStationRow | None]:
+    if runtime.records is not None:
+        dataset = session.get_one(RecordDatasetRow, location.artifact_id)
+        record = runtime.records.record(dataset, location.ordinal)
+        station = record[2] if record is not None else None
+        return runtime.records.findings(dataset, location.ordinal), station
+    findings = session.scalars(
+        select(RecordQualityFindingRow)
+        .where(RecordQualityFindingRow.source_record_id == location.source_record_id)
+        .order_by(RecordQualityFindingRow.finding_id)
+    ).all()
+    return list(findings), session.get(ReferenceStationRow, location.source_record_id)
 
 
 def get_record(
@@ -674,12 +765,7 @@ def get_record(
     location, artifact, search = _readable_record(
         runtime, request, session, principal, source_record_id
     )
-    findings = session.scalars(
-        select(RecordQualityFindingRow)
-        .where(RecordQualityFindingRow.source_record_id == source_record_id)
-        .order_by(RecordQualityFindingRow.finding_id)
-    ).all()
-    station = session.get(ReferenceStationRow, source_record_id)
+    findings, station = _findings_and_station(runtime, session, location)
     return SourceRecordDetail(
         **_envelope(),
         source_record_id=source_record_id,

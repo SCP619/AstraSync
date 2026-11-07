@@ -149,6 +149,7 @@ def runtime(
     sessions: sessionmaker[Session],
     store: LocalObjectStore,  # noqa: F811
     users: Any,
+    record_store: Any,
 ) -> WorkerRuntime:
     admin.register_source(
         sessions,
@@ -172,6 +173,7 @@ def runtime(
                 m4.SOURCE_TYPE: m4.TraficomM4TableAdapter(),
                 workbook.SOURCE_TYPE: workbook.TraficomWorkbookAdapter(),
             },
+            records=record_store,
         ),
         clients={"traficom-m4": recorded_client()},
         worker_id="test-worker",

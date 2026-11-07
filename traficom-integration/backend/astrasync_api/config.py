@@ -45,6 +45,8 @@ class Settings:
     oidc: OidcSettings | None = None
     cors_origins: tuple[str, ...] = ()
     object_store_path: Path | None = None
+    # Parsed records go to Parquet datasets here. Unset: the PostgreSQL index tables (Stage 6).
+    record_store_path: Path | None = None
     max_upload_bytes: int = 10 * 1024**3
     source_adapters: tuple[str, ...] = ()
     source_clients: tuple[str, ...] = ()
@@ -91,6 +93,11 @@ class Settings:
             object_store_path=(
                 Path(env["ASTRASYNC_OBJECT_STORE_PATH"])
                 if env.get("ASTRASYNC_OBJECT_STORE_PATH")
+                else None
+            ),
+            record_store_path=(
+                Path(env["ASTRASYNC_RECORD_STORE_PATH"])
+                if env.get("ASTRASYNC_RECORD_STORE_PATH")
                 else None
             ),
             max_upload_bytes=int(env.get("ASTRASYNC_MAX_UPLOAD_BYTES", 10 * 1024**3)),

@@ -1,0 +1,68 @@
+{
+  "hardware": {
+    "cpu": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "logical_cpus": 16,
+    "ram_gib": 15.4,
+    "os": "Windows-10-10.0.26300-SP0",
+    "python": "3.11.0"
+  },
+  "file": "smoke.csv",
+  "expected_rows": 453000,
+  "upload": {
+    "parts": 1,
+    "part_size_bytes": 67108864,
+    "bytes": 50020036,
+    "sha256": "f3cee34d7d4992fcc55bd063edfa57b6ee8f41cfb11192cf267c83c22810eb63",
+    "transfer_seconds": 0.41,
+    "transfer_mib_per_s": 117.6,
+    "client_hash_seconds": 0.04,
+    "complete_call_seconds": 0.021
+  },
+  "ingest": {
+    "final_status": "READY",
+    "attempt": 1,
+    "seconds_from_complete_to_final": 381.7,
+    "processed_records": 453000,
+    "records_per_s_while_parsing": 1194,
+    "crash": null
+  },
+  "reconciliation": {
+    "artifact_id": "7b4c3b9c891f4606a17593b08d155b8b",
+    "status": "INDEXED_WITH_WARNINGS",
+    "server_sha256_matches": true,
+    "row_reconciliation": {
+      "parsed": 453000,
+      "accepted": 451173,
+      "flagged": 1827,
+      "rejected": 0
+    },
+    "expected_rows": 453000,
+    "rows_match": true
+  },
+  "queries": {
+    "station_lookup": {
+      "n": 50,
+      "p50_ms": 9.1,
+      "p95_ms": 10.1,
+      "max_ms": 17.6
+    },
+    "frequency_window_page": {
+      "n": 50,
+      "p50_ms": 172.7,
+      "p95_ms": 201.6,
+      "max_ms": 343.1
+    },
+    "text_search_page": {
+      "n": 50,
+      "p50_ms": 65.8,
+      "p95_ms": 75.3,
+      "max_ms": 92.5
+    }
+  },
+  "token_renewals": 0,
+  "peak_rss_mib": {
+    "idp": 4,
+    "api": 4,
+    "worker": 4
+  }
+}

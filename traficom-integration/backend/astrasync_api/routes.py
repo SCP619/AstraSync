@@ -905,7 +905,10 @@ def screen_frequency_relevance(
     """Frequency stage of the Finland relevance filter. A match is a screening signal only."""
     if start_mhz > end_mhz:
         raise ApiError(422, ErrorCode.VALIDATION_ERROR, "start_mhz must not exceed end_mhz.")
-    return relevance.screen_range(session, _library(request).policy, principal, start_mhz, end_mhz)
+    library = _library(request)
+    return relevance.screen_range(
+        session, library.policy, principal, start_mhz, end_mhz, library.records
+    )
 
 
 @router.get(

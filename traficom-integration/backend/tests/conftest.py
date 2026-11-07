@@ -181,6 +181,12 @@ def secure_app(
         database_url=engine.url.render_as_string(hide_password=False),
         oidc=oidc_settings(),
         object_store_path=tmp_path / "objects",
+        # ASTRASYNC_TEST_RECORD_STORE=parquet runs the suite on the Parquet record store.
+        record_store_path=(
+            tmp_path / "records"
+            if os.environ.get("ASTRASYNC_TEST_RECORD_STORE") == "parquet"
+            else None
+        ),
         max_upload_bytes=1024 * 1024,
     )
     app = create_app(settings, keys=JwksCache(lambda: jwks_document))
@@ -188,6 +194,12 @@ def secure_app(
     app.state.alert_stream_poll_seconds = 0.02
     app.state.alert_stream_max_seconds = 0.1
     return app
+
+
+@pytest.fixture
+def record_store(secure_app: FastAPI) -> Any:
+    """The app's Parquet record store, or None when records go to the PostgreSQL index."""
+    return secure_app.state.library.records
 
 
 @pytest.fixture

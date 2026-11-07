@@ -1,6 +1,6 @@
 # AstraSync backend
 
-FastAPI service. **Status:** IPD stage 5. Identity, authorization, audit, the source library and the case and review workflow are implemented. No real RF method, criterion or AI agent is plugged in yet. Each operation's `x-implementation-status` in `contract/openapi.json` says what is real; other routes return `501` after authorization. MFA and the production identity provider have not been tested against a real provider. Object storage is local and demo-only; real ITU and workbook parsers and connectors do not exist yet.
+FastAPI service. **Status:** IPD stage 7, part way. Identity, authorization, audit, the source library, the case and review workflow, and alerts are implemented. No real push gateway exists, and native packages are unbuilt (see `ui/README.md`). No real RF method, criterion or AI agent is plugged in yet. Each operation's `x-implementation-status` in `contract/openapi.json` says what is real; other routes return `501` after authorization. MFA and the production identity provider have not been tested against a real provider. Object storage is local and demo-only; real ITU and workbook parsers and connectors do not exist yet.
 
 ## How access works
 
@@ -42,6 +42,19 @@ The backend orchestrates. It holds no RF formula, legal limit or AI model.
 
 **Plugging in components (Data/AI):** set `ASTRASYNC_RF_METHODS` to `module:Class` values, and `ASTRASYNC_CRITERION_RESOLVER` and `ASTRASYNC_DRAFT_AGENT` to one each. See `contract/interfaces.py`, `MethodAssessment`, `MethodCalculation` and `AgentDraftResponse`.
 
+## Alerts
+
+The alert engine is its own process (`python -m astrasync_api.alerts`), so an ingest or RF backlog can't delay it.
+
+- **Flow:** durable `outbox_events`, then versioned rules, then one deduplicated alert per rule, then deliveries, then acknowledgment. Each rule decision is audited.
+- **Truthful triggers:** an exceedance alert re-checks stored state for a verified criterion and a margin. An event alone can't create one.
+- **Safe text:** titles come from fixed templates in `alerts.py`, so rules and source records can't add content. A push carries only `PushPayload`.
+- **Recipients:** active users with a routed role who can read the case at that moment. Inbox and deep-link access are re-checked on each request.
+- **Delivery states:** in-app, then `PENDING`, `SENT`, `DELIVERED`, `READ` or `FAILED`. `SENT` only means handed to the provider. Without a gateway, push fails visibly with `PUSH_NOT_CONFIGURED`.
+- **Limits:** per-user push quota, quiet hours, and channel choices. Critical and security alerts skip the last two.
+
+**Add a provider:** implement `alerts.PushGateway`, and set `ASTRASYNC_PUSH_GATEWAY` and `ASTRASYNC_PUSH_TOKEN_KEY` (a Fernet key).
+
 ## Session policy
 
 Tokens are verified on every request, and the database is read each time, so these apply to the user's next request, even with an unexpired token:
@@ -75,6 +88,8 @@ There is no self-registration. A valid sign-in with no provisioned account gets 
 | `ASTRASYNC_DRAFT_AGENT` | API | Empty means AI drafting is off |
 | `ASTRASYNC_AI_CLASSIFICATIONS` | No | Default `PUBLIC,INTERNAL` |
 | `ASTRASYNC_BUILD_SHA` | No | Stored on each analysis run for replay |
+| `ASTRASYNC_PUSH_TOKEN_KEY` | For device registration | Fernet key that encrypts push tokens at rest |
+| `ASTRASYNC_PUSH_GATEWAY` | For push | `module:Class` implementing `alerts.PushGateway` |
 
 With none set, the API starts unconfigured and denies everything. An unsafe or partial configuration refuses to start.
 

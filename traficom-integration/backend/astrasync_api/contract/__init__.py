@@ -6,5 +6,5 @@ traficom-integration/contract/DECISIONS.md for documented conflicts and assumpti
 
 from typing import Literal
 
-CONTRACT_VERSION = "1.0.0-draft.4"
-SchemaVersion = Literal["1.0.0-draft.4"]
+CONTRACT_VERSION = "1.0.0-draft.5"
+SchemaVersion = Literal["1.0.0-draft.5"]

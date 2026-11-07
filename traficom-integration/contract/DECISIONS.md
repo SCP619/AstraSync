@@ -1,6 +1,6 @@
 # Contract decisions for joint review
 
-TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.4`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
+TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.5`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
 
 ## Documentation conflicts
 
@@ -41,6 +41,8 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | G19 | No route to read or edit drafts or read review history, though the inspector requires them | Added `GET /cases/{id}/drafts`, `PUT /cases/{id}/drafts/{draft_id}` and `GET /cases/{id}/reviews` |
 | G20 | Nothing defined how a relevance result becomes a case | Added `CaseCandidate` and `cases.upsert_candidate`, for the relevance owner to call |
 | G21 | BSD has no rule for a case's lead metric, or for its finding from a set of method runs | See A17 and A18 |
+| G22 | `PUT /alerts/preferences` had no way to read current values | Added `GET /alerts/preferences` |
+| G23 | ALERT_ENGINE has a reviewer escalation trigger, but nothing can raise it | Added `ReviewAction.ESCALATE` and `DomainEventKind.CASE_ESCALATED` |
 | G10 | Relevance labels and reason codes have no closed list beyond `FREQUENCY_MATCH` | Validated `UPPER_SNAKE_CASE` codes. The relevance owner should publish the list |
 
 ## Assumptions
@@ -68,6 +70,12 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A20 | Case access reuses source entitlements. Per-case assignment ("assigned/authorised" in Security) isn't modelled yet | Stage 8 |
 | A21 | Case export needs `CASE_EXPORT` plus an `EXPORT` right on restricted data, and a reviewer can approve a draft with no second approver | Deployment policy |
 | A22 | AI drafting is synchronous in the request. A slow provider holds one API thread | When a real agent exists |
+| A23 | Native clients keep tokens in memory only, so there is no refresh token and no use yet for the OS credential vault that Security describes. Restarting signs in again | Usability testing on devices |
+| A24 | Native sign-in uses the custom scheme `fi.astrasync.app` with PKCE. Android App Links would be stronger but need a production domain | Before release |
+| A25 | Windows notifications are local while the app runs, with no server push. An inbox catches up on start | Windows delivery testing |
+| A26 | Device revocation stops pushes. It doesn't end the session: that needs device-bound tokens, which A23 avoids. `revoke-sessions` ends sessions | Security review |
+| A27 | Severity defaults and role routing in `alerts.DEFAULT_RULES` are starting values | **Team review** |
+| A28 | Alert titles and previews are English only. Finnish needs a client-side catalogue | Usability testing |
 | A11 | Audit covers denials by signed-in users, permitted writes, exports and downloads. Anonymous and invalid-token failures are logged only, so they cannot fill the audit table | Stage 8 |
 
 ## Outside the contract: needs a team decision

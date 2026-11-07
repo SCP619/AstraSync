@@ -372,8 +372,8 @@ function ReviewForm({
       <label className="stacked">
         Decision
         <select name="decision" required>
-          {(["FOLLOW_UP", "NEEDS_MORE_DATA", "ACCEPT_FINDING", "REJECT_FINDING", "CLOSE_NO_CONCERN"] as const)
-            .filter((action) => action === "FOLLOW_UP" || action === "NEEDS_MORE_DATA" || run !== null)
+          {(["FOLLOW_UP", "NEEDS_MORE_DATA", "ESCALATE", "ACCEPT_FINDING", "REJECT_FINDING", "CLOSE_NO_CONCERN"] as const)
+            .filter((action) => !["ACCEPT_FINDING", "REJECT_FINDING", "CLOSE_NO_CONCERN"].includes(action) || run !== null)
             .map((action) => <option key={action} value={action}>{ACTION_TEXT[action]}</option>)}
           {openDrafts.map((draft) => {
             const blocked = draft.draft_type === "DRAFT_OBJECTION" && !hasVerified;

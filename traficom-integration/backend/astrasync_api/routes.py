@@ -14,7 +14,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
-from . import cases, library
+from . import alert_api, cases, library
 from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
@@ -537,56 +537,104 @@ def abort_upload(
 # --- Alerts and devices -----------------------------------------------------------------------
 
 
-@router.get("/alerts", response_model=AlertList, **_policy(Capability.ALERT_READ))
-async def list_alerts(
+@router.get("/alerts", response_model=AlertList, **_policy(Capability.ALERT_READ, _IMPLEMENTED))
+def list_alerts(
+    request: Request,
+    principal: CurrentPrincipal,
+    session: DbSession,
     status: AlertStatus | None = None,
     severity: AlertSeverity | None = None,
     limit: Limit = 50,
     cursor: Cursor = None,
 ) -> Any:
-    raise _not_implemented()
+    return alert_api.list_alerts(
+        _library(request),
+        session,
+        principal,
+        status=status,
+        severity=severity,
+        limit=limit,
+        cursor=cursor,
+    )
+
+
+@router.get(
+    "/alerts/preferences",
+    response_model=AlertPreferences,
+    **_policy(Capability.ALERT_PREFERENCES, _IMPLEMENTED),
+)
+def get_alert_preferences(principal: CurrentPrincipal, session: DbSession) -> Any:
+    return alert_api.get_preferences(session, principal)
 
 
 @router.get(
     "/alerts/stream",
     response_class=StreamingResponse,
     responses={200: {"content": {"text/event-stream": {"schema": {"type": "string"}}}}},
-    **_policy(Capability.ALERT_READ),
+    **_policy(Capability.ALERT_READ, _IMPLEMENTED),
 )
-async def stream_alerts() -> Any:
-    raise _not_implemented()
+async def stream_alerts(request: Request, principal: CurrentPrincipal) -> Any:
+    return StreamingResponse(
+        alert_api.alert_stream(
+            request,
+            _library(request),
+            principal,
+            poll_seconds=request.app.state.alert_stream_poll_seconds,
+            max_seconds=request.app.state.alert_stream_max_seconds,
+        ),
+        media_type="text/event-stream",
+    )
 
 
-@router.get("/alerts/{alert_id}", response_model=AlertDetail, **_policy(Capability.ALERT_READ))
-async def get_alert(alert_id: ResourceId) -> Any:
-    raise _not_implemented()
+@router.get(
+    "/alerts/{alert_id}", response_model=AlertDetail, **_policy(Capability.ALERT_READ, _IMPLEMENTED)
+)
+def get_alert(
+    request: Request, alert_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return alert_api.get_alert(_library(request), session, principal, alert_id)
 
 
 @router.post(
     "/alerts/{alert_id}/acknowledge",
     response_model=AlertAcknowledged,
-    **_policy(Capability.ALERT_ACKNOWLEDGE),
+    **_policy(Capability.ALERT_ACKNOWLEDGE, _IMPLEMENTED),
 )
-async def acknowledge_alert(
-    alert_id: ResourceId, body: AlertAcknowledgeRequest, idempotency_key: IdempotencyKey
+def acknowledge_alert(
+    request: Request,
+    alert_id: ResourceId,
+    body: AlertAcknowledgeRequest,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
 ) -> Any:
-    raise _not_implemented()
+    return alert_api.acknowledge(_library(request), session, principal, alert_id, body)
 
 
 @router.put(
     "/alerts/preferences",
     response_model=AlertPreferences,
-    **_policy(Capability.ALERT_PREFERENCES),
+    **_policy(Capability.ALERT_PREFERENCES, _IMPLEMENTED),
 )
-async def update_alert_preferences(body: AlertPreferencesUpdate) -> Any:
-    raise _not_implemented()
+def update_alert_preferences(
+    body: AlertPreferencesUpdate, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return alert_api.update_preferences(session, principal, body)
 
 
 @router.post(
-    "/devices", response_model=Device, status_code=201, **_policy(Capability.DEVICE_MANAGE)
+    "/devices",
+    response_model=Device,
+    status_code=201,
+    **_policy(Capability.DEVICE_MANAGE, _IMPLEMENTED),
 )
-async def register_device(body: DeviceRegistrationRequest) -> Any:
-    raise _not_implemented()
+def register_device(
+    request: Request,
+    body: DeviceRegistrationRequest,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return alert_api.register_device(session, principal, body, request.app.state.push_cipher)
 
 
 @router.delete(
@@ -594,24 +642,31 @@ async def register_device(body: DeviceRegistrationRequest) -> Any:
     status_code=204,
     response_class=Response,
     response_model=None,
-    **_policy(Capability.DEVICE_MANAGE),
+    **_policy(Capability.DEVICE_MANAGE, _IMPLEMENTED),
 )
-async def revoke_device(device_id: ResourceId) -> Any:
-    raise _not_implemented()
+def revoke_device(device_id: ResourceId, principal: CurrentPrincipal, session: DbSession) -> Any:
+    alert_api.revoke_device(session, principal, device_id)
+    return Response(status_code=204)
 
 
 @router.get(
-    "/admin/alert-rules", response_model=AlertRuleList, **_policy(Capability.ADMIN_ALERT_RULES)
+    "/admin/alert-rules",
+    response_model=AlertRuleList,
+    **_policy(Capability.ADMIN_ALERT_RULES, _IMPLEMENTED),
 )
-async def list_alert_rules(limit: Limit = 50, cursor: Cursor = None) -> Any:
-    raise _not_implemented()
+def list_alert_rules(
+    principal: CurrentPrincipal, session: DbSession, limit: Limit = 50, cursor: Cursor = None
+) -> Any:
+    return alert_api.list_rules(session, principal, limit, cursor)
 
 
 @router.put(
-    "/admin/alert-rules", response_model=AlertRuleSaved, **_policy(Capability.ADMIN_ALERT_RULES)
+    "/admin/alert-rules",
+    response_model=AlertRuleSaved,
+    **_policy(Capability.ADMIN_ALERT_RULES, _IMPLEMENTED),
 )
-async def save_alert_rule(body: AlertRuleUpsert) -> Any:
-    raise _not_implemented()
+def save_alert_rule(body: AlertRuleUpsert, principal: CurrentPrincipal, session: DbSession) -> Any:
+    return alert_api.save_rule(session, principal, body)
 
 
 # --- Source library and monitoring ------------------------------------------------------------

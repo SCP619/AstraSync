@@ -1,0 +1,15 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Only what the shared UI needs: open the system browser, receive sign-in redirects, and show notifications.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "notification:default",
+    "deep-link:default",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [{ "url": "https://*" }, { "url": "http://127.0.0.1:*" }]
+    }
+  ]
+}

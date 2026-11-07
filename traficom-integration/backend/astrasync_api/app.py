@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from pydantic.json_schema import models_json_schema
 
+from .alerts import TokenCipher
 from .authz import ObjectAccessPolicy
 from .config import Settings, SettingsError, load_named
 from .contract import CONTRACT_VERSION
@@ -109,6 +110,11 @@ def create_app(settings: Settings | None = None, *, keys: JwksCache | None = Non
             ),
             max_upload_bytes=settings.max_upload_bytes,
         )
+    app.state.push_cipher = (
+        TokenCipher(settings.push_token_key) if settings.push_token_key else None
+    )
+    app.state.alert_stream_poll_seconds = 2.0
+    app.state.alert_stream_max_seconds = 900.0
     app.state.draft_agent = _load_draft_agent(settings)
     app.state.ai_classifications = frozenset(
         UsageClassification(level) for level in settings.ai_classifications

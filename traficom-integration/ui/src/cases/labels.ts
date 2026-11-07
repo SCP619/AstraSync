@@ -56,6 +56,7 @@ export const ACTION_TEXT: Record<Schemas["ReviewAction"], string> = {
   CLOSE_NO_CONCERN: "Close: no concern",
   APPROVE_DRAFT: "Approve draft",
   REJECT_DRAFT: "Reject draft",
+  ESCALATE: "Escalate as urgent",
 };
 
 export const DRAFT_TYPE_TEXT: Record<Schemas["DraftType"], string> = {

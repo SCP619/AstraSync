@@ -53,6 +53,8 @@ class Settings:
     draft_agent: str | None = None
     ai_classifications: tuple[str, ...] = ("PUBLIC", "INTERNAL")
     build_sha: str = "unknown"
+    push_token_key: str | None = None
+    push_gateway: str | None = None
 
     def __post_init__(self) -> None:
         _validate(self)
@@ -99,6 +101,8 @@ class Settings:
             draft_agent=env.get("ASTRASYNC_DRAFT_AGENT") or None,
             ai_classifications=_csv(env.get("ASTRASYNC_AI_CLASSIFICATIONS", "PUBLIC,INTERNAL")),
             build_sha=env.get("ASTRASYNC_BUILD_SHA", "unknown"),
+            push_token_key=env.get("ASTRASYNC_PUSH_TOKEN_KEY") or None,
+            push_gateway=env.get("ASTRASYNC_PUSH_GATEWAY") or None,
             oidc=OidcSettings(
                 issuer=env["ASTRASYNC_OIDC_ISSUER"],
                 audience=env["ASTRASYNC_OIDC_AUDIENCE"],

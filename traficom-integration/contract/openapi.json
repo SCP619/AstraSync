@@ -364,7 +364,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           }
@@ -616,7 +616,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -692,7 +692,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -758,7 +758,7 @@
             "title": "Quiet Hours Start Utc"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           }
@@ -919,7 +919,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -998,7 +998,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1276,7 +1276,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           }
@@ -1371,7 +1371,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1575,7 +1575,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1928,7 +1928,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2017,7 +2017,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2466,7 +2466,7 @@
             "$ref": "#/components/schemas/DevicePlatform"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2576,7 +2576,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2614,6 +2614,7 @@
           "METHOD_COMPLETED",
           "CRITERION_CHECKED",
           "CASE_REVIEWED",
+          "CASE_ESCALATED",
           "ALERT_CREATED",
           "ALERT_ACKNOWLEDGED",
           "SECURITY_EVENT"
@@ -2651,7 +2652,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2750,7 +2751,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2873,7 +2874,7 @@
             "type": "boolean"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -2948,7 +2949,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3206,7 +3207,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           }
@@ -3310,7 +3311,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3353,7 +3354,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3469,7 +3470,7 @@
             "title": "Resource Id"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3605,7 +3606,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -3856,7 +3857,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           }
@@ -4289,7 +4290,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -4662,7 +4663,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5078,7 +5079,8 @@
           "FOLLOW_UP",
           "CLOSE_NO_CONCERN",
           "APPROVE_DRAFT",
-          "REJECT_DRAFT"
+          "REJECT_DRAFT",
+          "ESCALATE"
         ],
         "title": "ReviewAction",
         "type": "string"
@@ -5195,7 +5197,7 @@
             "type": "string"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           }
@@ -5248,7 +5250,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5637,7 +5639,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5714,7 +5716,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5866,7 +5868,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5979,7 +5981,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6322,7 +6324,7 @@
             "title": "Record Schema Version"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6430,7 +6432,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           }
@@ -6594,7 +6596,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6690,7 +6692,7 @@
             ]
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -6877,7 +6879,7 @@
             "title": "Next Cursor"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -7093,7 +7095,7 @@
             "type": "array"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -7230,7 +7232,7 @@
             "type": "integer"
           },
           "schema_version": {
-            "const": "1.0.0-draft.4",
+            "const": "1.0.0-draft.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -7298,7 +7300,7 @@
   },
   "info": {
     "title": "AstraSync API",
-    "version": "1.0.0-draft.4"
+    "version": "1.0.0-draft.5"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -7439,7 +7441,7 @@
           }
         },
         "summary": "List Alert Rules",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ADMIN_ALERT_RULES"
       },
       "put": {
@@ -7557,7 +7559,7 @@
           }
         },
         "summary": "Save Alert Rule",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ADMIN_ALERT_RULES"
       }
     },
@@ -7865,11 +7867,119 @@
           }
         },
         "summary": "List Alerts",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ALERT_READ"
       }
     },
     "/api/v1/alerts/preferences": {
+      "get": {
+        "operationId": "get_alert_preferences_api_v1_alerts_preferences_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertPreferences"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Alert Preferences",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "ALERT_PREFERENCES"
+      },
       "put": {
         "operationId": "update_alert_preferences_api_v1_alerts_preferences_put",
         "requestBody": {
@@ -7985,7 +8095,7 @@
           }
         },
         "summary": "Update Alert Preferences",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ALERT_PREFERENCES"
       }
     },
@@ -8095,7 +8205,7 @@
           }
         },
         "summary": "Stream Alerts",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ALERT_READ"
       }
     },
@@ -8219,7 +8329,7 @@
           }
         },
         "summary": "Get Alert",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ALERT_READ"
       }
     },
@@ -8364,7 +8474,7 @@
           }
         },
         "summary": "Acknowledge Alert",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "ALERT_ACKNOWLEDGE"
       }
     },
@@ -10111,7 +10221,7 @@
           }
         },
         "summary": "Register Device",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "DEVICE_MANAGE"
       }
     },
@@ -10228,7 +10338,7 @@
           }
         },
         "summary": "Revoke Device",
-        "x-implementation-status": "DESIGNED",
+        "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "DEVICE_MANAGE"
       }
     },

@@ -30,7 +30,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 
-from astrasync_api import admin, cases
+from astrasync_api import admin, alerts, cases
 from astrasync_api.case_tables import CaseRow
 from astrasync_api.config import Settings
 from astrasync_api.contract.enums import (
@@ -60,9 +60,11 @@ IDP_PORT = 8801
 API_PORT = 8800
 UI_ORIGIN = f"http://{HOST}:5173"
 ISSUER = f"http://{HOST}:{IDP_PORT}"
+NATIVE_ORIGINS = ("http://tauri.localhost", "tauri://localhost", "https://localhost")
 CLIENT_ID = "astrasync-dev-ui"
 AUDIENCE = "astrasync-api"
-REDIRECT_URIS = {f"{UI_ORIGIN}/auth/callback"}
+NATIVE_REDIRECT = "fi.astrasync.app://auth/callback"
+REDIRECT_URIS = {f"{UI_ORIGIN}/auth/callback", NATIVE_REDIRECT}
 LOGOUT_URIS = {f"{UI_ORIGIN}/login"}
 KID = "dev-key-1"
 TENANT_A = "DEMO-TENANT-A"
@@ -114,7 +116,7 @@ def create_idp() -> FastAPI:
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[UI_ORIGIN],
+        allow_origins=[UI_ORIGIN, *NATIVE_ORIGINS],
         allow_methods=["GET", "POST"],
         allow_headers=["Content-Type"],
     )
@@ -480,7 +482,7 @@ def _dev_environment() -> dict[str, str]:
         "ASTRASYNC_OIDC_AUDIENCE": AUDIENCE,
         "ASTRASYNC_OIDC_JWKS_URI": f"{ISSUER}/jwks",
         "ASTRASYNC_OIDC_REQUIRED_SCOPES": "astrasync.api",
-        "ASTRASYNC_CORS_ORIGINS": UI_ORIGIN,
+        "ASTRASYNC_CORS_ORIGINS": ",".join((UI_ORIGIN, *NATIVE_ORIGINS)),
         "ASTRASYNC_OBJECT_STORE_PATH": str(OBJECTS_PATH),
         "ASTRASYNC_DRAFT_AGENT": "demo_plugins:DemoDraftAgent",
         "ASTRASYNC_RF_METHODS": "demo_plugins:DemoEchoMethod",
@@ -507,7 +509,8 @@ def main() -> int:
         os.environ.update(_dev_environment())
         runtime = build_runtime(Settings.from_env(os.environ))
         while True:
-            if not run_one(runtime):
+            created = alerts.run_once(runtime.context.sessions, None, None)
+            if not run_one(runtime) and not created:
                 time.sleep(1)
     else:
         print(__doc__)

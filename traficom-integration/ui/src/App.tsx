@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ApiError, createApiClient, type CaseList, type Me } from "./api/client";
 import type { AuthAdapter } from "./auth/adapter";
@@ -14,8 +22,10 @@ import {
   type SessionState,
   type SignInNotice,
 } from "./shared";
+import { AlertDetailPage, AlertsPage } from "./alerts/AlertsPage";
 import { CaseInspectorPage } from "./cases/CaseInspectorPage";
 import { CaseListPage } from "./cases/CaseListPage";
+import { webPlatform, type PlatformAdapter, type PushPermission } from "./platform/types";
 import { SourceLibraryPage } from "./sources/SourceLibraryPage";
 
 function SessionProvider({
@@ -76,6 +86,12 @@ function SessionProvider({
       },
       signInFailed: () => {
         setNotice("SIGN_IN_FAILED");
+        setState("SIGNED_OUT");
+      },
+      sessionEnded: () => {
+        token.current = null;
+        void auth.clearSession();
+        setNotice("SESSION_ENDED");
         setState("SIGNED_OUT");
       },
     }),
@@ -181,6 +197,121 @@ function RequireSession({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+const STREAM_RETRY_MS = 5000;
+const INBOX_POLL_MS = 60000;
+
+interface AlertActivity {
+  openCount: number | null;
+  more: boolean;
+  version: number;
+  pushPermission: PushPermission | null;
+  changed: () => void;
+}
+
+/** Live alert state: a stream with reconnects, and a slow poll so a broken stream still recovers. */
+function useAlertActivity(platform: PlatformAdapter, me: Me | null): AlertActivity {
+  const { api, sessionEnded } = useSession();
+  const [version, setVersion] = useState(0);
+  const [open, setOpen] = useState<{ count: number; more: boolean } | null>(null);
+  const [pushPermission, setPushPermission] = useState<PushPermission | null>(null);
+  const changed = useCallback(() => setVersion((value) => value + 1), []);
+  const canRead = me?.capabilities.includes("ALERT_READ") ?? false;
+  const canRegister = me?.capabilities.includes("DEVICE_MANAGE") ?? false;
+
+  useEffect(() => {
+    if (!canRead) {
+      return undefined;
+    }
+    const controller = new AbortController();
+    api
+      .listAlerts("OPEN", undefined, controller.signal)
+      .then((page) => setOpen({ count: page.items.length, more: page.next_cursor !== null }))
+      .catch(() => undefined);
+    const timer = window.setInterval(changed, INBOX_POLL_MS);
+    return () => {
+      controller.abort();
+      window.clearInterval(timer);
+    };
+  }, [api, canRead, version, changed]);
+
+  useEffect(() => {
+    if (!canRead) {
+      return undefined;
+    }
+    const controller = new AbortController();
+    let retry: number | undefined;
+    const connect = () => {
+      api
+        .streamAlerts(
+          (alert) => {
+            void platform.notify(alert);
+            changed();
+          },
+          controller.signal,
+          sessionEnded,
+        )
+        .catch(() => undefined)
+        .finally(() => {
+          if (!controller.signal.aborted) {
+            retry = window.setTimeout(connect, STREAM_RETRY_MS);
+          }
+        });
+    };
+    connect();
+    return () => {
+      controller.abort();
+      window.clearTimeout(retry);
+    };
+  }, [api, canRead, platform, changed, sessionEnded]);
+
+  useEffect(() => {
+    if (!canRegister) {
+      return;
+    }
+    platform
+      .enablePush(async (name, token) => {
+        await api.registerDevice(name, token);
+      })
+      .then(setPushPermission)
+      .catch(() => setPushPermission("NOT_CONFIGURED"));
+  }, [api, canRegister, platform]);
+
+  return {
+    openCount: open?.count ?? null,
+    more: open?.more ?? false,
+    version,
+    pushPermission,
+    changed,
+  };
+}
+
+const AlertActivityContext = createContext<AlertActivity | null>(null);
+
+function useAlertContext(): AlertActivity {
+  const value = useContext(AlertActivityContext);
+  if (value === null) {
+    throw new Error("useAlertContext needs an AppShell");
+  }
+  return value;
+}
+
+function AlertsRoute() {
+  const activity = useAlertContext();
+  return <AlertsPage pushPermission={activity.pushPermission} refreshKey={activity.version} />;
+}
+
+function AlertDetailRoute() {
+  const activity = useAlertContext();
+  return <AlertDetailPage onChanged={activity.changed} />;
+}
+
+/** Opens paths the OS hands the app: a sign-in redirect or a tapped notification. */
+function DeepLinks({ platform }: { platform: PlatformAdapter }) {
+  const navigate = useNavigate();
+  useEffect(() => platform.onOpenPath((path) => navigate(path)), [platform, navigate]);
+  return null;
+}
+
 const ROLE_TEXT: Record<Me["roles"][number], string> = {
   ANALYST: "Analyst",
   REVIEWER: "Reviewer",
@@ -189,10 +320,17 @@ const ROLE_TEXT: Record<Me["roles"][number], string> = {
 };
 
 /** Confirms identity with the server before anything inside it renders. */
-function AppShell({ children }: { children: React.ReactNode }) {
+function AppShell({
+  platform,
+  children,
+}: {
+  platform: PlatformAdapter;
+  children: React.ReactNode;
+}) {
   const { api, signOut } = useSession();
   const load = useCallback((signal: AbortSignal) => api.getMe(signal), [api]);
   const { result, retry } = useLoad<Me>(load);
+  const activity = useAlertActivity(platform, result?.data ?? null);
 
   const signOutButton = (
     <button type="button" onClick={() => void signOut()}>Sign out</button>
@@ -226,11 +364,18 @@ function AppShell({ children }: { children: React.ReactNode }) {
   const me = result.data;
   return (
     <MeContext.Provider value={me}>
+      <AlertActivityContext.Provider value={activity}>
       <header className="top-bar">
         <span className="brand">AstraSync</span>
         <nav aria-label="Main" className="main-nav">
           <NavLink to="/dashboard">Overview</NavLink>
           {me.capabilities.includes("CASE_READ") && <NavLink to="/cases">Cases</NavLink>}
+          {me.capabilities.includes("ALERT_READ") && (
+            <NavLink to="/alerts">
+              Alerts
+              {activity.openCount ? ` (${activity.openCount}${activity.more ? "+" : ""})` : ""}
+            </NavLink>
+          )}
           {me.capabilities.includes("SOURCE_HEALTH_READ") && <NavLink to="/sources">Source library</NavLink>}
         </nav>
         <span className="environment" data-environment={me.environment}>
@@ -240,6 +385,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
         {signOutButton}
       </header>
       {children}
+      </AlertActivityContext.Provider>
     </MeContext.Provider>
   );
 }
@@ -355,43 +501,47 @@ export function App({
   auth,
   apiBaseUrl,
   fetchImpl,
+  platform = webPlatform,
 }: {
   auth: AuthAdapter;
   apiBaseUrl: string;
   fetchImpl?: typeof fetch;
+  platform?: PlatformAdapter;
 }) {
+  const shell = (page: React.ReactNode) => (
+    <RequireSession>
+      <AppShell platform={platform}>{page}</AppShell>
+    </RequireSession>
+  );
   return (
     <SessionProvider auth={auth} apiBaseUrl={apiBaseUrl} {...(fetchImpl ? { fetchImpl } : {})}>
+      <DeepLinks platform={platform} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/auth/callback" element={<CallbackPage auth={auth} />} />
         <Route
           path="/dashboard"
-          element={<RequireSession><AppShell><DashboardPage /></AppShell></RequireSession>}
+          element={shell(<DashboardPage />)}
         />
         <Route
           path="/sources"
-          element={<RequireSession><AppShell><SourcesRoute /></AppShell></RequireSession>}
+          element={shell(<SourcesRoute />)}
         />
         <Route
           path="/cases"
-          element={
-            <RequireSession>
-              <AppShell>
-                <RequireCapability capability="CASE_READ"><CaseListPage /></RequireCapability>
-              </AppShell>
-            </RequireSession>
-          }
+          element={shell(<RequireCapability capability="CASE_READ"><CaseListPage /></RequireCapability>)}
         />
         <Route
           path="/cases/:caseId"
-          element={
-            <RequireSession>
-              <AppShell>
-                <RequireCapability capability="CASE_READ"><CaseInspectorPage /></RequireCapability>
-              </AppShell>
-            </RequireSession>
-          }
+          element={shell(<RequireCapability capability="CASE_READ"><CaseInspectorPage /></RequireCapability>)}
+        />
+        <Route
+          path="/alerts"
+          element={shell(<RequireCapability capability="ALERT_READ"><AlertsRoute /></RequireCapability>)}
+        />
+        <Route
+          path="/alerts/:alertId"
+          element={shell(<RequireCapability capability="ALERT_READ"><AlertDetailRoute /></RequireCapability>)}
         />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

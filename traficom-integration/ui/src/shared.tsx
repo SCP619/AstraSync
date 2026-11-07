@@ -12,6 +12,7 @@ export interface Session {
   signOut(): Promise<void>;
   sessionEstablished(): Promise<void>;
   signInFailed(): void;
+  sessionEnded(): void;
 }
 
 export const SessionContext = createContext<Session | null>(null);

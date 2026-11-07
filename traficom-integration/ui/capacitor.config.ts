@@ -6,7 +6,8 @@ const config: CapacitorConfig = {
   webDir: "dist",
   android: {
     allowMixedContent: false,
-    webContentsDebuggingEnabled: false,
+    // Only for local automated device tests (ui/e2e). Off in every other build.
+    webContentsDebuggingEnabled: process.env.ASTRASYNC_E2E_WEBVIEW_DEBUG === "true",
   },
 };
 

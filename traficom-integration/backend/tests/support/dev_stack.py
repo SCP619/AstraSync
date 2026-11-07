@@ -28,7 +28,7 @@ import jwt
 import uvicorn
 from cryptography.hazmat.primitives.asymmetric import rsa
 from demo_adapter import FORMAT_HEADER, DemoAdapter
-from fastapi import FastAPI, Form, HTTPException, Query
+from fastapi import FastAPI, Form, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
@@ -115,6 +115,8 @@ def create_idp() -> FastAPI:
     key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
     public_jwk: dict[str, Any] = jwt.algorithms.RSAAlgorithm.to_jwk(key.public_key(), as_dict=True)
     codes: dict[str, dict[str, str]] = {}
+    # The last sign-in request, so automated device tests can act as the person in the browser.
+    latest_request: dict[str, str] = {}
 
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(
@@ -138,12 +140,17 @@ def create_idp() -> FastAPI:
             "subject_types_supported": ["public"],
         }
 
+    @app.get("/dev/latest-sign-in-request")
+    def latest_sign_in_request() -> dict[str, str]:
+        return dict(latest_request)
+
     @app.get("/jwks")
     def jwks() -> dict[str, Any]:
         return {"keys": [{**public_jwk, "kid": KID, "use": "sig", "alg": "RS256"}]}
 
     @app.get("/authorize", response_class=HTMLResponse)
     def authorize(
+        request: Request,
         client_id: str,
         redirect_uri: str,
         code_challenge: str,
@@ -167,6 +174,8 @@ def create_idp() -> FastAPI:
             "scope": scope,
             "nonce": nonce,
         }
+        latest_request.clear()
+        latest_request.update(request.query_params)  # Exactly what the app sent.
         fields = "".join(
             f'<input type="hidden" name="{name}" value="{html.escape(value, quote=True)}">'
             for name, value in hidden.items()

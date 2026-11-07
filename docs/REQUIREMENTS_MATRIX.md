@@ -71,7 +71,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-REL-001 | BE | VERIFIED | Distinct domains and source types | |
 | TR-REL-002 | BE | BLOCKED | | Needs consecutive real IFIC issues |
 | TR-REL-003 | BE | BLOCKED | | Same |
-| TR-REL-004 | BE | IN_PROGRESS | Frequency stage done on real data (`test_relevance.py`) | Service, geometry, technical stages need IFIC fields |
+| TR-REL-004 | BE, UI | IN_PROGRESS | Frequency stage on real data (`test_relevance.py`); `/finland` screen shows the stages, unassessed ones as not assessed (PR #21, browser-checked) | Service, geometry, technical stages need IFIC fields |
 | TR-REL-005 | BE, UI | VERIFIED | Overlap labelled a screening signal | |
 | TR-REL-006 | BE | VERIFIED | `INSUFFICIENT_DATA` candidates kept with reasons | |
 | TR-REL-007 | BE | NOT_STARTED | | Prioritisation rules need agreement |
@@ -101,7 +101,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | --- | --- | --- | --- | --- |
 | TR-CASE-001 | BE | VERIFIED | Case links notice, relevance, source, run, methods, criterion | Demo data |
 | TR-CASE-002 | UI | VERIFIED | Split-pane inspector (UI tests) | |
-| TR-CASE-003 | BE | IMPLEMENTED_UNVERIFIED | Evidence chain links | Exportable evidence pack not built |
+| TR-CASE-003 | BE, UI | IMPLEMENTED_UNVERIFIED | `GET /cases/{id}/export` (`CASE_EXPORT`) returns the evidence pack: evidence links (artifact hash, record, relevance), analysis runs with method and criterion checks, drafts marked unapproved, review events; audited (`test_cases.py::test_export_contains_the_chain_and_marks_unapproved_drafts`, restricted-export test) | Links are not re-verified (hash re-check) at export time; JSON only, no signed bundle |
 | TR-CASE-004 | BE | VERIFIED | Append-only review events, role-protected | |
 | TR-CASE-005 | BE, UI | IMPLEMENTED_UNVERIFIED | Drafts from evidence, pending approval, demo agent | No real `EvidenceDraftAgent` |
 | TR-AI-001 | BE | IMPLEMENTED_UNVERIFIED | Agent cannot write method results (API) | No real agent |
@@ -131,7 +131,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-NFR-003 | BE | IMPLEMENTED_UNVERIFIED | No hardcoded ceilings; queue-based | Load profiles not run |
 | TR-NFR-004 | BE | IN_PROGRESS | DuckDB memory/thread limits; parser memory/time limits (A16); queue backlog in `GET /operations/metrics` (G25) | No per-tenant quotas |
 | TR-NFR-005 | BE | VERIFIED | Idempotent retries, crash-safe publication (`test_record_store.py`, `test_source_library.py`) | No checkpoint resume inside a parse |
-| TR-NFR-006 | BE | NOT_STARTED | | Case-list benchmark |
+| TR-NFR-006 | BE | VERIFIED | 50,000 synthetic cases on local PostgreSQL 16: every list query p95 ≤ 657 ms (text search; others ≤ 282 ms), target 2 s (`benchmarks/case_list.py`, `results/case-list-50k.json`) | Developer laptop, not production-like hardware; function-level timing without HTTP |
 | TR-NFR-007 | BE | IMPLEMENTED_UNVERIFIED | Upload init 0.02 s locally | Not on production-like hardware |
 | TR-NFR-008 | BE | VERIFIED | Preview without master transfer (`test_preview_search_and_record_never_touch_the_master`) | |
 | TR-NFR-009 | BE | IN_PROGRESS | Benchmarks record bytes/s, rows/s, RSS, expansion; runtime backlog, failures, outbox and storage counts (`test_operations.py`) | No time-series export (Prometheus/OTel) |

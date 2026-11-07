@@ -25,27 +25,33 @@ verified only on challenge or made-up data. *Blocked*: needs an external input, 
 | 5 Case UI and evidence | Verified with demo plugins | Case workflow, reviewer API, inspector, 91 UI tests | Real relevance stages, methods and draft agent |
 | 6 Large data | In progress, synthetic only | L1 4 GiB upload resilience; storage analysis (39.5× in PostgreSQL); Parquet/DuckDB record store with identical API answers; re-index command; dev stack on the record store. Report: [`architecture/STAGE6_RECORD_STORE.md`](architecture/STAGE6_RECORD_STORE.md) | 10M/50M rows, checkpoint resume inside a parse |
 | 7 Native and alerts | Verified on CI package and emulator (PR #7) | Windows W1–W3, W5–W12; Android A1–A8 | Android push gateway, signed packages, real IdP |
-| 8 Security and operations | Not started | | Scans, backups, monitoring, sandboxed parsing (A16) |
+| 8 Security and operations | Largely implemented | Secret scan, dependency audits, SBOMs (`supply-chain.yml`); parser process isolation (A16); `/operations/metrics`, `/healthz`, `/readyz` (G25); verified backup/restore; runbook `docs/operations/RUNBOOK.md`; PostgreSQL connection lifecycle fixed (engine disposed per app) | TLS, encryption at rest, OS-level parser sandbox, metrics export, threat model |
 | 9 Extended methods | Not started | | P.1812/P.452, NGSO, EPFD |
 | 10 Optional | Not started | | |
 
-## Active work
+## Active work and next tasks
 
-- **Stage 6 completion** (branch `scp619/stage6-completion`): `records_cli build|verify`,
-  `ingest.build_record_dataset`, metadata cache, dev stack on the record store, 50-artifact
-  benchmark, these tracking documents; plus the criteria-registry resolver (A43, Priority B).
+1. Merge open PRs: #20 (backup/restore), #21 (Finland screen, overview processing panel), and
+   the case-list benchmark PR.
+2. UI: an upload screen (workflow A has backend endpoints but no production screen yet), the
+   case-detail method table and provenance timeline from the Lovable design, accessibility checks.
+3. Scientific: no teammate modules in the repo (`traficom-integration/agent` is empty);
+   `RegistryCriterionResolver` ships no criteria. Service, geometry and technical relevance
+   gates need IFIC field definitions.
 
-## Next executable tasks
+## Launching the application (local demonstration)
 
-1. Merge the Stage 6 completion PR.
-2. Priority B: no teammate scientific modules exist in the repo (`traficom-integration/agent` is
-   empty). `RegistryCriterionResolver` is built and ships no criteria. The service, geometry and
-   technical-readiness relevance gates need IFIC field definitions before rules can be written.
-3. Priority C: Windows installer settings and deep links in CI; Android release build in CI
-   (unsigned until keys are provided).
-4. Priority D: Lovable design system, in the account owner's workspace (see blockers).
-5. Priority E: secret scanning, dependency audit and SBOM in CI; parser isolation; backup/restore
-   runbook.
+From the repository root, with the backend virtualenv and UI dependencies installed:
+
+1. Backend stack (local test identity provider, API on 8800, worker; synthetic demo data, the
+   Parquet record store on by default): `traficom-integration/backend/.venv/Scripts/python
+   traficom-integration/backend/tests/support/dev_stack.py all`
+2. UI: `npm --prefix traficom-integration/ui run dev`, then open `http://127.0.0.1:5173` and
+   choose a test persona (no passwords; local only).
+3. Real Traficom M4 data: configure the worker with the M4 source client and adapter (see
+   "Enabling the real components"), register the source, and run the worker.
+
+The dev stack is for local demonstration only: it is not packaged and refuses non-loopback use.
 
 ## Blockers
 
@@ -79,6 +85,12 @@ Worker and API settings:
 | #10 | `f1dfec4` | Traficom M4 open-data connector |
 | #12 | `da7e9df` | Finland frequency relevance |
 | #13 | `5df61ad` | Stage 6: L1, storage analysis, Parquet/DuckDB record store |
+| #14 | `e361969` | Stage 6 completion, criteria registry, tracking docs |
+| #15 | `9ccec11` | UI increment 1: Lovable tokens, Tailwind 4, app shell |
+| #16 | `249065f` | Supply-chain checks, react-router patch, stricter return paths |
+| #17 | merged | UI increment 2: status badges |
+| #18 | merged | Parser isolation (A16) |
+| #19 | merged | Operations metrics and probes; PostgreSQL connection-lifecycle fix (peak 99 → 4 connections) |
 
 Seven commits up to `65997b2` carry a Claude co-author trailer; they are left unchanged (no
 history rewrite). New commits carry no attribution.

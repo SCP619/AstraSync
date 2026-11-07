@@ -1,0 +1,62 @@
+{
+  "cases": 50000,
+  "seed_seconds": 248.2,
+  "target": "p95 <= 2000 ms (TR-NFR-006)",
+  "queries": {
+    "default_page": {
+      "n": 30,
+      "p50_ms": 21.8,
+      "p95_ms": 27.0,
+      "max_ms": 27.6
+    },
+    "sort_frequency": {
+      "n": 30,
+      "p50_ms": 24.2,
+      "p95_ms": 26.9,
+      "max_ms": 27.8
+    },
+    "sort_updated": {
+      "n": 30,
+      "p50_ms": 42.8,
+      "p95_ms": 62.5,
+      "max_ms": 74.3
+    },
+    "sort_priority": {
+      "n": 30,
+      "p50_ms": 98.9,
+      "p95_ms": 281.7,
+      "max_ms": 312.2
+    },
+    "filter_finding": {
+      "n": 30,
+      "p50_ms": 7.9,
+      "p95_ms": 9.4,
+      "max_ms": 11.2
+    },
+    "filter_review_and_domain": {
+      "n": 30,
+      "p50_ms": 10.1,
+      "p95_ms": 11.7,
+      "max_ms": 12.8
+    },
+    "filter_issue": {
+      "n": 30,
+      "p50_ms": 12.9,
+      "p95_ms": 14.0,
+      "max_ms": 15.7
+    },
+    "text_search": {
+      "n": 30,
+      "p50_ms": 340.7,
+      "p95_ms": 657.3,
+      "max_ms": 803.8
+    },
+    "page_11_by_frequency": {
+      "n": 30,
+      "p50_ms": 10.3,
+      "p95_ms": 11.9,
+      "max_ms": 13.9
+    }
+  },
+  "all_within_target": true
+}

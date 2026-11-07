@@ -1,0 +1,29 @@
+{
+  "analysis_run_id": "DEMO-RUN-001",
+  "scenario_id": "DEMO-SCENARIO-001",
+  "standard_ref_id": null,
+  "role": "SCREENING",
+  "reference_bandwidth_hz": 1000000.0,
+  "time_percentage": null,
+  "location_percentage": null,
+  "receiver_site_id": null,
+  "satellite_epoch_utc": null,
+  "inputs": {},
+  "assumptions": [
+    "Schema fixture only; not a calculation"
+  ],
+  "diagnostics": {},
+  "result_trace": {},
+  "method_run_id": "DEMO-MR-002",
+  "method_id": "SPACE_PFD_FREE_SPACE",
+  "method_version": "DEMO-NOT-A-CALCULATION",
+  "applicability": "APPLICABLE",
+  "execution_status": "SUCCEEDED",
+  "reason_codes": [],
+  "missing_fields": [],
+  "metric_kind": "PFD",
+  "numeric_value": -102.3,
+  "unit": "DEMO-UNIT",
+  "implementation_sha": "DEMO-SHA",
+  "calculation_sha256": null
+}

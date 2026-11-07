@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0.0-draft.1",
+  "generated_at_utc": "2026-11-07T12:00:00Z",
+  "analysis_run_id": "DEMO-RUN-001",
+  "is_synthetic": true,
+  "method_runs": [
+    {
+      "analysis_run_id": "DEMO-RUN-001",
+      "scenario_id": "DEMO-SCENARIO-001",
+      "standard_ref_id": null,
+      "role": "SCREENING",
+      "reference_bandwidth_hz": 1000000.0,
+      "time_percentage": null,
+      "location_percentage": null,
+      "receiver_site_id": null,
+      "satellite_epoch_utc": null,
+      "inputs": {},
+      "assumptions": [
+        "Schema fixture only; not a calculation"
+      ],
+      "diagnostics": {},
+      "result_trace": {},
+      "method_run_id": "DEMO-MR-002",
+      "method_id": "SPACE_PFD_FREE_SPACE",
+      "method_version": "DEMO-NOT-A-CALCULATION",
+      "applicability": "APPLICABLE",
+      "execution_status": "SUCCEEDED",
+      "reason_codes": [],
+      "missing_fields": [],
+      "metric_kind": "PFD",
+      "numeric_value": -102.3,
+      "unit": "DEMO-UNIT",
+      "implementation_sha": "DEMO-SHA",
+      "calculation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "analysis_run_id": "DEMO-RUN-001",
+      "scenario_id": "DEMO-SCENARIO-001",
+      "standard_ref_id": null,
+      "role": "SCREENING",
+      "reference_bandwidth_hz": 1000000.0,
+      "time_percentage": null,
+      "location_percentage": null,
+      "receiver_site_id": null,
+      "satellite_epoch_utc": null,
+      "inputs": {},
+      "assumptions": [
+        "Schema fixture only; not a calculation"
+      ],
+      "diagnostics": {},
+      "result_trace": {},
+      "method_run_id": "DEMO-MR-003",
+      "method_id": "SPACE_PFD_DIRECTIONAL",
+      "method_version": "DEMO-NOT-A-CALCULATION",
+      "applicability": "APPLICABLE",
+      "execution_status": "SUCCEEDED",
+      "reason_codes": [],
+      "missing_fields": [],
+      "metric_kind": "PFD",
+      "numeric_value": -104.0,
+      "unit": "DEMO-UNIT",
+      "implementation_sha": "DEMO-SHA",
+      "calculation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "comparison_groups": [
+    {
+      "group_id": "DEMO-GROUP-001",
+      "metric_kind": "PFD",
+      "method_run_ids": [
+        "DEMO-MR-002",
+        "DEMO-MR-003"
+      ],
+      "preferred_method_run_id": "DEMO-MR-002",
+      "preferred_reason": null
+    }
+  ]
+}

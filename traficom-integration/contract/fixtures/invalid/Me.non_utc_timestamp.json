@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0-draft.1",
+  "generated_at_utc": "2026-11-07T14:00:00+02:00",
+  "user_id": "DEMO-USER-001",
+  "tenant_id": "DEMO-TENANT-001",
+  "environment": "DEMO",
+  "roles": [],
+  "capabilities": []
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0-draft.1",
+  "generated_at_utc": "2026-11-07T12:00:00Z",
+  "source_record_id": "DEMO-RECORD-001",
+  "location": {
+    "source_record_id": "DEMO-RECORD-001",
+    "artifact_id": "DEMO-ARTIFACT-001",
+    "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "source_table_or_sheet": "demo-sheet",
+    "source_row_or_key": "1",
+    "source_page": null,
+    "notice_id": null,
+    "raw_record_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "parser_version": "DEMO",
+    "schema_version": "DEMO",
+    "is_synthetic": true
+  },
+  "record_status": "REVIEW_REQUIRED",
+  "field_aliases": {
+    "TX frequency": [
+      "DEMO-ALIAS"
+    ]
+  },
+  "raw_fields": {
+    "TX frequency": "99",
+    "Radiation power": null
+  },
+  "reference_station": {
+    "source_record_id": "DEMO-RECORD-001",
+    "station_number_raw": "DEMO-STATION-001",
+    "licence_class_code": null,
+    "longitude_deg": null,
+    "latitude_deg": null,
+    "ground_elevation_m": null,
+    "mast_height_m": null,
+    "antenna_height_agl_m": null,
+    "antenna_height_asl_m": null,
+    "antenna_gain_db": null,
+    "tx_frequency_hz": null,
+    "rx_frequency_hz": null,
+    "channel_bandwidth_hz": null,
+    "emission_bandwidth_hz": null,
+    "polarization_code": null,
+    "radiation_power_value": null,
+    "radiation_power_unit": null,
+    "radiation_power_itu_code_raw": null,
+    "transmission_line_db": null,
+    "directivity_code": null,
+    "is_synthetic": true,
+    "parse_status": "REVIEW_REQUIRED"
+  },
+  "quality_findings": [
+    {
+      "finding_id": "DEMO-FINDING-001",
+      "source_record_id": "DEMO-RECORD-001",
+      "field_key": "TX frequency",
+      "raw_value": "99",
+      "normalized_value": null,
+      "rule_id": "UNIT_UNSPECIFIED",
+      "severity": "BLOCKING",
+      "status": "OPEN",
+      "reviewer_override_id": null
+    }
+  ],
+  "analysis_eligibility": {
+    "TERR_P1546": "INSUFFICIENT_DATA"
+  },
+  "is_synthetic": true
+}

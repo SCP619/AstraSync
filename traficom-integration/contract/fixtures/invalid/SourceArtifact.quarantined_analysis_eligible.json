@@ -1,0 +1,22 @@
+{
+  "artifact_id": "DEMO-ARTIFACT-001",
+  "source_id": "DEMO-SOURCE-001",
+  "publication_id": null,
+  "filename_original": "demo-synthetic.xlsx",
+  "artifact_type": "XLSX",
+  "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "expected_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "expected_digest_origin": "supplied-manifest",
+  "publisher_auth_status": "HASH_MATCH_MANIFEST_UNTRUSTED",
+  "byte_length": 1024,
+  "revision": 1,
+  "usage_classification": "UNVERIFIED",
+  "status": "QUARANTINED",
+  "analysis_eligible": true,
+  "published_at_utc": null,
+  "first_seen_at_utc": "2026-11-07T12:00:00Z",
+  "download_completed_at_utc": "2026-11-07T12:00:00Z",
+  "indexed_at_utc": "2026-11-07T12:00:00Z",
+  "parser_version": "DEMO",
+  "is_synthetic": true
+}

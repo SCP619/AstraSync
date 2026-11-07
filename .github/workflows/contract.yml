@@ -1,0 +1,35 @@
+name: Contract
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Backend lint, types and tests
+        working-directory: traficom-integration/backend
+        run: |
+          pip install -r requirements-dev.lock
+          pip install --no-deps -e .
+          ruff check .
+          mypy
+          python -m astrasync_api.contract.export --check
+          python -m pytest
+      - name: UI contract check
+        working-directory: traficom-integration/ui
+        run: |
+          npm ci
+          npm run contract:check

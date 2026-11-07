@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0.0-draft.1",
+  "generated_at_utc": "2026-11-07T12:00:00Z",
+  "analysis_run_id": "DEMO-RUN-001",
+  "case_id": "DEMO-SPACE-002",
+  "scenario_id": "DEMO-SCENARIO-001",
+  "is_synthetic": true,
+  "run_created_at_utc": "2026-11-07T12:00:00Z",
+  "input_snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "software_commit_sha": "DEMO-SHA",
+  "method_registry_version": "DEMO",
+  "reference_snapshot_sha256": null,
+  "analysis_status": "READY",
+  "created_by": "DEMO-USER-001",
+  "method_runs": [
+    {
+      "analysis_run_id": "DEMO-RUN-001",
+      "scenario_id": "DEMO-SCENARIO-001",
+      "standard_ref_id": null,
+      "role": "SCREENING",
+      "reference_bandwidth_hz": null,
+      "time_percentage": null,
+      "location_percentage": null,
+      "receiver_site_id": null,
+      "satellite_epoch_utc": null,
+      "inputs": {},
+      "assumptions": [
+        "Schema fixture only; not a calculation"
+      ],
+      "diagnostics": {},
+      "result_trace": {},
+      "method_run_id": "DEMO-MR-001",
+      "method_id": "SPACE_EPFD_NGSO",
+      "method_version": "DEMO-NOT-A-CALCULATION",
+      "applicability": "INSUFFICIENT_DATA",
+      "execution_status": "NOT_RUN",
+      "reason_codes": [
+        "MISSING_REQUIRED_INPUT"
+      ],
+      "missing_fields": [
+        "constellation_definition"
+      ],
+      "metric_kind": "EPFD",
+      "numeric_value": null,
+      "unit": null,
+      "implementation_sha": null,
+      "calculation_sha256": null
+    },
+    {
+      "analysis_run_id": "DEMO-RUN-001",
+      "scenario_id": "DEMO-SCENARIO-001",
+      "standard_ref_id": null,
+      "role": "SCREENING",
+      "reference_bandwidth_hz": 1000000.0,
+      "time_percentage": null,
+      "location_percentage": null,
+      "receiver_site_id": null,
+      "satellite_epoch_utc": null,
+      "inputs": {},
+      "assumptions": [
+        "Schema fixture only; not a calculation"
+      ],
+      "diagnostics": {},
+      "result_trace": {},
+      "method_run_id": "DEMO-MR-002",
+      "method_id": "SPACE_PFD_FREE_SPACE",
+      "method_version": "DEMO-NOT-A-CALCULATION",
+      "applicability": "APPLICABLE",
+      "execution_status": "SUCCEEDED",
+      "reason_codes": [],
+      "missing_fields": [],
+      "metric_kind": "PFD",
+      "numeric_value": -102.3,
+      "unit": "DEMO-UNIT",
+      "implementation_sha": "DEMO-SHA",
+      "calculation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "criterion_checks": [
+    {
+      "criterion_check_id": "DEMO-CC-001",
+      "method_run_id": "DEMO-MR-999",
+      "criterion_ref_id": "DEMO-CRITERION-NOT-REAL",
+      "regulatory_scope": "DEMO",
+      "applicable": "VERIFIED",
+      "matching_conditions": {},
+      "limit_value": -100.0,
+      "limit_unit": "DEMO-UNIT",
+      "limit_reference_bandwidth_hz": 1000000.0,
+      "comparison_operator": "UPPER_BOUND",
+      "margin_db": -2.3,
+      "comparison_status": "COMPARED",
+      "review_note": null,
+      "citation": {
+        "reference_id": "DEMO-REF-001",
+        "section_id": "DEMO-SECTION",
+        "source_url": "https://example.invalid/demo"
+      }
+    }
+  ]
+}

@@ -17,3 +17,7 @@ src-tauri/target/
 raw_data/
 dataset/
 .DS_Store
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/

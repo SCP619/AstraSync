@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0-draft.1",
+  "generated_at_utc": "2026-11-07T12:00:00Z",
+  "job_id": "DEMO-JOB-001",
+  "job_type": "INGEST",
+  "resource_id": "DEMO-UPLOAD-001",
+  "status": "PARSING",
+  "progress_stage": "PARSING",
+  "processed_bytes": 1024,
+  "processed_records": 10,
+  "total_records_if_known": null,
+  "attempt": 1,
+  "max_attempts": 3,
+  "started_at_utc": "2026-11-07T12:00:00Z",
+  "finished_at_utc": null,
+  "error_code": null
+}

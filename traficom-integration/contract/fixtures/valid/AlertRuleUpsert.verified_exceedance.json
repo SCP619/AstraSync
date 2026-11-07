@@ -1,0 +1,10 @@
+{
+  "trigger_kind": "POTENTIAL_EXCEEDANCE",
+  "severity": "HIGH",
+  "enabled": true,
+  "evidence_requirement": "VERIFIED_CRITERION_AND_METHOD_RUN",
+  "routing_roles": [
+    "REVIEWER"
+  ],
+  "dedupe_window_seconds": 3600
+}

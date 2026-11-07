@@ -1,0 +1,10 @@
+{
+  "method_id": "SPACE_PFD_FREE_SPACE",
+  "method_version": "DEMO",
+  "applicability": "INSUFFICIENT_DATA",
+  "reason_codes": [],
+  "missing_fields": [
+    "slant_range_m"
+  ],
+  "metric_kind": "PFD"
+}

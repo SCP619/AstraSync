@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0-draft.1",
+  "generated_at_utc": "2026-11-07T12:00:00Z",
+  "draft_id": "DEMO-DRAFT-001",
+  "case_id": "DEMO-SPACE-001",
+  "draft_type": "REQUEST_INFORMATION",
+  "source_analysis_run_id": "DEMO-RUN-001",
+  "content_markdown": "[Unapproved illustrative draft]",
+  "citations": [
+    "DEMO-EVIDENCE-001"
+  ],
+  "warnings": [],
+  "ai_model_id": null,
+  "generation_provenance": "DEMO",
+  "status": "DRAFT",
+  "requires_human_review": true,
+  "created_at_utc": "2026-11-07T12:00:00Z"
+}

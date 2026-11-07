@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0-draft.1",
+  "generated_at_utc": "2026-11-07T12:00:00Z",
+  "device_id": "DEMO-DEVICE-001",
+  "platform": "ANDROID",
+  "status": "ACTIVE",
+  "last_seen_at_utc": null,
+  "push_token": "secret"
+}

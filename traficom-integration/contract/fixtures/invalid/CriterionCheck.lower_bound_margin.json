@@ -1,0 +1,20 @@
+{
+  "criterion_check_id": "DEMO-CC-001",
+  "method_run_id": "DEMO-MR-002",
+  "criterion_ref_id": "DEMO-CRITERION-NOT-REAL",
+  "regulatory_scope": "DEMO",
+  "applicable": "VERIFIED",
+  "matching_conditions": {},
+  "limit_value": -100.0,
+  "limit_unit": "DEMO-UNIT",
+  "limit_reference_bandwidth_hz": 1000000.0,
+  "comparison_operator": "LOWER_BOUND",
+  "margin_db": -2.3,
+  "comparison_status": "COMPARED",
+  "review_note": null,
+  "citation": {
+    "reference_id": "DEMO-REF-001",
+    "section_id": "DEMO-SECTION",
+    "source_url": "https://example.invalid/demo"
+  }
+}

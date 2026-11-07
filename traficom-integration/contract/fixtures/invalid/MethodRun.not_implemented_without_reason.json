@@ -1,0 +1,29 @@
+{
+  "analysis_run_id": "DEMO-RUN-001",
+  "scenario_id": "DEMO-SCENARIO-001",
+  "standard_ref_id": null,
+  "role": "SCREENING",
+  "reference_bandwidth_hz": null,
+  "time_percentage": null,
+  "location_percentage": null,
+  "receiver_site_id": null,
+  "satellite_epoch_utc": null,
+  "inputs": {},
+  "assumptions": [
+    "Schema fixture only; not a calculation"
+  ],
+  "diagnostics": {},
+  "result_trace": {},
+  "method_run_id": "DEMO-MR-001",
+  "method_id": "SPACE_EPFD_NGSO",
+  "method_version": "DEMO-NOT-A-CALCULATION",
+  "applicability": "NOT_IMPLEMENTED",
+  "execution_status": "NOT_RUN",
+  "reason_codes": [],
+  "missing_fields": [],
+  "metric_kind": "EPFD",
+  "numeric_value": null,
+  "unit": null,
+  "implementation_sha": null,
+  "calculation_sha256": null
+}

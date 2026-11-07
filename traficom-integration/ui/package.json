@@ -1,0 +1,16 @@
+{
+  "name": "astrasync-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "contract:generate": "node scripts/generate-contract.mjs",
+    "contract:drift": "node scripts/generate-contract.mjs --check",
+    "contract:typecheck": "tsc --noEmit",
+    "contract:check": "npm run contract:drift && npm run contract:typecheck"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

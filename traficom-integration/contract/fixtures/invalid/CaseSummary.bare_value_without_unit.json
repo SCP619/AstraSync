@@ -1,0 +1,25 @@
+{
+  "case_id": "DEMO-SPACE-001",
+  "is_synthetic": true,
+  "domain": "SPACE",
+  "notice_id": "SYNTHETIC-NOTICE-001",
+  "source_issue_id": "DEMO-IFIC-001",
+  "administration": "DEMO",
+  "change_type": "NEW",
+  "frequency_start_mhz": 10700.0,
+  "frequency_end_mhz": 10720.0,
+  "relevance_label": "FREQUENCY_MATCH",
+  "method_summary": {
+    "succeeded": 0,
+    "candidates": 3
+  },
+  "lead_metric": {
+    "metric_kind": "PFD",
+    "numeric_value": -1.0,
+    "unit": null
+  },
+  "margin_db": null,
+  "criterion_status": null,
+  "finding_status": "INSUFFICIENT_DATA",
+  "review_status": "NEW"
+}

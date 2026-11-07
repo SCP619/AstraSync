@@ -1,6 +1,6 @@
 # Contract decisions for joint review
 
-TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.2`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
+TRD section 1.1 says conflicts must not be resolved silently. Each entry is a reversible default, applied in contract `1.0.0-draft.3`, that both contributors need to confirm and then reflect in the BSD. BSD field names win unless stated otherwise.
 
 ## Documentation conflicts
 
@@ -30,6 +30,14 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | G7 | `comparison_status` has no vocabulary | `COMPARED`, `NOT_COMPARABLE`, `CRITERION_UNVERIFIED`, `REVIEW_REQUIRED` |
 | G8 | Lower-bound thresholds have no documented margin convention | Any margin on them is rejected until a comparator is documented |
 | G9 | DBD table columns `Satellite or station` and `Evidence quality` have no API field | **Not added.** Needs a definition, especially for evidence quality, before Stage 5 |
+| G11 | `upload_sessions` had no source. Every artifact needs a registered source and its rights basis | Added `source_id` to `UploadCreateRequest` |
+| G12 | `source_type` was missing from the client's view of a connector | Added to `SourceConnector` |
+| G13 | `SourceLocationDetail` had two different `schema_version` fields (found by a Stage 2 test) | The record's is now `record_schema_version` |
+| G14 | No route for streaming a part or original when object storage is local | Added `PUT /uploads/{id}/parts/{n}` and `GET /source-artifacts/{id}/content`. A managed store's signed URLs replace them |
+| G15 | Workers have no contract for what a parser returns | Added `AdapterRecord`, published in OpenAPI |
+| G16 | `acquisition_jobs` in BSD section 9 duplicates `job_runs` | One `job_runs` table with a new `ACQUIRE` type |
+| G17 | `part_manifest_json` would need rewriting on each part | A separate `upload_parts` table |
+| G18 | Alerts need a durable outbox from Stage 7, but events start now | `outbox_events` is written now and unconsumed until then |
 | G10 | Relevance labels and reason codes have no closed list beyond `FREQUENCY_MATCH` | Validated `UPPER_SNAKE_CASE` codes. The relevance owner should publish the list |
 
 ## Assumptions
@@ -46,6 +54,11 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A8 | Any provisioned user with no role can call `GET /me` and nothing else, so the client can explain the state | Stage 1 review |
 | A9 | Client tokens stay in memory in the web preview, so a reload requires sign-in. Native storage comes in Stage 7 | Stage 7 |
 | A10 | Reviewer reruns ("if granted" in Security) stay denied: no extra-capability grant exists yet | Stage 5 |
+| A12 | The queue runs on the transactional database (`FOR UPDATE SKIP LOCKED`), so no separate broker is needed yet | Stage 6 benchmarks |
+| A13 | Object-store access goes through `ObjectStore`. Only a local demo implementation exists, and it is refused outside `DEMO` | Before staging |
+| A14 | The search index and raw record values are in PostgreSQL. Analytical Parquet and DuckDB stay with Data/AI. Tens of millions of rows are unproven | Stage 6 benchmarks |
+| A15 | Connector status is tenant metadata, visible with `SOURCE_HEALTH_READ` without an entitlement. It has no file names or credentials | Stage 2 review |
+| A16 | Adapters run inside the worker process. Sandboxing and malware scanning are not done yet | Stage 8; do not parse untrusted files in production before then |
 | A11 | Audit covers denials by signed-in users, permitted writes, exports and downloads. Anonymous and invalid-token failures are logged only, so they cannot fill the audit table | Stage 8 |
 
 ## Outside the contract: needs a team decision

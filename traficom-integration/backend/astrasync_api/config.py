@@ -5,6 +5,7 @@ No value here is a secret: the API only verifies tokens with the provider's publ
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from urllib.parse import urlsplit
 
 from .contract.enums import Environment
@@ -41,6 +42,10 @@ class Settings:
     database_url: str | None = None
     oidc: OidcSettings | None = None
     cors_origins: tuple[str, ...] = ()
+    object_store_path: Path | None = None
+    max_upload_bytes: int = 10 * 1024**3
+    source_adapters: tuple[str, ...] = ()
+    source_clients: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         _validate(self)
@@ -74,6 +79,14 @@ class Settings:
             environment=environment,
             database_url=env["ASTRASYNC_DATABASE_URL"],
             cors_origins=_csv(env.get("ASTRASYNC_CORS_ORIGINS", "")),
+            object_store_path=(
+                Path(env["ASTRASYNC_OBJECT_STORE_PATH"])
+                if env.get("ASTRASYNC_OBJECT_STORE_PATH")
+                else None
+            ),
+            max_upload_bytes=int(env.get("ASTRASYNC_MAX_UPLOAD_BYTES", 10 * 1024**3)),
+            source_adapters=_csv(env.get("ASTRASYNC_SOURCE_ADAPTERS", "")),
+            source_clients=_csv(env.get("ASTRASYNC_SOURCE_CLIENTS", "")),
             oidc=OidcSettings(
                 issuer=env["ASTRASYNC_OIDC_ISSUER"],
                 audience=env["ASTRASYNC_OIDC_AUDIENCE"],
@@ -115,6 +128,8 @@ def _validate(settings: Settings) -> None:
         return
 
     # STAGING and PRODUCTION: nothing in this block may be relaxed by configuration.
+    if settings.object_store_path is not None:
+        raise SettingsError("Local object storage has no encryption and is for the demo only")
     for url in (oidc.issuer, oidc.jwks_uri):
         if urlsplit(url).scheme != "https":
             raise SettingsError("Identity endpoints must use HTTPS")

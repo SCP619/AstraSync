@@ -6,8 +6,9 @@ tenant, data environment, classification and source entitlement. No role bypasse
 
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import ColumnElement, and_, or_, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from .contract.enums import ErrorCode, UsageClassification
@@ -49,6 +50,41 @@ class ObjectAccessPolicy:
         """Denial is the same 404 as an absent object, so existence does not leak."""
         if not self.can_access(principal, target, right):
             raise not_found()
+
+    def readable_clause(
+        self,
+        principal: Principal,
+        right: str,
+        *,
+        tenant_column: Any,
+        source_column: Any,
+        classification_column: Any,
+        synthetic_column: Any,
+    ) -> ColumnElement[bool]:
+        """The same rules as ``can_access``, as a filter inside a list or search query."""
+        now = datetime.now(UTC)
+        with self._sessions() as session:
+            grants = session.scalars(
+                select(ResourceEntitlement).where(
+                    ResourceEntitlement.subject == principal.user_id,
+                    ResourceEntitlement.tenant_id == principal.tenant_id,
+                    ResourceEntitlement.object_type == "source",
+                    (ResourceEntitlement.expires_at_utc.is_(None))
+                    | (ResourceEntitlement.expires_at_utc > now),
+                )
+            ).all()
+        entitled = [
+            and_(source_column == grant.object_id, classification_column == grant.classification)
+            for grant in grants
+            if right in grant.rights
+        ]
+        permitted = or_(
+            classification_column.in_([level.value for level in _OPEN_WITHIN_TENANT]), *entitled
+        )
+        clause = and_(tenant_column == principal.tenant_id, permitted)
+        if principal.roles & _SYNTHETIC_ONLY_ROLES:
+            clause = and_(clause, synthetic_column.is_(True))
+        return clause
 
     def _has_entitlement(self, principal: Principal, target: ObjectRef, right: str) -> bool:
         now = datetime.now(UTC)

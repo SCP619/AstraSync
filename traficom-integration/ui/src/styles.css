@@ -144,6 +144,164 @@ button.primary {
   flex: 1;
 }
 
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+a {
+  color: var(--accent);
+}
+
+.main-nav a {
+  padding: 8px 0;
+  text-decoration: none;
+}
+
+.main-nav a.active {
+  color: var(--foreground);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+h3 {
+  margin: 16px 0 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.review {
+  border-color: var(--review);
+  color: var(--review);
+}
+
+.source-list,
+.plain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.source-list li,
+.plain li {
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.source-list li:first-child,
+.plain li:first-child {
+  border-top: 0;
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.search-form label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+}
+
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+caption {
+  padding-bottom: 4px;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 8px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th {
+  border-top: 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+tbody th {
+  font-weight: 400;
+}
+
+tr[aria-selected="true"] {
+  background: var(--raised);
+}
+
+button.link {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  text-align: left;
+  text-decoration: underline;
+}
+
+.block {
+  display: block;
+}
+
+.contents {
+  display: contents;
+}
+
+.break {
+  overflow-wrap: anywhere;
+}
+
 .environment {
   padding: 2px 8px;
   border: 1px solid var(--border);

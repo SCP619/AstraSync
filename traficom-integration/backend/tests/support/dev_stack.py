@@ -23,14 +23,33 @@ from urllib.parse import urlencode
 import jwt
 import uvicorn
 from cryptography.hazmat.primitives.asymmetric import rsa
+from demo_adapter import FORMAT_HEADER, DemoAdapter
 from fastapi import FastAPI, Form, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 
 from astrasync_api import admin
+from astrasync_api.contract.enums import (
+    IssueDomain,
+    JobType,
+    SourceType,
+    UsageClassification,
+)
 from astrasync_api.contract.permissions import Role
-from astrasync_api.db import Tenant, User, build_engine, build_session_factory, run_migrations
+from astrasync_api.db import (
+    ResourceEntitlement,
+    Tenant,
+    User,
+    build_engine,
+    build_session_factory,
+    run_migrations,
+)
+from astrasync_api.ingest import IncomingBytes, PipelineContext, register_bytes
+from astrasync_api.jobs import LANE_INGESTION, enqueue
+from astrasync_api.library_tables import SourceConnectorRow
+from astrasync_api.objectstore import LocalObjectStore
+from astrasync_api.worker import WorkerRuntime, run_until_idle
 
 HOST = "127.0.0.1"
 IDP_PORT = 8801
@@ -44,7 +63,9 @@ LOGOUT_URIS = {f"{UI_ORIGIN}/login"}
 KID = "dev-key-1"
 TENANT_A = "DEMO-TENANT-A"
 TENANT_B = "DEMO-TENANT-B"
-DATABASE_PATH = Path(__file__).resolve().parents[2] / ".dev" / "astrasync-dev.db"
+DEV_DIR = Path(__file__).resolve().parents[2] / ".dev"
+DATABASE_PATH = DEV_DIR / "astrasync-dev.db"
+OBJECTS_PATH = DEV_DIR / "objects"
 
 
 @dataclass(frozen=True)
@@ -265,11 +286,110 @@ def seed_accounts(database_url: str) -> None:
             admin.provision_user(
                 sessions, tenant_id=tenant, issuer=ISSUER, subject=subject, roles=roles
             )
+    seed_sources(sessions)
     engine.dispose()
 
 
+def _stage_bytes(store: LocalObjectStore, data: bytes) -> Any:
+    path = store.new_staging_path()
+    path.write_bytes(data)
+    return store.hash_file(path)
+
+
+def seed_sources(sessions: Any) -> None:
+    """Made-up records through the real pipeline. Nothing here comes from a real source."""
+    with sessions() as session:
+        if session.get(SourceConnectorRow, "DEMO-SYNTHETIC") is not None:
+            return
+    common: dict[str, Any] = {
+        "tenant_id": TENANT_A,
+        "publisher": "Demo synthetic publisher",
+        "domain": IssueDomain.FINNISH_REFERENCE,
+        "source_type": SourceType.CHALLENGE_SYNTHETIC_REFERENCE,
+        "rights_basis": "Made-up local test data",
+        "is_synthetic": True,
+    }
+    admin.register_source(
+        sessions,
+        source_id="DEMO-SYNTHETIC",
+        classification=UsageClassification.INTERNAL,
+        **common,
+    )
+    admin.register_source(
+        sessions,
+        source_id="DEMO-RESTRICTED",
+        classification=UsageClassification.RESTRICTED,
+        **common,
+    )
+    with sessions() as session:
+        analyst = session.scalar(select(User.user_id).where(User.oidc_subject == "analyst-a"))
+        session.add(
+            ResourceEntitlement(
+                grant_id="dev-analyst-restricted",
+                subject=analyst,
+                tenant_id=TENANT_A,
+                object_type="source",
+                object_id="DEMO-RESTRICTED",
+                classification="RESTRICTED",
+                rights=["READ", "DOWNLOAD", "IMPORT"],
+            )
+        )
+        session.commit()
+
+    store = LocalObjectStore(OBJECTS_PATH)
+    context = PipelineContext(
+        sessions=sessions, store=store, adapters={DemoAdapter.source_type: DemoAdapter()}
+    )
+    rows = "\n".join(
+        ("DEMO-STATION-1,100.5 MHz,10", "DEMO-STATION-2,99,20", "DEMO-STATION-3,410.25 MHz,5")
+    )
+    good = f"{FORMAT_HEADER}\n{rows}\n".encode()
+    secret = f"{FORMAT_HEADER}\nDEMO-RESTRICTED-STATION,450 MHz,1\n".encode()
+    artifacts = [
+        register_bytes(
+            context,
+            IncomingBytes(
+                tenant_id=TENANT_A,
+                source_id="DEMO-SYNTHETIC",
+                filename_original="demo-reference.txt",
+                classification=UsageClassification.INTERNAL.value,
+                staged=_stage_bytes(store, good),
+                expected_size_bytes=len(good),
+                transport_sha256=None,
+                expected_digest=hashlib.sha256(good).hexdigest(),
+                expected_digest_origin="uploader-supplied-manifest",
+            ),
+        ),
+        register_bytes(
+            context,
+            IncomingBytes(
+                tenant_id=TENANT_A,
+                source_id="DEMO-RESTRICTED",
+                filename_original="demo-restricted.txt",
+                classification=UsageClassification.RESTRICTED.value,
+                staged=_stage_bytes(store, secret),
+                expected_size_bytes=len(secret),
+                transport_sha256=None,
+                expected_digest=None,
+                expected_digest_origin=None,
+            ),
+        ),
+    ]
+    for artifact in artifacts:
+        enqueue(
+            sessions,
+            tenant_id=TENANT_A,
+            job_type=JobType.INGEST,
+            lane=LANE_INGESTION,
+            idempotency_key=f"seed:{artifact.artifact_id}",
+            requested_by="dev-seed",
+            payload={"artifact_id": artifact.artifact_id},
+        )
+    run_until_idle(WorkerRuntime(context=context, clients={}, worker_id="dev-seed"))
+
+
 def run_api() -> None:
-    DATABASE_PATH.parent.mkdir(exist_ok=True)
+    DEV_DIR.mkdir(exist_ok=True)
     database_url = f"sqlite:///{DATABASE_PATH.as_posix()}"
     os.environ.update(
         {
@@ -280,6 +400,7 @@ def run_api() -> None:
             "ASTRASYNC_OIDC_JWKS_URI": f"{ISSUER}/jwks",
             "ASTRASYNC_OIDC_REQUIRED_SCOPES": "astrasync.api",
             "ASTRASYNC_CORS_ORIGINS": UI_ORIGIN,
+            "ASTRASYNC_OBJECT_STORE_PATH": str(OBJECTS_PATH),
         }
     )
     seed_accounts(database_url)

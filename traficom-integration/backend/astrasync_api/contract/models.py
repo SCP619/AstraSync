@@ -561,6 +561,9 @@ class ReferenceList(Page[ReferenceDocument]):
 
 
 class UploadCreateRequest(ContractModel):
+    """``content_sha256`` is a digest supplied with a manifest. It is never publisher proof."""
+
+    source_id: StableId
     source_type: SourceType
     usage_classification: UsageClassification
     filename_original: Annotated[str, Field(min_length=1, max_length=512)]
@@ -660,6 +663,7 @@ class SourceConnector(ContractModel):
     source_id: StableId
     publisher: str
     domain: IssueDomain
+    source_type: SourceType
     discovery_mode: DiscoveryMode
     rights_basis: str
     usage_classification: UsageClassification
@@ -791,7 +795,7 @@ class SourceLocation(ContractModel):
     notice_id: str | None
     raw_record_sha256: Sha256Hex | None
     parser_version: str | None
-    schema_version: str | None
+    record_schema_version: str | None
     is_synthetic: bool
 
 
@@ -1034,6 +1038,47 @@ class AlertRuleSaved(AlertRule, Envelope):
 
 
 # --- Non-REST integration payloads, published in the OpenAPI components -----------------------
+
+
+class AdapterQualityFinding(ContractModel):
+    field_key: str
+    raw_value: str | None
+    normalized_value: str | None
+    rule_id: StableCode
+    severity: QualitySeverity
+
+
+class AdapterRecord(ContractModel):
+    """One record from ``SourceAdapter.iter_record_batches``, validated at the worker boundary.
+
+    ``raw_fields`` holds original values as text. Normalized values are nullable: an unknown
+    unit stays null with a quality finding, and is never guessed.
+    """
+
+    source_table_or_sheet: str | None
+    source_row_or_key: str | None
+    source_page: Annotated[int, Field(ge=1)] | None
+    notice_id: str | None
+    issue_key: str | None
+    station_number: str | None
+    network_id: str | None
+    administration: str | None
+    frequency_start_mhz: NonNegativeFloat | None
+    frequency_end_mhz: NonNegativeFloat | None
+    record_status: RecordStatus
+    schema_version: str
+    raw_fields: dict[str, str | None]
+    field_aliases: dict[str, list[str]]
+    analysis_eligibility: dict[str, RecordStatus]
+    quality_findings: list[AdapterQualityFinding]
+    reference_station: dict[str, Any] | None
+
+    @model_validator(mode="after")
+    def _frequency_order(self) -> AdapterRecord:
+        start, end = self.frequency_start_mhz, self.frequency_end_mhz
+        if start is not None and end is not None and start > end:
+            raise ValueError("frequency_start_mhz must not exceed frequency_end_mhz")
+        return self
 
 
 class PushPayload(ContractModel):

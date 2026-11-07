@@ -32,7 +32,7 @@ export const fixture1 = {
 
 // AnalysisRun.mixed_method_states.json
 export const fixture2 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "analysis_run_id": "DEMO-RUN-001",
   "case_id": "DEMO-SPACE-002",
@@ -135,7 +135,7 @@ export const fixture2 = {
 
 // CaseDetail.insufficient_data.json
 export const fixture3 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "case_id": "DEMO-SPACE-001",
   "is_synthetic": true,
@@ -199,7 +199,7 @@ export const fixture3 = {
 
 // CaseList.single_page.json
 export const fixture4 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "items": [
     {
@@ -316,7 +316,7 @@ export const fixture7 = {
 
 // DraftCreated.unapproved.json
 export const fixture8 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "draft_id": "DEMO-DRAFT-001",
   "case_id": "DEMO-SPACE-001",
@@ -346,7 +346,7 @@ export const fixture9 = {
 
 // JobRun.unknown_total.json
 export const fixture10 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "job_id": "DEMO-JOB-001",
   "job_type": "INGEST",
@@ -365,7 +365,7 @@ export const fixture10 = {
 
 // Me.analyst.json
 export const fixture11 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "user_id": "DEMO-USER-001",
   "tenant_id": "DEMO-TENANT-001",
@@ -393,7 +393,7 @@ export const fixture12 = {
 
 // MethodMatrix.commensurate_pfd_group.json
 export const fixture13 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "analysis_run_id": "DEMO-RUN-001",
   "is_synthetic": true,
@@ -511,7 +511,7 @@ export const fixture16 = {
 
 // SourceRecordDetail.flagged_unit.json
 export const fixture17 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "source_record_id": "DEMO-RECORD-001",
   "location": {
@@ -524,7 +524,7 @@ export const fixture17 = {
     "notice_id": null,
     "raw_record_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "parser_version": "DEMO",
-    "schema_version": "DEMO",
+    "record_schema_version": "DEMO",
     "is_synthetic": true
   },
   "record_status": "REVIEW_REQUIRED",
@@ -582,6 +582,7 @@ export const fixture17 = {
 
 // UploadCreateRequest.large_file.json
 export const fixture18 = {
+  "source_id": "DEMO-SOURCE-001",
   "source_type": "SPACE_IFIC",
   "usage_classification": "RESTRICTED",
   "filename_original": "demo.iso",
@@ -590,7 +591,7 @@ export const fixture18 = {
 
 // UploadSession.resumable.json
 export const fixture19 = {
-  "schema_version": "1.0.0-draft.2",
+  "schema_version": "1.0.0-draft.3",
   "generated_at_utc": "2026-11-07T12:00:00Z",
   "upload_id": "DEMO-UPLOAD-001",
   "status": "UPLOADING",

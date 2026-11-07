@@ -310,6 +310,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/finland-relevance/frequency-screen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Screen Frequency Relevance
+         * @description Frequency stage of the Finland relevance filter. A match is a screening signal only.
+         */
+        get: operations["screen_frequency_relevance_api_v1_finland_relevance_frequency_screen_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/ingest/ific": {
         parameters: {
             query?: never;
@@ -1822,6 +1842,71 @@ export interface components {
          */
         FindingStatus: "NO_IDENTIFIED_CONCERN" | "POTENTIAL_CONCERN" | "POTENTIAL_LIMIT_EXCEEDANCE" | "INSUFFICIENT_DATA" | "METHOD_DISAGREEMENT" | "EXPERT_REVIEW_REQUIRED";
         /**
+         * FrequencyReferenceMatch
+         * @description One Finnish reference interval that a screened range overlaps. A screening signal only.
+         */
+        FrequencyReferenceMatch: {
+            /** Artifact Id */
+            artifact_id: string;
+            /** Interval Basis */
+            interval_basis: string;
+            /** Is Synthetic */
+            is_synthetic: boolean;
+            /** Label */
+            label: string | null;
+            /** Overlap End Mhz */
+            overlap_end_mhz: number;
+            /** Overlap Start Mhz */
+            overlap_start_mhz: number;
+            /** Reference End Mhz */
+            reference_end_mhz: number;
+            /**
+             * Reference Field
+             * @enum {string}
+             */
+            reference_field: "SUB_BAND" | "TX_FREQUENCY" | "RX_FREQUENCY";
+            /**
+             * Reference Kind
+             * @enum {string}
+             */
+            reference_kind: "M4_ALLOCATION" | "SPECIAL_INTEREST_STATION";
+            /** Reference Start Mhz */
+            reference_start_mhz: number;
+            /** Source Id */
+            source_id: string;
+            /** Source Record Id */
+            source_record_id: string;
+        };
+        /**
+         * FrequencyRelevanceScreen
+         * @description Stage one of TR-REL-004 (frequency). Service, geometry and technical stages stay null.
+         */
+        FrequencyRelevanceScreen: {
+            gates: components["schemas"]["RelevanceGates"];
+            /**
+             * Generated At Utc
+             * Format: date-time
+             */
+            generated_at_utc: string;
+            /** Is Synthetic */
+            is_synthetic: boolean;
+            /** Matches */
+            matches: components["schemas"]["FrequencyReferenceMatch"][];
+            /** Matches Truncated */
+            matches_truncated: boolean;
+            /** Query End Mhz */
+            query_end_mhz: number;
+            /** Query Start Mhz */
+            query_start_mhz: number;
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.5";
+            /** Sources Screened */
+            sources_screened: components["schemas"]["ScreenedReferenceSource"][];
+        };
+        /**
          * IngestRequest
          * @description Refers to an already staged artifact. Arbitrary URLs and paths are not accepted.
          */
@@ -2436,6 +2521,19 @@ export interface components {
             parsed: number;
             /** Rejected */
             rejected: number;
+        };
+        /** ScreenedReferenceSource */
+        ScreenedReferenceSource: {
+            /** Artifact Id */
+            artifact_id: string;
+            /** Is Synthetic */
+            is_synthetic: boolean;
+            /** Revision */
+            revision: number;
+            /** Source Id */
+            source_id: string;
+            /** Source Type */
+            source_type: string;
         };
         /** SourceArtifact */
         SourceArtifact: {
@@ -5271,6 +5369,110 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    screen_frequency_relevance_api_v1_finland_relevance_frequency_screen_get: {
+        parameters: {
+            query: {
+                start_mhz: number;
+                end_mhz: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FrequencyRelevanceScreen"];
+                };
             };
             /** @description Unauthorized */
             401: {

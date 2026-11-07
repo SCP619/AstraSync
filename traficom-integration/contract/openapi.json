@@ -3237,6 +3237,168 @@
         "title": "FindingStatus",
         "type": "string"
       },
+      "FrequencyReferenceMatch": {
+        "additionalProperties": false,
+        "description": "One Finnish reference interval that a screened range overlaps. A screening signal only.",
+        "properties": {
+          "artifact_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Artifact Id",
+            "type": "string"
+          },
+          "interval_basis": {
+            "maxLength": 64,
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "title": "Interval Basis",
+            "type": "string"
+          },
+          "is_synthetic": {
+            "title": "Is Synthetic",
+            "type": "boolean"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "overlap_end_mhz": {
+            "minimum": 0.0,
+            "title": "Overlap End Mhz",
+            "type": "number"
+          },
+          "overlap_start_mhz": {
+            "minimum": 0.0,
+            "title": "Overlap Start Mhz",
+            "type": "number"
+          },
+          "reference_end_mhz": {
+            "minimum": 0.0,
+            "title": "Reference End Mhz",
+            "type": "number"
+          },
+          "reference_field": {
+            "enum": [
+              "SUB_BAND",
+              "TX_FREQUENCY",
+              "RX_FREQUENCY"
+            ],
+            "title": "Reference Field",
+            "type": "string"
+          },
+          "reference_kind": {
+            "enum": [
+              "M4_ALLOCATION",
+              "SPECIAL_INTEREST_STATION"
+            ],
+            "title": "Reference Kind",
+            "type": "string"
+          },
+          "reference_start_mhz": {
+            "minimum": 0.0,
+            "title": "Reference Start Mhz",
+            "type": "number"
+          },
+          "source_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_record_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Source Record Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_record_id",
+          "source_id",
+          "artifact_id",
+          "reference_kind",
+          "reference_field",
+          "interval_basis",
+          "reference_start_mhz",
+          "reference_end_mhz",
+          "overlap_start_mhz",
+          "overlap_end_mhz",
+          "label",
+          "is_synthetic"
+        ],
+        "title": "FrequencyReferenceMatch",
+        "type": "object"
+      },
+      "FrequencyRelevanceScreen": {
+        "additionalProperties": false,
+        "description": "Stage one of TR-REL-004 (frequency). Service, geometry and technical stages stay null.",
+        "properties": {
+          "gates": {
+            "$ref": "#/components/schemas/RelevanceGates"
+          },
+          "generated_at_utc": {
+            "format": "date-time",
+            "title": "Generated At Utc",
+            "type": "string"
+          },
+          "is_synthetic": {
+            "title": "Is Synthetic",
+            "type": "boolean"
+          },
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/FrequencyReferenceMatch"
+            },
+            "title": "Matches",
+            "type": "array"
+          },
+          "matches_truncated": {
+            "title": "Matches Truncated",
+            "type": "boolean"
+          },
+          "query_end_mhz": {
+            "minimum": 0.0,
+            "title": "Query End Mhz",
+            "type": "number"
+          },
+          "query_start_mhz": {
+            "minimum": 0.0,
+            "title": "Query Start Mhz",
+            "type": "number"
+          },
+          "schema_version": {
+            "const": "1.0.0-draft.5",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sources_screened": {
+            "items": {
+              "$ref": "#/components/schemas/ScreenedReferenceSource"
+            },
+            "title": "Sources Screened",
+            "type": "array"
+          }
+        },
+        "required": [
+          "schema_version",
+          "generated_at_utc",
+          "query_start_mhz",
+          "query_end_mhz",
+          "gates",
+          "matches",
+          "matches_truncated",
+          "sources_screened",
+          "is_synthetic"
+        ],
+        "title": "FrequencyRelevanceScreen",
+        "type": "object"
+      },
       "IngestRequest": {
         "additionalProperties": false,
         "description": "Refers to an already staged artifact. Arbitrary URLs and paths are not accepted.",
@@ -5331,6 +5493,44 @@
           "rejected"
         ],
         "title": "RowReconciliation",
+        "type": "object"
+      },
+      "ScreenedReferenceSource": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Artifact Id",
+            "type": "string"
+          },
+          "is_synthetic": {
+            "title": "Is Synthetic",
+            "type": "boolean"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "integer"
+          },
+          "source_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_type": {
+            "title": "Source Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "source_type",
+          "artifact_id",
+          "revision",
+          "is_synthetic"
+        ],
+        "title": "ScreenedReferenceSource",
         "type": "object"
       },
       "SourceArtifact": {
@@ -10340,6 +10540,141 @@
         "summary": "Revoke Device",
         "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "DEVICE_MANAGE"
+      }
+    },
+    "/api/v1/finland-relevance/frequency-screen": {
+      "get": {
+        "description": "Frequency stage of the Finland relevance filter. A match is a screening signal only.",
+        "operationId": "screen_frequency_relevance_api_v1_finland_relevance_frequency_screen_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_mhz",
+            "required": true,
+            "schema": {
+              "maximum": 3000000,
+              "minimum": 0,
+              "title": "Start Mhz",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_mhz",
+            "required": true,
+            "schema": {
+              "maximum": 3000000,
+              "minimum": 0,
+              "title": "End Mhz",
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrequencyRelevanceScreen"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Screen Frequency Relevance",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "SOURCE_READ"
       }
     },
     "/api/v1/ingest/ific": {

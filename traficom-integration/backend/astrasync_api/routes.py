@@ -14,7 +14,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
-from . import alert_api, cases, library
+from . import alert_api, cases, library, relevance
 from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
@@ -57,6 +57,7 @@ from .contract.models import (
     DraftUpdateRequest,
     ErrorResponse,
     EvidencePack,
+    FrequencyRelevanceScreen,
     IngestRequest,
     IssueList,
     JobAccepted,
@@ -887,6 +888,24 @@ def search_source_records(
         limit=limit,
         cursor=cursor,
     )
+
+
+@router.get(
+    "/finland-relevance/frequency-screen",
+    response_model=FrequencyRelevanceScreen,
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
+)
+def screen_frequency_relevance(
+    request: Request,
+    principal: CurrentPrincipal,
+    session: DbSession,
+    start_mhz: Annotated[float, Query(ge=0, le=3_000_000, allow_inf_nan=False)],
+    end_mhz: Annotated[float, Query(ge=0, le=3_000_000, allow_inf_nan=False)],
+) -> Any:
+    """Frequency stage of the Finland relevance filter. A match is a screening signal only."""
+    if start_mhz > end_mhz:
+        raise ApiError(422, ErrorCode.VALIDATION_ERROR, "start_mhz must not exceed end_mhz.")
+    return relevance.screen_range(session, _library(request).policy, principal, start_mhz, end_mhz)
 
 
 @router.get(

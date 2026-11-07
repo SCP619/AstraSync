@@ -146,13 +146,13 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-SEC-007 | — | BLOCKED | | Legal review |
 | TR-SEC-008 | — | BLOCKED | | `LICENSE.md` background-IP question |
 | TR-SEC-009 | BE | IMPLEMENTED_UNVERIFIED | Entitlements on indexes, datasets, previews, notifications | Backups/telemetry not built |
-| TR-UX-001 | UI | IMPLEMENTED_UNVERIFIED | Library → inspector → case flow | Lovable redesign pending |
+| TR-UX-001 | UI | IMPLEMENTED_UNVERIFIED | Library → inspector → case flow; Finland screen links matches to records; Lovable tokens, shell and status badges integrated (PRs #15, #17, #21) | Case-detail method table and provenance timeline from the Lovable design not yet ported |
 | TR-UX-002 | UI | IMPLEMENTED_UNVERIFIED | Units and method versions shown | |
 | TR-UX-003 | UI | IMPLEMENTED_UNVERIFIED | Text labels with colour | No audit |
 | TR-UX-004 | UI, NAT | IN_PROGRESS | | Virtualised tables not built |
 | TR-UX-005 | UI | VERIFIED | Synthetic and warning labels (UI tests) | |
 | TR-UX-006 | UI | IN_PROGRESS | | No accessibility suite |
-| TR-UX-007 | UI | IMPLEMENTED_UNVERIFIED | Job progress and retry guidance | |
+| TR-UX-007 | UI | VERIFIED | Upload screen reports hashing, part progress, server verification and the job state as returned (PR #23; browser-checked against the dev stack: PARTIAL with `PARSER_UNAVAILABLE` shown honestly) | Uploads above 256 MiB go to the command-line path |
 | TR-UX-008 | UI, CORE | IMPLEMENTED_UNVERIFIED | Bilingual workbook headers kept as aliases | |
 
 ## Acceptance tests

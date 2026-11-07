@@ -129,12 +129,12 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-NFR-001 | BE | IN_PROGRESS | 4 GiB upload verified (L1) | 10 GB not run (directive); real formats/network not measured |
 | TR-NFR-002 | BE | IN_PROGRESS | Parquet/DuckDB record store | Tens of millions of rows not measured |
 | TR-NFR-003 | BE | IMPLEMENTED_UNVERIFIED | No hardcoded ceilings; queue-based | Load profiles not run |
-| TR-NFR-004 | BE | IN_PROGRESS | DuckDB memory/thread limits | No per-tenant quotas |
+| TR-NFR-004 | BE | IN_PROGRESS | DuckDB memory/thread limits; parser memory/time limits (A16); queue backlog in `GET /operations/metrics` (G25) | No per-tenant quotas |
 | TR-NFR-005 | BE | VERIFIED | Idempotent retries, crash-safe publication (`test_record_store.py`, `test_source_library.py`) | No checkpoint resume inside a parse |
 | TR-NFR-006 | BE | NOT_STARTED | | Case-list benchmark |
 | TR-NFR-007 | BE | IMPLEMENTED_UNVERIFIED | Upload init 0.02 s locally | Not on production-like hardware |
 | TR-NFR-008 | BE | VERIFIED | Preview without master transfer (`test_preview_search_and_record_never_touch_the_master`) | |
-| TR-NFR-009 | BE | IN_PROGRESS | Benchmarks record bytes/s, rows/s, RSS, expansion | No runtime metrics endpoint |
+| TR-NFR-009 | BE | IN_PROGRESS | Benchmarks record bytes/s, rows/s, RSS, expansion; runtime backlog, failures, outbox and storage counts (`test_operations.py`) | No time-series export (Prometheus/OTel) |
 | TR-NFR-010 | BE, OPS | IMPLEMENTED_UNVERIFIED | `astrasync_api.backup` create/verify/restore with hash and count verification (`test_backup.py`); runbook | Encryption and lifecycle of backups, scheduled drills in a real deployment |
 | TR-NFR-011 | BE | IMPLEMENTED_UNVERIFIED | Separate alert lane | Not stress-tested |
 | TR-SEC-001 | OPS | NOT_STARTED | | TLS/encryption are deployment work |

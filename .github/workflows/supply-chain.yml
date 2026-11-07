@@ -1,0 +1,62 @@
+name: Supply chain
+
+# Stage 8 (TR-SEC-002, TR-SEC-005, TR-SEC-006): secret scanning of the full history, known-vulnerability
+# audits of the locked dependencies, and CycloneDX SBOMs. Tool versions are pinned.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks, full history
+        run: |
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.30.1 \
+            git /repo --redact --no-banner --exit-code 1 --config /repo/.gitleaks.toml
+
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install audit tools
+        run: pip install pip-audit==2.9.0 cyclonedx-bom==8.0.1
+      - name: Python lockfiles, known vulnerabilities
+        run: |
+          pip-audit --strict \
+            -r traficom-integration/backend/requirements-dev.lock \
+            -r astrasync-core-lib/requirements.lock
+      - name: UI production dependencies, known vulnerabilities (high and above)
+        working-directory: traficom-integration/ui
+        run: |
+          npm ci --ignore-scripts
+          npm audit --omit=dev --audit-level=high
+      - name: SBOMs (CycloneDX)
+        run: |
+          mkdir -p sbom
+          cyclonedx-py requirements traficom-integration/backend/requirements-dev.lock \
+            --output-format JSON --output-file sbom/backend.cdx.json
+          cyclonedx-py requirements astrasync-core-lib/requirements.lock \
+            --output-format JSON --output-file sbom/core-lib.cdx.json
+          (cd traficom-integration/ui && npx --yes @cyclonedx/cyclonedx-npm@6.0.1 --omit dev \
+            --output-file ../../sbom/ui.cdx.json)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom/
+          retention-days: 30

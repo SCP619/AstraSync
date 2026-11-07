@@ -344,6 +344,25 @@ describe("deep links and native sign-in", () => {
     vi.unstubAllGlobals();
   });
 
+  it("says which sign-in step failed", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      throw new TypeError("Failed to fetch");
+    }));
+    const unreachable = createNativeOidcAdapter(config, { openExternal: async () => undefined });
+    await expect(unreachable.signIn("/")).rejects.toMatchObject({ step: "IDENTITY_PROVIDER_UNREACHABLE" });
+
+    vi.stubGlobal("fetch", identityProvider());
+    const noBrowser = createNativeOidcAdapter(config, {
+      openExternal: async () => {
+        throw new Error("not allowed");
+      },
+    });
+    await expect(noBrowser.signIn("/")).rejects.toMatchObject({ step: "BROWSER_UNAVAILABLE" });
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
   it("does not return to an unsafe path after sign-in", async () => {
     vi.stubGlobal("fetch", identityProvider());
     const { adapter, state } = await startSignIn("https://evil.test/");

@@ -1,3 +1,14 @@
+/** Says which sign-in step failed, so the user and a tester know what to check. */
+export class SignInStepError extends Error {
+  constructor(
+    readonly step: "IDENTITY_PROVIDER_UNREACHABLE" | "BROWSER_UNAVAILABLE",
+    readonly cause: unknown,
+  ) {
+    super(step);
+    this.name = "SignInStepError";
+  }
+}
+
 /**
  * Platform seam for sign-in. The web preview uses the browser; the Tauri and Capacitor builds will
  * provide the same interface with the system browser and OS-protected credential storage.

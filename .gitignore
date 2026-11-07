@@ -22,3 +22,6 @@ dataset/
 .ruff_cache/
 *.egg-info/
 .dev/
+
+# Downloaded CI test packages.
+astrasync-*-LOCAL-TEST*

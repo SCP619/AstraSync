@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: "22"
       - run: npm ci
-      - run: npx tauri build --config src-tauri/tauri.local-test.conf.json
+      - run: npx tauri build --config src-tauri/tauri.local-test.conf.json --features devtools
       - uses: actions/upload-artifact@v4
         with:
           name: astrasync-windows-LOCAL-TEST

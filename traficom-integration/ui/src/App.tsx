@@ -9,7 +9,7 @@ import {
 } from "react";
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ApiError, createApiClient, type CaseList, type Me } from "./api/client";
-import type { AuthAdapter } from "./auth/adapter";
+import { SignInStepError, type AuthAdapter } from "./auth/adapter";
 import {
   describeError,
   MeContext,
@@ -111,7 +111,7 @@ function LoginPage() {
   const { state, notice, signIn } = useSession();
   const location = useLocation();
   const [starting, setStarting] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<string | null>(null);
   const from = (location.state as { from?: string } | null)?.from ?? "/dashboard";
 
   if (state === "SIGNED_IN") {
@@ -120,11 +120,15 @@ function LoginPage() {
 
   async function start() {
     setStarting(true);
-    setFailed(false);
+    setFailed(null);
     try {
       await signIn(from);
-    } catch {
-      setFailed(true);
+    } catch (error) {
+      setFailed(
+        error instanceof SignInStepError && error.step === "BROWSER_UNAVAILABLE"
+          ? "Your web browser could not be opened for sign-in. Check that a default browser is set, then try again."
+          : "The identity provider could not be reached. Try again.",
+      );
       setStarting(false);
     }
   }
@@ -139,11 +143,7 @@ function LoginPage() {
           identity provider handles sign-in and multi-factor authentication.
         </p>
         {notice !== null && <p role="status" className="notice">{NOTICE_TEXT[notice]}</p>}
-        {failed && (
-          <p role="alert" className="notice">
-            The identity provider could not be reached. Try again.
-          </p>
-        )}
+        {failed !== null && <p role="alert" className="notice">{failed}</p>}
         <button type="button" className="primary" onClick={() => void start()} disabled={starting}>
           {starting ? "Opening sign-in…" : "Continue to sign-in"}
         </button>

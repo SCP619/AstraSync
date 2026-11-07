@@ -1,6 +1,6 @@
 # AstraSync backend
 
-FastAPI service. **Status:** IPD stage 2. Identity, authorization, audit and the source library are implemented. Each operation's `x-implementation-status` in `contract/openapi.json` says what is real; other routes return `501` after authorization. MFA and the production identity provider have not been tested against a real provider. Object storage is local and demo-only; real ITU and workbook parsers and connectors do not exist yet.
+FastAPI service. **Status:** IPD stage 5. Identity, authorization, audit, the source library and the case and review workflow are implemented. No real RF method, criterion or AI agent is plugged in yet. Each operation's `x-implementation-status` in `contract/openapi.json` says what is real; other routes return `501` after authorization. MFA and the production identity provider have not been tested against a real provider. Object storage is local and demo-only; real ITU and workbook parsers and connectors do not exist yet.
 
 ## How access works
 
@@ -27,6 +27,20 @@ Files arrive through a resumable upload session or a registered connector client
 **Entitlements:** rights on `resource_entitlements` with `object_type=source` and the artifact's classification: `READ`, `DOWNLOAD` and `IMPORT`. `PUBLIC` and `INTERNAL` are open within a tenant; everything else needs one.
 
 **Plugging in components (Data/AI):** set `ASTRASYNC_SOURCE_ADAPTERS` to `module:Class` values, and `ASTRASYNC_SOURCE_CLIENTS` to `endpoint_ref=module:Class` values. See `contract/interfaces.py` and `AdapterRecord`.
+
+## Cases and review
+
+The backend orchestrates. It holds no RF formula, legal limit or AI model.
+
+- **Creating a case:** the relevance pipeline calls `cases.upsert_candidate` with a `CaseCandidate`. A new case is always `INSUFFICIENT_DATA`, whatever the frequency overlap.
+- **Analysis (`analysis.py`):** a worker job freezes the scenario and records a row for every candidate method in the catalogue. Methods not registered are `NOT_IMPLEMENTED`. One failing method never hides the others and never yields a number.
+- **Margins:** `predicted - limit`, only for a verified upper-bound criterion whose citation, unit, bandwidth, metric and statistics all match. A margin supplied by a resolver is ignored.
+- **Findings:** deliberately cautious. Nothing here concludes `NO_IDENTIFIED_CONCERN`, and `METHOD_DISAGREEMENT` needs a per-metric tolerance the docs have not set, so neither is produced yet.
+- **Immutability:** method runs, criterion checks and review events are insert-only, enforced by a trigger on PostgreSQL. A rerun creates a new run.
+- **Drafts:** agent output is validated like untrusted input: citations must exist, and text making unsupported claims gets a warning. Restricted classifications never reach an agent by default (`ASTRASYNC_AI_CLASSIFICATIONS`). Everything else keeps working without an agent.
+- **Decisions:** only `REVIEW_DECIDE` can approve, and an objection needs a verified criterion. Nothing is ever sent automatically.
+
+**Plugging in components (Data/AI):** set `ASTRASYNC_RF_METHODS` to `module:Class` values, and `ASTRASYNC_CRITERION_RESOLVER` and `ASTRASYNC_DRAFT_AGENT` to one each. See `contract/interfaces.py`, `MethodAssessment`, `MethodCalculation` and `AgentDraftResponse`.
 
 ## Session policy
 
@@ -57,6 +71,10 @@ There is no self-registration. A valid sign-in with no provisioned account gets 
 | `ASTRASYNC_OBJECT_STORE_PATH` | For uploads | Local store, `DEMO` only: refused elsewhere because it has no encryption at rest |
 | `ASTRASYNC_MAX_UPLOAD_BYTES` | No | Default 10 GiB |
 | `ASTRASYNC_SOURCE_ADAPTERS`, `ASTRASYNC_SOURCE_CLIENTS` | Worker | Comma-separated. See above |
+| `ASTRASYNC_RF_METHODS`, `ASTRASYNC_CRITERION_RESOLVER` | Worker | See "Cases and review" |
+| `ASTRASYNC_DRAFT_AGENT` | API | Empty means AI drafting is off |
+| `ASTRASYNC_AI_CLASSIFICATIONS` | No | Default `PUBLIC,INTERNAL` |
+| `ASTRASYNC_BUILD_SHA` | No | Stored on each analysis run for replay |
 
 With none set, the API starts unconfigured and denies everything. An unsafe or partial configuration refuses to start.
 
@@ -112,6 +130,10 @@ traficom-integration/backend/.venv/Scripts/python traficom-integration/backend/t
 
 ```bash
 traficom-integration/backend/.venv/Scripts/python traficom-integration/backend/tests/support/dev_stack.py api
+```
+
+```bash
+traficom-integration/backend/.venv/Scripts/python traficom-integration/backend/tests/support/dev_stack.py worker
 ```
 
 ```bash

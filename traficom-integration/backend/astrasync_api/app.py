@@ -9,11 +9,14 @@ from fastapi.openapi.utils import get_openapi
 from pydantic.json_schema import models_json_schema
 
 from .authz import ObjectAccessPolicy
-from .config import Settings
+from .config import Settings, SettingsError, load_named
 from .contract import CONTRACT_VERSION
+from .contract.enums import UsageClassification
+from .contract.interfaces import EvidenceDraftAgent
 from .contract.models import (
     AdapterRecord,
     AgentDraftResponse,
+    CaseCandidate,
     DomainEvent,
     MethodAssessment,
     MethodCalculation,
@@ -32,6 +35,7 @@ from .security import SecurityRuntime
 _INTEGRATION_MODELS = (
     AdapterRecord,
     AgentDraftResponse,
+    CaseCandidate,
     DomainEvent,
     MethodAssessment,
     MethodCalculation,
@@ -70,6 +74,15 @@ def _build_security(settings: Settings, keys: JwksCache | None) -> SecurityRunti
     )
 
 
+def _load_draft_agent(settings: Settings) -> EvidenceDraftAgent | None:
+    if not settings.draft_agent:
+        return None
+    agent = load_named(settings.draft_agent)()
+    if not isinstance(agent, EvidenceDraftAgent):
+        raise SettingsError("The draft agent does not implement EvidenceDraftAgent")
+    return agent
+
+
 def create_app(settings: Settings | None = None, *, keys: JwksCache | None = None) -> FastAPI:
     settings = settings if settings is not None else Settings.from_env(os.environ)
     # Interactive docs and the live spec stay off: the contract ships as a reviewed file.
@@ -96,6 +109,10 @@ def create_app(settings: Settings | None = None, *, keys: JwksCache | None = Non
             ),
             max_upload_bytes=settings.max_upload_bytes,
         )
+    app.state.draft_agent = _load_draft_agent(settings)
+    app.state.ai_classifications = frozenset(
+        UsageClassification(level) for level in settings.ai_classifications
+    )
     install_error_handlers(app)
     app.include_router(router)
     if settings.cors_origins:

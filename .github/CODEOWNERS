@@ -1,0 +1,23 @@
+# AstraSync — Development Responsibilities
+
+# Shared contracts
+/traficom-integration/contract/ @Aosaf098 @SCP619
+
+# Aosaf: Software engineering
+/traficom-integration/backend/ @Aosaf098
+/traficom-integration/ui/ @Aosaf098
+/scripts/deployment/ @Aosaf098
+
+# SCP619: Data, RF and AI
+/astrasync-core-lib/data/ @SCP619
+/astrasync-core-lib/physics/ @SCP619
+/traficom-integration/agent/ @SCP619
+
+# Source adapters, when created
+/traficom-integration/backend/astrasync_api/adapters/ @SCP619
+
+# Shared scientific and architectural documentation
+/docs/architecture/ @Aosaf098 @SCP619
+
+# Shared ownership of this file
+/.github/CODEOWNERS @Aosaf098 @SCP619

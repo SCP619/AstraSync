@@ -5,7 +5,9 @@ No value here is a secret: the API only verifies tokens with the provider's publ
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from importlib import import_module
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlsplit
 
 from .contract.enums import Environment
@@ -46,6 +48,11 @@ class Settings:
     max_upload_bytes: int = 10 * 1024**3
     source_adapters: tuple[str, ...] = ()
     source_clients: tuple[str, ...] = ()
+    rf_methods: tuple[str, ...] = ()
+    criterion_resolver: str | None = None
+    draft_agent: str | None = None
+    ai_classifications: tuple[str, ...] = ("PUBLIC", "INTERNAL")
+    build_sha: str = "unknown"
 
     def __post_init__(self) -> None:
         _validate(self)
@@ -87,6 +94,11 @@ class Settings:
             max_upload_bytes=int(env.get("ASTRASYNC_MAX_UPLOAD_BYTES", 10 * 1024**3)),
             source_adapters=_csv(env.get("ASTRASYNC_SOURCE_ADAPTERS", "")),
             source_clients=_csv(env.get("ASTRASYNC_SOURCE_CLIENTS", "")),
+            rf_methods=_csv(env.get("ASTRASYNC_RF_METHODS", "")),
+            criterion_resolver=env.get("ASTRASYNC_CRITERION_RESOLVER") or None,
+            draft_agent=env.get("ASTRASYNC_DRAFT_AGENT") or None,
+            ai_classifications=_csv(env.get("ASTRASYNC_AI_CLASSIFICATIONS", "PUBLIC,INTERNAL")),
+            build_sha=env.get("ASTRASYNC_BUILD_SHA", "unknown"),
             oidc=OidcSettings(
                 issuer=env["ASTRASYNC_OIDC_ISSUER"],
                 audience=env["ASTRASYNC_OIDC_AUDIENCE"],
@@ -98,6 +110,14 @@ class Settings:
                 mfa_acr_values=frozenset(_csv(env.get("ASTRASYNC_OIDC_MFA_ACR", ""))),
             ),
         )
+
+
+def load_named(spec: str) -> Any:
+    """Loads a server-configured ``module:attribute``. Never takes a client-supplied value."""
+    module_name, _, attribute = spec.partition(":")
+    if not module_name or not attribute:
+        raise SettingsError(f"Expected module:attribute, got {spec!r}")
+    return getattr(import_module(module_name), attribute)
 
 
 def _csv(value: str) -> tuple[str, ...]:

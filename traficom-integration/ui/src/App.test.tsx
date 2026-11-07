@@ -88,6 +88,7 @@ describe("signed in", () => {
       backend({ [ME]: { status: 200, body: analyst }, [CASES]: { status: 501, body: error("NOT_IMPLEMENTED") } }),
     );
     expect(await screen.findByText(/not implemented/)).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Cases" })).toBeTruthy();
   });
 
   it("hides the case panel without the capability and does not request it", async () => {

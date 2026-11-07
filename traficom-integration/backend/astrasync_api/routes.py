@@ -14,7 +14,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
-from . import library
+from . import cases, library
 from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
@@ -50,8 +50,11 @@ from .contract.models import (
     DeviceRegistrationRequest,
     DownloadLink,
     DownloadLinkRequest,
+    Draft,
     DraftCreated,
     DraftCreateRequest,
+    DraftList,
+    DraftUpdateRequest,
     ErrorResponse,
     EvidencePack,
     IngestRequest,
@@ -64,6 +67,7 @@ from .contract.models import (
     ReferenceList,
     ReviewCreateRequest,
     ReviewEvent,
+    ReviewEventList,
     SourceArtifactDetail,
     SourceArtifactList,
     SourceConnectorList,
@@ -197,8 +201,11 @@ async def list_issue_changes(
 # --- Cases and analysis -----------------------------------------------------------------------
 
 
-@router.get("/cases", response_model=CaseList, **_policy(Capability.CASE_READ))
-async def list_cases(
+@router.get("/cases", response_model=CaseList, **_policy(Capability.CASE_READ, _IMPLEMENTED))
+def list_cases(
+    request: Request,
+    principal: CurrentPrincipal,
+    session: DbSession,
     domain: CaseDomain | None = None,
     source_issue_id: Annotated[str | None, Query(max_length=128)] = None,
     change_type: ChangeType | None = None,
@@ -209,78 +216,193 @@ async def list_cases(
     limit: Limit = 50,
     cursor: Cursor = None,
 ) -> Any:
-    raise _not_implemented()
+    return cases.list_cases(
+        _library(request),
+        session,
+        principal,
+        domain=domain,
+        source_issue_id=source_issue_id,
+        change_type=change_type,
+        finding_status=finding_status,
+        review_status=review_status,
+        query_text=query,
+        sort=sort,
+        limit=limit,
+        cursor=cursor,
+    )
 
 
-@router.get("/cases/{case_id}", response_model=CaseDetail, **_policy(Capability.CASE_READ))
-async def get_case(case_id: ResourceId) -> Any:
-    raise _not_implemented()
+@router.get(
+    "/cases/{case_id}", response_model=CaseDetail, **_policy(Capability.CASE_READ, _IMPLEMENTED)
+)
+def get_case(
+    request: Request, case_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return cases.get_case(_library(request), request, session, principal, case_id)
 
 
 @router.post(
     "/cases/{case_id}/analyse",
     response_model=AnalysisAccepted,
     status_code=202,
-    **_policy(Capability.ANALYSIS_RUN),
+    **_policy(Capability.ANALYSIS_RUN, _IMPLEMENTED),
 )
-async def analyse_case(
-    case_id: ResourceId, body: AnalyseRequest, idempotency_key: IdempotencyKey
+def analyse_case(
+    request: Request,
+    case_id: ResourceId,
+    body: AnalyseRequest,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
 ) -> Any:
-    raise _not_implemented()
+    return cases.request_analysis(
+        _library(request),
+        request,
+        session,
+        principal,
+        case_id,
+        body,
+        idempotency_key,
+    )
 
 
 @router.get(
     "/analyses/{analysis_run_id}",
     response_model=AnalysisRun,
-    **_policy(Capability.ANALYSIS_READ),
+    **_policy(Capability.ANALYSIS_READ, _IMPLEMENTED),
 )
-async def get_analysis(analysis_run_id: ResourceId) -> Any:
-    raise _not_implemented()
+def get_analysis(
+    request: Request, analysis_run_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return cases.get_analysis(_library(request), request, session, principal, analysis_run_id)
 
 
 @router.get(
     "/analyses/{analysis_run_id}/methods",
     response_model=MethodMatrix,
-    **_policy(Capability.ANALYSIS_READ),
+    **_policy(Capability.ANALYSIS_READ, _IMPLEMENTED),
 )
-async def get_analysis_methods(analysis_run_id: ResourceId) -> Any:
-    raise _not_implemented()
+def get_analysis_methods(
+    request: Request, analysis_run_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return cases.get_method_matrix(_library(request), request, session, principal, analysis_run_id)
 
 
-@router.get("/references", response_model=ReferenceList, **_policy(Capability.REFERENCE_READ))
-async def list_references(limit: Limit = 50, cursor: Cursor = None) -> Any:
-    raise _not_implemented()
+@router.get(
+    "/references", response_model=ReferenceList, **_policy(Capability.REFERENCE_READ, _IMPLEMENTED)
+)
+def list_references(
+    principal: CurrentPrincipal, session: DbSession, limit: Limit = 50, cursor: Cursor = None
+) -> Any:
+    return cases.list_references(session, principal, limit, cursor)
 
 
 @router.post(
     "/cases/{case_id}/drafts",
     response_model=DraftCreated,
     status_code=201,
-    **_policy(Capability.DRAFT_CREATE),
+    **_policy(Capability.DRAFT_CREATE, _IMPLEMENTED),
 )
-async def create_draft(
-    case_id: ResourceId, body: DraftCreateRequest, idempotency_key: IdempotencyKey
+def create_draft(
+    request: Request,
+    case_id: ResourceId,
+    body: DraftCreateRequest,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
 ) -> Any:
-    raise _not_implemented()
+    return cases.create_draft(
+        _library(request),
+        request,
+        session,
+        principal,
+        case_id,
+        body,
+        agent=request.app.state.draft_agent,
+        ai_classifications=request.app.state.ai_classifications,
+    )
+
+
+@router.get(
+    "/cases/{case_id}/drafts",
+    response_model=DraftList,
+    **_policy(Capability.DRAFT_READ, _IMPLEMENTED),
+)
+def list_drafts(
+    request: Request,
+    case_id: ResourceId,
+    principal: CurrentPrincipal,
+    session: DbSession,
+    limit: Limit = 50,
+    cursor: Cursor = None,
+) -> Any:
+    return cases.list_drafts(_library(request), request, session, principal, case_id, limit, cursor)
+
+
+@router.put(
+    "/cases/{case_id}/drafts/{draft_id}",
+    response_model=Draft,
+    **_policy(Capability.DRAFT_CREATE, _IMPLEMENTED),
+)
+def update_draft(
+    request: Request,
+    case_id: ResourceId,
+    draft_id: ResourceId,
+    body: DraftUpdateRequest,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return cases.update_draft(
+        _library(request), request, session, principal, case_id, draft_id, body
+    )
+
+
+@router.get(
+    "/cases/{case_id}/reviews",
+    response_model=ReviewEventList,
+    **_policy(Capability.CASE_READ, _IMPLEMENTED),
+)
+def list_reviews(
+    request: Request,
+    case_id: ResourceId,
+    principal: CurrentPrincipal,
+    session: DbSession,
+    limit: Limit = 50,
+    cursor: Cursor = None,
+) -> Any:
+    return cases.list_reviews(
+        _library(request), request, session, principal, case_id, limit, cursor
+    )
 
 
 @router.post(
     "/cases/{case_id}/reviews",
     response_model=ReviewEvent,
     status_code=201,
-    **_policy(Capability.REVIEW_DECIDE),
+    **_policy(Capability.REVIEW_DECIDE, _IMPLEMENTED),
 )
-async def create_review(
-    case_id: ResourceId, body: ReviewCreateRequest, idempotency_key: IdempotencyKey
+def create_review(
+    request: Request,
+    case_id: ResourceId,
+    body: ReviewCreateRequest,
+    idempotency_key: IdempotencyKey,
+    principal: CurrentPrincipal,
+    session: DbSession,
 ) -> Any:
-    raise _not_implemented()
+    return cases.create_review(
+        _library(request), request, session, principal, case_id, body, idempotency_key
+    )
 
 
 @router.get(
-    "/cases/{case_id}/export", response_model=EvidencePack, **_policy(Capability.CASE_EXPORT)
+    "/cases/{case_id}/export",
+    response_model=EvidencePack,
+    **_policy(Capability.CASE_EXPORT, _IMPLEMENTED),
 )
-async def export_case(case_id: ResourceId) -> Any:
-    raise _not_implemented()
+def export_case(
+    request: Request, case_id: ResourceId, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return cases.export_case(_library(request), request, session, principal, case_id)
 
 
 # --- Uploads ----------------------------------------------------------------------------------

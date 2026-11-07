@@ -6,6 +6,7 @@ refuses plain-HTTP issuers elsewhere and off loopback.
 
     python tests/support/dev_stack.py idp
     python tests/support/dev_stack.py api
+    python tests/support/dev_stack.py worker
 """
 
 import base64
@@ -29,13 +30,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 
-from astrasync_api import admin
+from astrasync_api import admin, cases
+from astrasync_api.case_tables import CaseRow
+from astrasync_api.config import Settings
 from astrasync_api.contract.enums import (
     IssueDomain,
     JobType,
     SourceType,
     UsageClassification,
 )
+from astrasync_api.contract.models import CaseCandidate
 from astrasync_api.contract.permissions import Role
 from astrasync_api.db import (
     ResourceEntitlement,
@@ -47,9 +51,9 @@ from astrasync_api.db import (
 )
 from astrasync_api.ingest import IncomingBytes, PipelineContext, register_bytes
 from astrasync_api.jobs import LANE_INGESTION, enqueue
-from astrasync_api.library_tables import SourceConnectorRow
+from astrasync_api.library_tables import SourceConnectorRow, SourceRecordLocationRow
 from astrasync_api.objectstore import LocalObjectStore
-from astrasync_api.worker import WorkerRuntime, run_until_idle
+from astrasync_api.worker import WorkerRuntime, build_runtime, run_one, run_until_idle
 
 HOST = "127.0.0.1"
 IDP_PORT = 8801
@@ -287,6 +291,7 @@ def seed_accounts(database_url: str) -> None:
                 sessions, tenant_id=tenant, issuer=ISSUER, subject=subject, roles=roles
             )
     seed_sources(sessions)
+    seed_cases(sessions)
     engine.dispose()
 
 
@@ -388,22 +393,107 @@ def seed_sources(sessions: Any) -> None:
     run_until_idle(WorkerRuntime(context=context, clients={}, worker_id="dev-seed"))
 
 
+def seed_cases(sessions: Any) -> None:
+    """Made-up notices. Their numbers are test values echoed by a stand-in, not calculations."""
+    with sessions() as session:
+        if session.get(CaseRow, "DEMO-SPACE-001") is not None:
+            return
+    criterion = {
+        "criterion_ref_id": "DEMO-CRITERION-NOT-REAL",
+        "regulatory_scope": "Local test only",
+        "applicable": "VERIFIED",
+        "matching_conditions": {},
+        "limit_value": -100.0,
+        "limit_unit": "DEMO-UNIT",
+        "limit_reference_bandwidth_hz": None,
+        "comparison_operator": "UPPER_BOUND",
+        "review_note": "A made-up limit, for testing the workflow only.",
+        "citation": {
+            "reference_id": "DEMO-REF",
+            "section_id": "DEMO-SECTION-NOT-REAL",
+            "source_url": "https://example.invalid/demo",
+        },
+    }
+    with sessions() as session:
+        record_id = session.scalar(
+            select(SourceRecordLocationRow.source_record_id).order_by(
+                SourceRecordLocationRow.source_record_id
+            )
+        )
+    scenarios = (
+        ("DEMO-SPACE-001", "SPACE", "NEW", 10700.0, {}),
+        ("DEMO-SPACE-002", "SPACE", "MODIFIED", 11700.0, {"demo_value": -102.3}),
+        (
+            "DEMO-SPACE-003",
+            "SPACE",
+            "NEW",
+            12500.0,
+            {"demo_value": -97.7, "demo_criteria": [criterion]},
+        ),
+        (
+            "DEMO-TERR-001",
+            "TERRESTRIAL",
+            "NEW",
+            450.0,
+            {"demo_value": 12.0, "demo_metric": "FIELD_STRENGTH"},
+        ),
+    )
+    for case_id, domain, change, start, scenario in scenarios:
+        cases.upsert_candidate(
+            sessions,
+            TENANT_A,
+            CaseCandidate(
+                case_id=case_id,
+                notice_uid=f"notice-{case_id}",
+                notice_id=f"SYNTHETIC-{case_id}",
+                source_id="DEMO-SYNTHETIC",
+                source_issue_id="DEMO-IFIC-001",
+                source_record_id=record_id,
+                administration="DEMO",
+                domain=domain,
+                change_type=change,
+                frequency_start_mhz=start,
+                frequency_end_mhz=start + 20,
+                relevance={
+                    "label": "FREQUENCY_MATCH",
+                    "reason_codes": ["DEMO_BAND_OVERLAP"],
+                    "rule_version": "demo",
+                    "overlap_start_mhz": start,
+                    "overlap_end_mhz": start + 20,
+                    "frequency_match": True,
+                    "service_match": None,
+                    "geometry_match": None,
+                    "technical_data_ready": bool(scenario),
+                    "criterion_available": "demo_criteria" in scenario,
+                },
+                scenario_id=f"scenario-{case_id}",
+                scenario=scenario,
+            ),
+        )
+
+
+def _dev_environment() -> dict[str, str]:
+    return {
+        "ASTRASYNC_ENVIRONMENT": "DEMO",
+        "ASTRASYNC_DATABASE_URL": f"sqlite:///{DATABASE_PATH.as_posix()}",
+        "ASTRASYNC_OIDC_ISSUER": ISSUER,
+        "ASTRASYNC_OIDC_AUDIENCE": AUDIENCE,
+        "ASTRASYNC_OIDC_JWKS_URI": f"{ISSUER}/jwks",
+        "ASTRASYNC_OIDC_REQUIRED_SCOPES": "astrasync.api",
+        "ASTRASYNC_CORS_ORIGINS": UI_ORIGIN,
+        "ASTRASYNC_OBJECT_STORE_PATH": str(OBJECTS_PATH),
+        "ASTRASYNC_DRAFT_AGENT": "demo_plugins:DemoDraftAgent",
+        "ASTRASYNC_RF_METHODS": "demo_plugins:DemoEchoMethod",
+        "ASTRASYNC_CRITERION_RESOLVER": "demo_plugins:DemoEchoResolver",
+        "ASTRASYNC_BUILD_SHA": "local-dev",
+    }
+
+
 def run_api() -> None:
     DEV_DIR.mkdir(exist_ok=True)
-    database_url = f"sqlite:///{DATABASE_PATH.as_posix()}"
-    os.environ.update(
-        {
-            "ASTRASYNC_ENVIRONMENT": "DEMO",
-            "ASTRASYNC_DATABASE_URL": database_url,
-            "ASTRASYNC_OIDC_ISSUER": ISSUER,
-            "ASTRASYNC_OIDC_AUDIENCE": AUDIENCE,
-            "ASTRASYNC_OIDC_JWKS_URI": f"{ISSUER}/jwks",
-            "ASTRASYNC_OIDC_REQUIRED_SCOPES": "astrasync.api",
-            "ASTRASYNC_CORS_ORIGINS": UI_ORIGIN,
-            "ASTRASYNC_OBJECT_STORE_PATH": str(OBJECTS_PATH),
-        }
-    )
-    seed_accounts(database_url)
+    environment = _dev_environment()
+    os.environ.update(environment)
+    seed_accounts(environment["ASTRASYNC_DATABASE_URL"])
     uvicorn.run("astrasync_api.app:create_app", factory=True, host=HOST, port=API_PORT)
 
 
@@ -413,6 +503,12 @@ def main() -> int:
         uvicorn.run(create_idp(), host=HOST, port=IDP_PORT)
     elif target == "api":
         run_api()
+    elif target == "worker":
+        os.environ.update(_dev_environment())
+        runtime = build_runtime(Settings.from_env(os.environ))
+        while True:
+            if not run_one(runtime):
+                time.sleep(1)
     else:
         print(__doc__)
         return 2

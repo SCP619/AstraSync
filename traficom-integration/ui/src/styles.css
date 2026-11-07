@@ -290,6 +290,87 @@ button.link {
   text-decoration: underline;
 }
 
+select,
+textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+}
+
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+summary {
+  min-height: 28px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+details[open] > summary {
+  margin-bottom: 12px;
+}
+
+.stacked {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.stack {
+  max-width: 560px;
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+}
+
+.inline-form .stacked {
+  margin-bottom: 0;
+}
+
+.warnings {
+  margin: 0 0 12px;
+  padding-left: 24px;
+}
+
+.content.wide {
+  max-width: 1320px;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.summary {
+  margin-bottom: 16px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 16px 0 8px;
+}
+
+.tabs button[aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .block {
   display: block;
 }
@@ -350,6 +431,45 @@ dd {
   border: 1px solid var(--border);
   border-radius: 4px;
   background: var(--raised);
+}
+
+/* Android companion: cards instead of a wide table. */
+@media (max-width: 760px) {
+  .case-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .case-table,
+  .case-table tbody,
+  .case-table tr,
+  .case-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .case-table tr {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+
+  .case-table td {
+    padding: 4px 0;
+    border-top: 0;
+  }
+
+  .case-table td::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {

@@ -56,7 +56,7 @@ def test_response_models_have_no_implicit_defaults() -> None:
         f"{model.__name__}.{field}"
         for _, model in inspect.getmembers(models, inspect.isclass)
         if issubclass(model, ContractModel)
-        and not model.__name__.endswith(("Request", "Update", "Upsert"))
+        and not model.__name__.endswith(("Request", "Update", "Upsert", "Candidate"))
         and model is not ContractModel
         for field, info in model.model_fields.items()
         if not info.is_required()

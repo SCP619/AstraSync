@@ -294,7 +294,7 @@ def test_revoked_role_applies_to_an_unexpired_token(
     users: Users,
 ) -> None:
     headers = bearer("reviewer-a")
-    assert secure_client.get("/api/v1/references", headers=headers).status_code == 501
+    assert secure_client.get("/api/v1/references", headers=headers).status_code == 200
     admin.revoke_role(sessions, users.ids["reviewer-a"], Role.REVIEWER)
     assert secure_client.get("/api/v1/references", headers=headers).status_code == 403
     me = Me.model_validate(secure_client.get(ME, headers=headers).json())

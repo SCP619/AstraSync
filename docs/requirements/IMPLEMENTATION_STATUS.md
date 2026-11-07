@@ -12,7 +12,7 @@ Last updated: 2026-11-07. Update this file in the PR that changes the status. Re
 | --- | --- | --- | --- |
 | 0 Contract | Verified | Contract tests in CI; OpenAPI `1.0.0-draft.5` | BSD update for DECISIONS entries |
 | 1 Secure skeleton | Verified on the local test IdP | Backend auth/authorization tests, deny-by-default | Real identity provider (TRD §18) |
-| 2 Source library | Verified, synthetic only | Upload, immutable archive, integrity, index, preview, search, RBAC tests. **AT-H-01**: real workbook SHA-256 `bb7f481f…` and 874 rows reconciled through the pipeline (`test_traficom_ingest.py`, run locally with the file; the file is not in git) | Authorised ITU connectors, source monitoring, real-format adapters (blocked, see below) |
+| 2 Source library | Verified, synthetic only | Upload, immutable archive, integrity, index, preview, search, RBAC tests. **AT-H-01**: real workbook SHA-256 `bb7f481f…` and 874 rows reconciled through the pipeline (`test_traficom_ingest.py`, run locally with the file; the file is not in git) | Authorised ITU connectors and real IFIC adapters (blocked, see below). **Real-source verified:** the Traficom M4 allocation table connector (`astrasync_api.connectors.traficom_opendata`) and its parser (`astrasync_data.traficom_m4_table`). A live run on 2026-11-07 discovered, archived, parsed and indexed 5,917 rows, all accepted (`ASTRASYNC_LIVE_SOURCES=1 pytest tests/test_traficom_opendata_pipeline.py`) |
 | 3 Space RF | In progress | `SPACE_PFD_FREE_SPACE` (`astrasync_physics.space_pfd`): Tier 1 validation against 40-digit reference values, linear vs dB agreement, the −6.02 dB doubling rule, refusal of missing and invalid inputs; runs through the real analysis runner with no margin and no criterion | Directional/time-series PFD, EPFD, criterion resolver with cited limits, the notice-to-scenario mapping (needs real IFIC data) |
 | 4 Terrestrial RF | Not started | | Two real IFIC issues, P.1546 if validated |
 | 5 Case UI and evidence | Verified with demo plugins | Case workflow, reviewer API, inspector, 91 UI tests | Real relevance detection, RF methods and AI agent wired in |
@@ -41,6 +41,14 @@ Last updated: 2026-11-07. Update this file in the PR that changes the status. Re
 | No Lovable project for AstraSync | Planned Lovable UI work | The connected Lovable account (workspace "My Lovable") has one unrelated project from 2025 and no GitHub link. Creating a project spends credits and imports code; needs approval and a sync plan. No Lovable operation has been run |
 | `LICENSE.md` calls `astrasync-core-lib` background IP, while the docs say a folder name doesn't establish that | Code added to `astrasync-core-lib` | Team and legal decision; the licence was not changed |
 | Android push gateway | Stage 7 push | Firebase project or another approved gateway |
+
+## Enabling the real components
+
+Worker settings, comma-separated:
+
+- `ASTRASYNC_SOURCE_ADAPTERS=astrasync_data.traficom_workbook:TraficomWorkbookAdapter,astrasync_data.traficom_m4_table:TraficomM4TableAdapter`
+- `ASTRASYNC_SOURCE_CLIENTS=traficom-m4=astrasync_api.connectors.traficom_opendata:TraficomFrequencyTableClient`, with the source registered as `endpoint_ref=traficom-m4`, source type `M4_ALLOCATION`, rights basis "CC BY 4.0"
+- `ASTRASYNC_RF_METHODS=astrasync_physics.space_pfd:SpacePfdFreeSpace`
 
 ## Machine set-up notes
 

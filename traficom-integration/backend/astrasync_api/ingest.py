@@ -25,6 +25,7 @@ from .contract.enums import (
     IntegrityCheckResult,
     PipelineStatus,
     PublisherAuthStatus,
+    QualitySeverity,
     RecordStatus,
 )
 from .contract.interfaces import SourceAdapter
@@ -449,7 +450,9 @@ def _write_batch(
                 continue
             if record.record_status is RecordStatus.INVALID:
                 counts["rejected"] += 1
-            elif record.record_status in _FLAGGED or record.quality_findings:
+            elif record.record_status in _FLAGGED or any(
+                finding.severity is not QualitySeverity.INFO for finding in record.quality_findings
+            ):  # An informational note, such as an optional field left blank, is not a flag.
                 counts["flagged"] += 1
             else:
                 counts["accepted"] += 1

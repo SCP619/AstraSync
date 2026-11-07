@@ -16,6 +16,7 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | D8 | Source type: `FINLAND_FREQUENCY_INTEREST` (AFD) vs `CHALLENGE_SYNTHETIC_REFERENCE` (workbook profile) | Both kept: the workbook uses the second; a future real feed uses the first | Keeps synthetic data separately labelled |
 | D9 | Query parameter `filename` (BSD) vs `file_name` (Source Acquisition); path `{source_record_id}` vs `{record_id}` | BSD spelling | BSD owns routes |
 | D10 | Case detail may embed method runs or load them separately | Load from `GET /analyses/{id}`; the case holds `latest_analysis_run_id` | Inspector spec requires one canonical source |
+| D11 | The workbook audit (SYNTHETIC_DATA_ALIGNMENT §3) reports bare `26` values, 5 rows with ASL below ground and 614 blank gains. In the file, `26` is a shared-string index that resolves to an empty string (checked in `xl/sharedStrings.xml`). So rows 108–110 have an empty TX frequency, only row 187 has ASL below ground, and gain is blank in 789 rows (614 empty cells, 175 empty strings) | Follow the workbook, which the audit names as authoritative. Rows 108–110 get `MISSING_VALUE` (BLOCKING) on TX frequency, not `UNIT_UNSPECIFIED`. A bare number is still never given a unit | The audit's counts came from raw XML, not resolved cell values. **Update the audit in the v3 docs** |
 
 ## Gaps filled
 
@@ -77,6 +78,12 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A27 | Severity defaults and role routing in `alerts.DEFAULT_RULES` are starting values | **Team review** |
 | A28 | Alert titles and previews are English only. Finnish needs a client-side catalogue | Usability testing |
 | A11 | Audit covers denials by signed-in users, permitted writes, exports and downloads. Anonymous and invalid-token failures are logged only, so they cannot fill the audit table | Stage 8 |
+| A29 | The workbook parser (`astrasync-core-lib`, `astrasync_data.traficom_workbook`) matches the English and Finnish header rows exactly, including the source spelling `Radioation`. Any other layout is refused, not mapped by position | When Traficom publishes another version |
+| A30 | Bandwidth designations accept ITU-R RR Appendix 1 (`8M00`) and the workbook's suffix forms (`300k`, `1,4M`, `0,1G`), the latter with an INFO note. Lower-case `m` and `g` are refused as ambiguous | **Data/AI review** |
+| A31 | `Radioation power` is stored in its own unit (`mW`, `W`, `kW`, `MW`) with no conversion, because the source doesn't say whether it is ERP or EIRP. `Transmission line (dB)` is kept as given; its sign convention is unconfirmed | Codebook from Traficom |
+| A32 | Record search indexes the TX centre frequency only (`frequency_start_mhz = frequency_end_mhz`). A centre ± bandwidth interval would be an assumption, left to the relevance step that labels it | Stage 3/4 relevance design |
+| A33 | A negative antenna height AGL is kept as given, marked BLOCKING, and excluded from power-dependent calculations. The workbook's suggested "minimum 1 m" isn't applied; it would be a named sensitivity scenario | Scientific review |
+| A34 | Ingest counts a record as flagged only for a WARNING or BLOCKING finding or a non-valid status. INFO notes, such as an optional field left blank, don't count | Stage 2 review |
 
 ## Outside the contract: needs a team decision
 

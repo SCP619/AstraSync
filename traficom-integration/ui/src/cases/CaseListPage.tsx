@@ -10,6 +10,7 @@ import {
   METRIC_TEXT,
   REVIEW_TEXT,
 } from "./labels";
+import { ChangeBadge, FindingBadge, ReviewBadge, SyntheticBadge } from "../components/StatusBadge";
 
 function Options<T extends string>({ labels }: { labels: Record<T, string> }) {
   return (
@@ -145,14 +146,14 @@ export function CaseListPage() {
                   <tr key={item.case_id}>
                     <td data-label="Notice / case">
                       <Link to={`/cases/${encodeURIComponent(item.case_id)}`}>{item.notice_id}</Link>{" "}
-                      {item.is_synthetic && <span className="badge review">SYNTHETIC</span>}
+                      {item.is_synthetic && <SyntheticBadge />}
                       <span className="muted small block break">{item.case_id}</span>
                     </td>
                     <td data-label="Domain and issue">
                       {item.domain === "SPACE" ? "Space" : "Terrestrial"}
                       <span className="muted small block break">{item.source_issue_id}</span>
                     </td>
-                    <td data-label="Change">{CHANGE_TEXT[item.change_type]}</td>
+                    <td data-label="Change"><ChangeBadge change={item.change_type} /></td>
                     <td data-label="Frequency" className="numeric">
                       {formatFrequencyRange(item.frequency_start_mhz, item.frequency_end_mhz)}
                     </td>
@@ -164,8 +165,8 @@ export function CaseListPage() {
                     <td data-label="Criterion margin" className="numeric">
                       {formatMargin(item.margin_db, item.criterion_status)}
                     </td>
-                    <td data-label="Finding">{FINDING_TEXT[item.finding_status]}</td>
-                    <td data-label="Review">{REVIEW_TEXT[item.review_status]}</td>
+                    <td data-label="Finding"><FindingBadge status={item.finding_status} /></td>
+                    <td data-label="Review"><ReviewBadge status={item.review_status} /></td>
                   </tr>
                 ))}
               </tbody>

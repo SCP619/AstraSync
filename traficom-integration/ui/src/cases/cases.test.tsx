@@ -119,7 +119,10 @@ describe("case list", () => {
     expect(await screen.findByText("-2.30 dB")).toBeTruthy();
     expect(screen.getByText("+2.30 dB")).toBeTruthy();
     expect(screen.getAllByText(/Power flux density \(PFD\): -102.3 DEMO-UNIT/).length).toBe(2);
-    expect(screen.getAllByText("Potential limit exceedance", { selector: "td" }).length).toBe(2);
+    expect(
+      screen.getAllByText("Potential limit exceedance", { selector: 'td[data-label="Finding"] span' })
+        .length,
+    ).toBe(2);
     expect(screen.queryByText(/violation/i)).toBeNull();
   });
 

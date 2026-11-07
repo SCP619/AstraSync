@@ -35,8 +35,8 @@ jobs:
       - name: Backend lint, types and tests
         working-directory: traficom-integration/backend
         run: |
-          pip install -r requirements-dev.lock
-          pip install --no-deps -e .
+          pip install -r requirements-dev.lock -r ../../astrasync-core-lib/requirements.lock
+          pip install --no-deps -e . -e ../../astrasync-core-lib
           ruff check .
           mypy
           python -m astrasync_api.contract.export --check
@@ -49,6 +49,25 @@ jobs:
           npm run contract:check
           npm test
           npm run build
+
+  # Source parsers and RF methods. The real challenge workbook is never in git, so its golden
+  # tests report as skipped here; they run where ASTRASYNC_TRAFICOM_WORKBOOK points to it.
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Core lint, types and tests
+        working-directory: astrasync-core-lib
+        run: |
+          pip install -r ../traficom-integration/backend/requirements-dev.lock -r requirements.lock
+          pip install --no-deps -e ../traficom-integration/backend -e .
+          ruff check .
+          ruff format --check .
+          mypy
+          python -m pytest -rs
 
   # Native compile checks. These produce unsigned test packages, not releases.
   windows-package:

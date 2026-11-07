@@ -266,6 +266,111 @@ describe("deep links and native sign-in", () => {
     await expect(adapter.getAccessToken()).resolves.toBeNull();
   });
 
+  function identityProvider(tokenStatus = 200) {
+    const encode = (value: unknown) => btoa(JSON.stringify(value)).replace(/=+$/, "");
+    const idToken = [
+      encode({ alg: "none" }),
+      encode({ iss: "https://idp.test", sub: "demo-user", aud: "client", exp: 4102444800, iat: 1 }),
+      "signature",
+    ].join(".");
+    return vi.fn(async (url: RequestInfo | URL, _init?: RequestInit) => {
+      const body = String(url).includes("/.well-known/")
+        ? {
+            issuer: "https://idp.test",
+            authorization_endpoint: "https://idp.test/authorize",
+            token_endpoint: "https://idp.test/token",
+          }
+        : tokenStatus === 200
+          ? { access_token: "demo-access", id_token: idToken, token_type: "Bearer", expires_in: 900, scope: "openid api" }
+          : { error: "invalid_grant" };
+      return new Response(JSON.stringify(body), {
+        status: String(url).includes("/token") ? tokenStatus : 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+  }
+
+  async function startSignIn(returnTo: string) {
+    const openExternal = vi.fn(async (_url: string) => undefined);
+    const adapter = createNativeOidcAdapter(config, { openExternal });
+    await adapter.signIn(returnTo);
+    const opened = new URL(openExternal.mock.calls[0]![0]);
+    return { adapter, state: opened.searchParams.get("state")! };
+  }
+
+  it("completes the full redirect flow and keeps the token only in memory", async () => {
+    const provider = identityProvider();
+    vi.stubGlobal("fetch", provider);
+    const { adapter, state } = await startSignIn("/cases/DEMO-1");
+    const accepted = adapter.acceptRedirect(`${NATIVE_REDIRECT_URI}?code=demo-code&state=${state}`);
+    expect(accepted).toBe(true);
+    await expect(adapter.completeSignIn()).resolves.toBe("/cases/DEMO-1");
+    await expect(adapter.getAccessToken()).resolves.toBe("demo-access");
+    const exchange = provider.mock.calls.find(([url]) => String(url).includes("/token"))!;
+    const form = String(exchange[1]?.body);
+    expect(form).toContain("code_verifier=");
+    expect(form).not.toContain("client_secret");
+    expect(JSON.stringify({ ...localStorage, ...sessionStorage })).not.toContain("demo-access");
+    await adapter.clearSession();
+    await expect(adapter.getAccessToken()).resolves.toBeNull();
+    vi.unstubAllGlobals();
+  });
+
+  it("rejects a redirect with a state it did not issue, and gives no token", async () => {
+    vi.stubGlobal("fetch", identityProvider());
+    const { adapter } = await startSignIn("/");
+    adapter.acceptRedirect(`${NATIVE_REDIRECT_URI}?code=stolen&state=forged`);
+    await expect(adapter.completeSignIn()).rejects.toThrow();
+    await expect(adapter.getAccessToken()).resolves.toBeNull();
+    vi.unstubAllGlobals();
+  });
+
+  it("cannot replay a used redirect, and a provider error gives no token", async () => {
+    vi.stubGlobal("fetch", identityProvider());
+    const { adapter, state } = await startSignIn("/");
+    const redirect = `${NATIVE_REDIRECT_URI}?code=c&state=${state}`;
+    adapter.acceptRedirect(redirect);
+    await adapter.completeSignIn();
+    await adapter.clearSession();
+    adapter.acceptRedirect(redirect);
+    await expect(adapter.completeSignIn()).rejects.toThrow();
+    await expect(adapter.getAccessToken()).resolves.toBeNull();
+
+    vi.stubGlobal("fetch", identityProvider(400));
+    const second = await startSignIn("/");
+    second.adapter.acceptRedirect(`${NATIVE_REDIRECT_URI}?code=c&state=${second.state}`);
+    await expect(second.adapter.completeSignIn()).rejects.toThrow();
+    await expect(second.adapter.getAccessToken()).resolves.toBeNull();
+    vi.unstubAllGlobals();
+  });
+
+  it("says which sign-in step failed", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      throw new TypeError("Failed to fetch");
+    }));
+    const unreachable = createNativeOidcAdapter(config, { openExternal: async () => undefined });
+    await expect(unreachable.signIn("/")).rejects.toMatchObject({ step: "IDENTITY_PROVIDER_UNREACHABLE" });
+
+    vi.stubGlobal("fetch", identityProvider());
+    const noBrowser = createNativeOidcAdapter(config, {
+      openExternal: async () => {
+        throw new Error("not allowed");
+      },
+    });
+    await expect(noBrowser.signIn("/")).rejects.toMatchObject({ step: "BROWSER_UNAVAILABLE" });
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("does not return to an unsafe path after sign-in", async () => {
+    vi.stubGlobal("fetch", identityProvider());
+    const { adapter, state } = await startSignIn("https://evil.test/");
+    adapter.acceptRedirect(`${NATIVE_REDIRECT_URI}?code=c&state=${state}`);
+    await expect(adapter.completeSignIn()).resolves.toBe("/dashboard");
+    vi.unstubAllGlobals();
+  });
+
   it("signs in through the external browser with PKCE, storing no token", async () => {
     vi.stubGlobal(
       "fetch",

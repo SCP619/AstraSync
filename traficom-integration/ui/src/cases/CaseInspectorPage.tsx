@@ -330,15 +330,19 @@ function ReviewForm({
   run,
   drafts,
   onChanged,
+  saved,
+  setSaved,
 }: {
   item: Case;
   run: Run | null;
   drafts: Draft[];
   onChanged: () => void;
+  // Held by the parent, because recording a decision reloads the lists and remounts this form.
+  saved: boolean;
+  setSaved: (saved: boolean) => void;
 }) {
   const { api } = useSession();
   const [error, setError] = useState<unknown>(null);
-  const [saved, setSaved] = useState(false);
   const openDrafts = drafts.filter((draft) => draft.status === "DRAFT" || draft.status === "EDITED");
   const hasVerified = run?.criterion_checks.some((check) => check.applicable === "VERIFIED") ?? false;
 
@@ -413,6 +417,7 @@ function DraftAndReview({ item, run }: { item: Case; run: Run | null }) {
   const { result } = useLoad(load);
   const [draftError, setDraftError] = useState<unknown>(null);
   const [creating, setCreating] = useState(false);
+  const [decisionSaved, setDecisionSaved] = useState(false);
   const refresh = () => setVersion((value) => value + 1);
 
   async function createDraft(event: FormEvent<HTMLFormElement>) {
@@ -488,7 +493,11 @@ function DraftAndReview({ item, run }: { item: Case; run: Run | null }) {
       )}
       <h3>Reviewer decision</h3>
       {capabilities.includes("REVIEW_DECIDE") ? (
-        <ReviewForm item={item} run={run} drafts={drafts.items} onChanged={refresh} />
+        <ReviewForm item={item} run={run} drafts={drafts.items}
+          onChanged={refresh}
+          saved={decisionSaved}
+          setSaved={setDecisionSaved}
+        />
       ) : (
         <p className="muted">Only a reviewer can record a decision or approve a draft.</p>
       )}

@@ -22,3 +22,12 @@ dataset/
 .ruff_cache/
 *.egg-info/
 .dev/
+
+# Downloaded CI test packages.
+astrasync-*-LOCAL-TEST*
+
+# Automated device test downloads and output.
+traficom-integration/ui/e2e/.drivers/
+traficom-integration/ui/e2e/.venv/
+traficom-integration/ui/e2e/.stack.log
+traficom-integration/ui/e2e/*.xml

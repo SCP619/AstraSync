@@ -288,6 +288,30 @@ describe("drafts and review", () => {
     expect(post.headers["Idempotency-Key"]).toBeTruthy();
   });
 
+  it("keeps the confirmation after the decision lists reload", async () => {
+    const server = backend(REVIEWER, { [`POST ${CASE}/reviews`]: { status: 201, body: {} } });
+    let posted = false;
+    let release = () => {};
+    const held = new Promise<void>((resolve) => (release = resolve));
+    // Holds the reload open, as a real network does, so the form is replaced while it loads.
+    const fetchImpl = vi.fn(async (url: string, init?: RequestInit) => {
+      if (init?.method === "POST") {
+        posted = true;
+      } else if (posted && String(url).endsWith("/reviews")) {
+        await held;
+      }
+      return server(url, init);
+    }) as unknown as typeof fetch;
+    show(fetchImpl);
+    await openTab("Draft and review");
+    await userEvent.type(await screen.findByLabelText(/Reason/), "Due date is close.");
+    await userEvent.click(screen.getByRole("button", { name: "Record decision" }));
+    expect(await screen.findByText("Loading drafts and decisions…")).toBeTruthy();
+    release();
+    await screen.findByLabelText("Decision");
+    expect(screen.getByText("Decision recorded.")).toBeTruthy();
+  });
+
   it("blocks approving an objection when no criterion is verified", async () => {
     show(
       backend(REVIEWER, {

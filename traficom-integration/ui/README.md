@@ -2,7 +2,7 @@
 
 One React and TypeScript UI, packaged for Windows (Tauri) and Android (Capacitor). The server stays authoritative: clients hold no RF logic, permissions or stored tokens.
 
-**Status:** the web UI is tested. **The Windows and Android packages have not been built or installed yet,** so native sign-in, notifications and deep links are `DESIGNED`, not `TESTED`.
+**Status:** the web UI is tested, and CI compiles both native packages. **They have not been tested on a device yet,** so native sign-in, notifications and deep links are `IMPLEMENTED`, not `TESTED`. [DEVICE_TESTING.md](DEVICE_TESTING.md) is the plan to close that.
 
 ## Commands
 

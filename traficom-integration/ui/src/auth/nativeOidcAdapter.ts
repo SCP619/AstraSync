@@ -1,6 +1,6 @@
 import { OidcClient, WebStorageStateStore } from "oidc-client-ts";
 import type { AppConfig } from "../config";
-import type { AuthAdapter } from "./adapter";
+import { SignInStepError, type AuthAdapter } from "./adapter";
 import { safeReturnPath } from "./webOidcAdapter";
 
 export const NATIVE_SCHEME = "fi.astrasync.app";
@@ -43,8 +43,19 @@ export function createNativeOidcAdapter(
   return {
     getAccessToken: async () => accessToken,
     signIn: async (returnTo) => {
-      const request = await client.createSigninRequest({ state: { returnTo } });
-      await bridge.openExternal(request.url);
+      let url: string;
+      try {
+        url = (await client.createSigninRequest({ state: { returnTo } })).url;
+      } catch (cause) {
+        console.error("Sign-in: the identity provider could not be reached", cause);
+        throw new SignInStepError("IDENTITY_PROVIDER_UNREACHABLE", cause);
+      }
+      try {
+        await bridge.openExternal(url);
+      } catch (cause) {
+        console.error("Sign-in: the system browser could not be opened", cause);
+        throw new SignInStepError("BROWSER_UNAVAILABLE", cause);
+      }
     },
     acceptRedirect: (url) => {
       if (!url.startsWith(`${NATIVE_REDIRECT_URI}?`)) {

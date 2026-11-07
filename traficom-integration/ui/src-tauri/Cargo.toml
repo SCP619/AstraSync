@@ -8,6 +8,10 @@ publish = false
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
+[features]
+# Local test builds only: lets a tester open the WebView developer tools.
+devtools = ["tauri/devtools"]
+
 [dependencies]
 serde_json = "1"
 tauri = { version = "2", features = [] }

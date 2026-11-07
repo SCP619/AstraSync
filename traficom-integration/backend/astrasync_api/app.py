@@ -6,7 +6,10 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
 from pydantic.json_schema import models_json_schema
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from .alerts import TokenCipher
 from .authz import ObjectAccessPolicy
@@ -85,6 +88,26 @@ def _load_draft_agent(settings: Settings) -> EvidenceDraftAgent | None:
     return agent
 
 
+def _install_probes(app: FastAPI) -> None:
+    """Unauthenticated liveness and readiness for orchestration. They reveal nothing else."""
+
+    @app.get("/healthz", include_in_schema=False)
+    def live() -> dict[str, str]:
+        return {"status": "ok"}
+
+    @app.get("/readyz", include_in_schema=False)
+    def ready() -> JSONResponse:
+        identities = app.state.security.identities
+        if identities is None:
+            return JSONResponse({"status": "unconfigured"}, status_code=503)
+        try:
+            with identities.session_factory() as session:
+                session.execute(text("SELECT 1"))
+        except SQLAlchemyError:
+            return JSONResponse({"status": "database unavailable"}, status_code=503)
+        return JSONResponse({"status": "ready"})
+
+
 def create_app(settings: Settings | None = None, *, keys: JwksCache | None = None) -> FastAPI:
     settings = settings if settings is not None else Settings.from_env(os.environ)
     # Interactive docs and the live spec stay off: the contract ships as a reviewed file.
@@ -127,6 +150,7 @@ def create_app(settings: Settings | None = None, *, keys: JwksCache | None = Non
     )
     install_error_handlers(app)
     app.include_router(router)
+    _install_probes(app)
     if settings.cors_origins:
         # Bearer tokens only, so no cookies and no credentialed CORS.
         app.add_middleware(

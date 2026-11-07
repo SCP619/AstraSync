@@ -46,6 +46,7 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | G23 | ALERT_ENGINE has a reviewer escalation trigger, but nothing can raise it | Added `ReviewAction.ESCALATE` and `DomainEventKind.CASE_ESCALATED` |
 | G10 | Relevance labels and reason codes have no closed list beyond `FREQUENCY_MATCH` | Validated `UPPER_SNAKE_CASE` codes. The relevance owner should publish the list |
 | G24 | Nothing produced the frequency stage of TR-REL-004, and no IFIC notices exist yet to drive it | Added `GET /finland-relevance/frequency-screen` (`SOURCE_READ`) and `relevance.screen_range`, which the IFIC pipeline will reuse. Labels are `FREQUENCY_MATCH`, `NO_FREQUENCY_MATCH` and `NO_REFERENCE_DATA`. Reasons: `M4_ALLOCATION_OVERLAP`, `SPECIAL_INTEREST_STATION_OVERLAP`, `NO_FINNISH_REFERENCE_OVERLAP`, `NO_FINNISH_REFERENCE_INDEXED`, `SERVICE_NOT_EVALUATED`, `GEOMETRY_NOT_EVALUATED` (see A37) |
+| G25 | TR-NFR-004/009 ask for visible queue backlog and job errors; no endpoint reported them | Added `GET /operations/metrics` (`JOB_READ`, tenant-scoped counts only: backlog per lane and status with oldest age, failed jobs in 24 h, pending outbox events, record-store datasets/records/bytes) and the unauthenticated probes `/healthz` (process up) and `/readyz` (database reachable), which reveal nothing else and are outside the OpenAPI contract |
 
 ## Assumptions
 

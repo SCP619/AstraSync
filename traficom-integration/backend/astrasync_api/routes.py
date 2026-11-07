@@ -14,7 +14,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
-from . import alert_api, cases, library, relevance
+from . import alert_api, cases, library, operations, relevance
 from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
@@ -65,6 +65,7 @@ from .contract.models import (
     Me,
     MethodMatrix,
     NoticeChangeList,
+    OperationsMetrics,
     ReferenceList,
     ReviewCreateRequest,
     ReviewEvent,
@@ -171,6 +172,17 @@ def ingest_ific(
     session: DbSession,
 ) -> Any:
     return library.ingest_artifact(_library(request), request, session, principal, body.artifact_id)
+
+
+@router.get(
+    "/operations/metrics",
+    response_model=OperationsMetrics,
+    **_policy(Capability.JOB_READ, _IMPLEMENTED),
+)
+def get_operations_metrics(
+    request: Request, principal: CurrentPrincipal, session: DbSession
+) -> Any:
+    return operations.metrics(session, principal, _library(request).records is not None)
 
 
 @router.get("/jobs/{job_id}", response_model=JobRun, **_policy(Capability.JOB_READ, _IMPLEMENTED))

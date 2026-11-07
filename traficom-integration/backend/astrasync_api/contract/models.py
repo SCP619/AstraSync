@@ -692,6 +692,30 @@ class SourceConnectorList(Page[SourceConnector]):
     pass
 
 
+class QueueBacklog(ContractModel):
+    lane: Annotated[str, Field(min_length=1, max_length=32)]
+    status: StableCode
+    count: NonNegativeInt
+    oldest_age_seconds: Annotated[float, Field(ge=0)] | None
+
+
+class RecordStoreUsage(ContractModel):
+    enabled: bool
+    datasets: NonNegativeInt
+    records: NonNegativeInt
+    bytes: NonNegativeInt
+
+
+class OperationsMetrics(Envelope):
+    """Tenant-scoped counts for operators (TR-NFR-004/009). No payloads or error details."""
+
+    tenant_id: StableId
+    queues: list[QueueBacklog]
+    failed_jobs_last_24h: NonNegativeInt
+    outbox_pending: NonNegativeInt
+    record_store: RecordStoreUsage
+
+
 class SourceHealth(Envelope):
     source_id: StableId
     status: SourceHealthStatus

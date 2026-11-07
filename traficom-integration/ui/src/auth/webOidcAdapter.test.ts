@@ -32,7 +32,19 @@ describe("safeReturnPath", () => {
     expect(safeReturnPath("/cases/DEMO-1")).toBe("/cases/DEMO-1");
   });
 
-  it.each(["https://evil.test", "//evil.test", "/\\evil.test", "evil", 42, null, undefined])(
+  it.each([
+    "https://evil.test",
+    "//evil.test",
+    "/\\evil.test",
+    "/cases\\..\\evil.test",
+    "/\t/evil.test",
+    "/\n/evil.test",
+    `/${"a".repeat(2048)}`,
+    "evil",
+    42,
+    null,
+    undefined,
+  ])(
     "rejects %s",
     (value) => {
       expect(safeReturnPath(value)).toBe("/dashboard");

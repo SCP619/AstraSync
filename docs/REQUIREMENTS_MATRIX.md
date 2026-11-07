@@ -48,7 +48,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-INT-001 | BE | VERIFIED | Assembled SHA-256 and byte count recomputed; L1 4 GiB match | |
 | TR-INT-002 | BE | VERIFIED | Uploader manifest match never reported as publisher verification | |
 | TR-INT-003 | BE, CORE | IMPLEMENTED_UNVERIFIED | Magic-byte dispatch, XLSX via defusedxml/openpyxl, quarantine on parser refusal | No archive-bomb or spoofing corpus |
-| TR-INT-004 | CORE | IMPLEMENTED_UNVERIFIED | Sheet/row identities preserved; deterministic reparse (`build_record_dataset` count check) | Adapters run in-process, not isolated (A16) |
+| TR-INT-004 | CORE, BE | VERIFIED | Sheet/row identities preserved; deterministic reparse; adapters isolated in a child process (A16, `test_parser_sandbox.py`) | Process isolation only |
 | TR-INT-005 | CORE | VERIFIED | Raw values kept beside parsed units (`test_units.py`, workbook golden) | |
 | TR-INT-006 | CORE | VERIFIED | Field-level findings block dependent calculations | |
 | TR-INT-007 | CORE | VERIFIED | No repair or imputation (A33) | |
@@ -129,20 +129,20 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-NFR-001 | BE | IN_PROGRESS | 4 GiB upload verified (L1) | 10 GB not run (directive); real formats/network not measured |
 | TR-NFR-002 | BE | IN_PROGRESS | Parquet/DuckDB record store | Tens of millions of rows not measured |
 | TR-NFR-003 | BE | IMPLEMENTED_UNVERIFIED | No hardcoded ceilings; queue-based | Load profiles not run |
-| TR-NFR-004 | BE | IN_PROGRESS | DuckDB memory/thread limits | No per-tenant quotas |
+| TR-NFR-004 | BE | IN_PROGRESS | DuckDB memory/thread limits; parser memory/time limits (A16); queue backlog in `GET /operations/metrics` (G25) | No per-tenant quotas |
 | TR-NFR-005 | BE | VERIFIED | Idempotent retries, crash-safe publication (`test_record_store.py`, `test_source_library.py`) | No checkpoint resume inside a parse |
 | TR-NFR-006 | BE | NOT_STARTED | | Case-list benchmark |
 | TR-NFR-007 | BE | IMPLEMENTED_UNVERIFIED | Upload init 0.02 s locally | Not on production-like hardware |
 | TR-NFR-008 | BE | VERIFIED | Preview without master transfer (`test_preview_search_and_record_never_touch_the_master`) | |
-| TR-NFR-009 | BE | IN_PROGRESS | Benchmarks record bytes/s, rows/s, RSS, expansion | No runtime metrics endpoint |
+| TR-NFR-009 | BE | IN_PROGRESS | Benchmarks record bytes/s, rows/s, RSS, expansion; runtime backlog, failures, outbox and storage counts (`test_operations.py`) | No time-series export (Prometheus/OTel) |
 | TR-NFR-010 | OPS | NOT_STARTED | | Backups and restore drill |
 | TR-NFR-011 | BE | IMPLEMENTED_UNVERIFIED | Separate alert lane | Not stress-tested |
 | TR-SEC-001 | OPS | NOT_STARTED | | TLS/encryption are deployment work |
-| TR-SEC-002 | OPS | IMPLEMENTED_UNVERIFIED | No secrets in repo; server-side settings | No secret scan in CI |
+| TR-SEC-002 | OPS | VERIFIED | Gitleaks over full history in CI (`supply-chain.yml`), clean | Packaged-build inspection not done |
 | TR-SEC-003 | BE | VERIFIED | Five classifications enforced | |
-| TR-SEC-004 | BE, CORE | NOT_STARTED | defusedxml only | Sandboxing (A16) |
-| TR-SEC-005 | OPS | NOT_STARTED | | |
-| TR-SEC-006 | OPS | NOT_STARTED | Lockfiles exist | Signing, SBOM |
+| TR-SEC-004 | BE, CORE | IMPLEMENTED_UNVERIFIED | Separate parser process with memory/time limits, scrubbed environment, JSON-only channel (`test_parser_sandbox.py`); defusedxml | No OS sandbox, decompression quotas or adversarial corpus |
+| TR-SEC-005 | OPS | IN_PROGRESS | pip-audit and npm audit in CI | No threat model or ASVS/MASVS checklist yet |
+| TR-SEC-006 | OPS | IN_PROGRESS | Lockfiles; CycloneDX SBOMs in CI | Release signing (keys not provided) |
 | TR-SEC-007 | — | BLOCKED | | Legal review |
 | TR-SEC-008 | — | BLOCKED | | `LICENSE.md` background-IP question |
 | TR-SEC-009 | BE | IMPLEMENTED_UNVERIFIED | Entitlements on indexes, datasets, previews, notifications | Backups/telemetry not built |
@@ -199,6 +199,6 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 2. No approved criterion source edition, real `CriterionResolver`, or scientific review of methods.
 3. No production identity provider with MFA; local test IdP only.
 4. No encryption at rest, TLS deployment, backups, restore drill, secret scanning or SBOM.
-5. Parsers run in the worker process without sandboxing (A16).
+5. Parsers are process-isolated with limits, but not OS-sandboxed or malware-scanned (A16).
 6. Native packages unsigned; Android push gateway missing.
 7. Legal, licence and IP decisions (`LICENSE.md`) pending.

@@ -16,6 +16,7 @@ import {
   METRIC_TEXT,
   REVIEW_TEXT,
 } from "./labels";
+import { FindingBadge, ReviewBadge, SyntheticBadge } from "../components/StatusBadge";
 
 type Case = Schemas["CaseDetail"];
 type Run = Schemas["AnalysisRun"];
@@ -611,14 +612,14 @@ export function CaseInspectorPage() {
     <main className="content">
       <p><Link to="/cases">All cases</Link></p>
       <h1>
-        {item.notice_id} {item.is_synthetic && <span className="badge review">DEMO / SYNTHETIC</span>}
+        {item.notice_id} {item.is_synthetic && <SyntheticBadge label="DEMO / SYNTHETIC" />}
       </h1>
       <p className="muted small break">Case <code>{item.case_id}</code></p>
       <dl className="summary">
         <dt>Finding</dt>
-        <dd>{FINDING_TEXT[item.finding_status]}</dd>
+        <dd><FindingBadge status={item.finding_status} /></dd>
         <dt>Review</dt>
-        <dd>{REVIEW_TEXT[item.review_status]}</dd>
+        <dd><ReviewBadge status={item.review_status} /></dd>
         <dt>Methods run</dt>
         <dd>{item.method_summary.succeeded} of {item.method_summary.candidates}</dd>
         <dt>Criterion margin</dt>

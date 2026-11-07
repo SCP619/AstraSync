@@ -4491,6 +4491,59 @@
         "title": "ObservationStatus",
         "type": "string"
       },
+      "OperationsMetrics": {
+        "additionalProperties": false,
+        "description": "Tenant-scoped counts for operators (TR-NFR-004/009). No payloads or error details.",
+        "properties": {
+          "failed_jobs_last_24h": {
+            "minimum": 0.0,
+            "title": "Failed Jobs Last 24H",
+            "type": "integer"
+          },
+          "generated_at_utc": {
+            "format": "date-time",
+            "title": "Generated At Utc",
+            "type": "string"
+          },
+          "outbox_pending": {
+            "minimum": 0.0,
+            "title": "Outbox Pending",
+            "type": "integer"
+          },
+          "queues": {
+            "items": {
+              "$ref": "#/components/schemas/QueueBacklog"
+            },
+            "title": "Queues",
+            "type": "array"
+          },
+          "record_store": {
+            "$ref": "#/components/schemas/RecordStoreUsage"
+          },
+          "schema_version": {
+            "const": "1.0.0-draft.5",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tenant_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Tenant Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "generated_at_utc",
+          "tenant_id",
+          "queues",
+          "failed_jobs_last_24h",
+          "outbox_pending",
+          "record_store"
+        ],
+        "title": "OperationsMetrics",
+        "type": "object"
+      },
       "PipelineStatus": {
         "description": "Upload and job lifecycle (DATA_PIPELINE_AND_SCALABILITY.md section 3).",
         "enum": [
@@ -4568,6 +4621,48 @@
         ],
         "title": "QualitySeverity",
         "type": "string"
+      },
+      "QueueBacklog": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "lane": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Lane",
+            "type": "string"
+          },
+          "oldest_age_seconds": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oldest Age Seconds"
+          },
+          "status": {
+            "maxLength": 64,
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "lane",
+          "status",
+          "count",
+          "oldest_age_seconds"
+        ],
+        "title": "QueueBacklog",
+        "type": "object"
       },
       "RecordQualityFinding": {
         "additionalProperties": false,
@@ -4661,6 +4756,38 @@
         ],
         "title": "RecordStatus",
         "type": "string"
+      },
+      "RecordStoreUsage": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes": {
+            "minimum": 0.0,
+            "title": "Bytes",
+            "type": "integer"
+          },
+          "datasets": {
+            "minimum": 0.0,
+            "title": "Datasets",
+            "type": "integer"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "records": {
+            "minimum": 0.0,
+            "title": "Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled",
+          "datasets",
+          "records",
+          "bytes"
+        ],
+        "title": "RecordStoreUsage",
+        "type": "object"
       },
       "ReferenceDocument": {
         "additionalProperties": false,
@@ -11368,6 +11495,116 @@
         "summary": "Get Me",
         "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "AUTHENTICATED"
+      }
+    },
+    "/api/v1/operations/metrics": {
+      "get": {
+        "operationId": "get_operations_metrics_api_v1_operations_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationsMetrics"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Operations Metrics",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "JOB_READ"
       }
     },
     "/api/v1/references": {

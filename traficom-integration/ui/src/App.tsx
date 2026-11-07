@@ -30,6 +30,7 @@ import { OperationsPanel } from "./components/OperationsPanel";
 import { FinlandRelevancePage } from "./relevance/FinlandRelevancePage";
 import { webPlatform, type PlatformAdapter, type PushPermission } from "./platform/types";
 import { SourceLibraryPage } from "./sources/SourceLibraryPage";
+import { UploadPage } from "./sources/UploadPage";
 
 function SessionProvider({
   auth,
@@ -534,6 +535,10 @@ export function App({
         <Route
           path="/alerts/:alertId"
           element={shell(<RequireCapability capability="ALERT_READ"><AlertDetailRoute /></RequireCapability>)}
+        />
+        <Route
+          path="/uploads"
+          element={shell(<RequireCapability capability="UPLOAD_MANAGE"><UploadPage /></RequireCapability>)}
         />
         <Route
           path="/finland"

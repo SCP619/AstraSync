@@ -77,6 +77,11 @@ export interface ApiClient {
     onSessionEnded?: () => void,
   ): Promise<void>;
   listSources(signal?: AbortSignal): Promise<Schemas["SourceConnectorList"]>;
+  createUpload(body: Schemas["UploadCreateRequest"]): Promise<Schemas["UploadSession"]>;
+  putUploadPart(uploadId: string, partNumber: number, body: Blob): Promise<void>;
+  getUpload(uploadId: string, signal?: AbortSignal): Promise<Schemas["UploadSession"]>;
+  completeUpload(uploadId: string, body: Schemas["UploadCompleteRequest"]): Promise<Schemas["UploadSession"]>;
+  getJob(jobId: string, signal?: AbortSignal): Promise<Schemas["JobRun"]>;
   screenFrequency(
     startMhz: number,
     endMhz: number,
@@ -262,6 +267,21 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
       }
     },
     listSources: (signal) => get("/api/v1/sources", signal),
+    createUpload: (body) => write("POST", "/api/v1/uploads", body),
+    putUploadPart: async (uploadId, partNumber, body) => {
+      const response = await send(
+        `/api/v1/uploads/${encodeURIComponent(uploadId)}/parts/${partNumber}`,
+        "application/json",
+        { method: "PUT", body, headers: { "Content-Type": "application/octet-stream" } },
+      );
+      if (!response.ok) {
+        throw failure(response, await readJson(response));
+      }
+    },
+    getUpload: (uploadId, signal) => get(`/api/v1/uploads/${encodeURIComponent(uploadId)}`, signal),
+    completeUpload: (uploadId, body) =>
+      write("POST", `/api/v1/uploads/${encodeURIComponent(uploadId)}/complete`, body),
+    getJob: (jobId, signal) => get(`/api/v1/jobs/${encodeURIComponent(jobId)}`, signal),
     screenFrequency: (startMhz, endMhz, signal) => {
       const params = new URLSearchParams({ start_mhz: String(startMhz), end_mhz: String(endMhz) });
       return get(`/api/v1/finland-relevance/frequency-screen?${params.toString()}`, signal);

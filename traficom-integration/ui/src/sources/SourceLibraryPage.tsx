@@ -6,6 +6,7 @@ import {
   type SourceRecordList,
 } from "../api/client";
 import { describeError, RequestId, useLoad, useMe, useSession } from "../shared";
+import { SeverityBadge, SyntheticBadge as SyntheticLabel } from "../components/StatusBadge";
 
 type Hit = Schemas["SourceRecordHit"];
 type Report = Schemas["ArtifactIntegrityReport"];
@@ -48,7 +49,7 @@ const ARTIFACT_TEXT: Partial<Record<Schemas["ArtifactStatus"], string>> = {
 const MAX_BROWSER_DOWNLOAD_BYTES = 200 * 1024 * 1024;
 
 function SyntheticBadge({ show }: { show: boolean }) {
-  return show ? <span className="badge review">SYNTHETIC</span> : null;
+  return show ? <SyntheticLabel /> : null;
 }
 
 function formatTime(value: string | null): string {
@@ -277,7 +278,7 @@ function RecordInspector({ recordId, onClose }: { recordId: string; onClose: () 
           <ul className="plain">
             {record.quality_findings.map((finding) => (
               <li key={finding.finding_id}>
-                <span className="badge review">{finding.severity}</span>{" "}
+                <SeverityBadge severity={finding.severity} />{" "}
                 <code>{finding.rule_id}</code> on <code>{finding.field_key}</code>: received{" "}
                 <code>{finding.raw_value ?? "empty"}</code>. Calculations that need this field
                 cannot proceed without review.

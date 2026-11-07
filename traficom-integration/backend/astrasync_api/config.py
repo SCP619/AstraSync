@@ -49,6 +49,11 @@ class Settings:
     record_store_path: Path | None = None
     max_upload_bytes: int = 10 * 1024**3
     source_adapters: tuple[str, ...] = ()
+    # Adapters parse untrusted files in a separate limited process (parser_sandbox). In-process
+    # parsing ("none") is accepted only in the DEMO environment.
+    parser_isolation: str = "process"
+    parser_memory_mb: int = 2048
+    parser_timeout_seconds: float = 3600.0
     source_clients: tuple[str, ...] = ()
     rf_methods: tuple[str, ...] = ()
     criterion_resolver: str | None = None
@@ -102,6 +107,9 @@ class Settings:
             ),
             max_upload_bytes=int(env.get("ASTRASYNC_MAX_UPLOAD_BYTES", 10 * 1024**3)),
             source_adapters=_csv(env.get("ASTRASYNC_SOURCE_ADAPTERS", "")),
+            parser_isolation=env.get("ASTRASYNC_PARSER_ISOLATION", "process"),
+            parser_memory_mb=int(env.get("ASTRASYNC_PARSER_MEMORY_MB", 2048)),
+            parser_timeout_seconds=float(env.get("ASTRASYNC_PARSER_TIMEOUT_SECONDS", 3600)),
             source_clients=_csv(env.get("ASTRASYNC_SOURCE_CLIENTS", "")),
             rf_methods=_csv(env.get("ASTRASYNC_RF_METHODS", "")),
             criterion_resolver=env.get("ASTRASYNC_CRITERION_RESOLVER") or None,
@@ -136,6 +144,12 @@ def _csv(value: str) -> tuple[str, ...]:
 
 
 def _validate(settings: Settings) -> None:
+    if settings.parser_isolation not in ("process", "none"):
+        raise SettingsError("ASTRASYNC_PARSER_ISOLATION must be 'process' or 'none'")
+    if settings.parser_isolation == "none" and settings.environment not in (None, Environment.DEMO):
+        raise SettingsError("Parsers must run isolated outside the demo environment")
+    if settings.parser_memory_mb < 64 or settings.parser_timeout_seconds <= 0:
+        raise SettingsError("Parser limits must allow at least 64 MB and a positive time")
     for origin in settings.cors_origins:
         parts = urlsplit(origin)
         if "*" in origin or not parts.scheme or not parts.netloc or parts.path:

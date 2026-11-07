@@ -1,0 +1,5 @@
+# Gitleaks configuration for the history scan in .github/workflows/supply-chain.yml.
+# Uses the default rules. Add an allowlist entry only for a reviewed false positive,
+# with the reason next to it.
+[extend]
+useDefault = true

@@ -50,10 +50,19 @@ export function createWebOidcAdapter(config: AppConfig): AuthAdapter {
 
 /** Same-app paths only, so that a crafted link cannot redirect a user off the app after sign-in. */
 export function safeReturnPath(value: unknown): string {
-  if (typeof value === "string" && value.startsWith("/") && !value.startsWith("//")) {
-    if (!value.startsWith("/\\") && !value.startsWith("/login") && !value.startsWith("/auth/")) {
-      return value;
-    }
+  // Backslashes anywhere, control characters and protocol-relative starts are refused: browsers and
+  // React Router can read them as another origin (GHSA-wrjc-x8rr-h8h6 and its predecessors).
+  if (
+    typeof value === "string" &&
+    value.length <= 2048 &&
+    value.startsWith("/") &&
+    !value.startsWith("//") &&
+    !value.includes("\\") &&
+    !/[\u0000-\u001f\u007f]/.test(value) &&
+    !value.startsWith("/login") &&
+    !value.startsWith("/auth/")
+  ) {
+    return value;
   }
   return "/dashboard";
 }

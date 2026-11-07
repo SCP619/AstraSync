@@ -6,12 +6,13 @@ import sys
 from pathlib import Path
 
 from ..app import build_openapi, create_app
+from ..config import Settings
 
 OPENAPI_PATH = Path(__file__).resolve().parents[3] / "contract" / "openapi.json"
 
 
 def render_openapi() -> str:
-    return json.dumps(build_openapi(create_app()), indent=2, sort_keys=True) + "\n"
+    return json.dumps(build_openapi(create_app(Settings())), indent=2, sort_keys=True) + "\n"
 
 
 def main() -> int:

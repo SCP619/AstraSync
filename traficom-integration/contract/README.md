@@ -1,6 +1,6 @@
 # AstraSync API contract
 
-**Version:** `1.0.0-draft.1` · **Status:** `PROPOSED`: needs approval from both contributors (IPD stage 0, TRD section 15.1). Every route is `DESIGNED`, not implemented.
+**Version:** `1.0.0-draft.2` · **Status:** `PROPOSED`: needs approval from both contributors (IPD stage 0, TRD section 15.1). `GET /me` is `IMPLEMENTED`; every other route is `DESIGNED`. See each operation's `x-implementation-status`.
 
 The Pydantic models in `backend/astrasync_api/contract/` are the source. Everything else is generated from them and checked for drift.
 

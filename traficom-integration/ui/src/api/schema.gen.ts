@@ -719,7 +719,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
         };
         /** AlertAcknowledgment */
         AlertAcknowledgment: {
@@ -803,7 +803,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             severity: components["schemas"]["AlertSeverity"];
             status: components["schemas"]["AlertStatus"];
         };
@@ -829,7 +829,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -850,7 +850,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
         };
         /** AlertPreferencesUpdate */
         AlertPreferencesUpdate: {
@@ -900,7 +900,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -930,7 +930,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             severity: components["schemas"]["AlertSeverity"];
             trigger_kind: components["schemas"]["AlertTriggerKind"];
             /** Version */
@@ -1022,7 +1022,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
         };
         /**
          * AnalysisRun
@@ -1064,7 +1064,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Software Commit Sha */
             software_commit_sha: string;
         };
@@ -1130,7 +1130,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             status: components["schemas"]["ArtifactStatus"];
         };
         /**
@@ -1197,7 +1197,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Source Issue Id */
             source_issue_id: string;
             /**
@@ -1228,7 +1228,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1354,7 +1354,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             status: components["schemas"]["DeviceStatus"];
         };
         /**
@@ -1410,7 +1410,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Tenant Id */
             tenant_id: string;
         };
@@ -1441,7 +1441,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Url */
             url: string;
         };
@@ -1490,7 +1490,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             status: components["schemas"]["DraftStatus"];
@@ -1540,7 +1540,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             /**
@@ -1570,7 +1570,7 @@ export interface components {
          * ErrorCode
          * @enum {string}
          */
-        ErrorCode: "UNAUTHENTICATED" | "FORBIDDEN" | "REVOKED_DEVICE" | "NOT_FOUND" | "ALERT_NOT_FOUND" | "CONFLICT" | "VALIDATION_ERROR" | "INSUFFICIENT_DATA" | "UPLOAD_CHECKSUM_MISMATCH" | "JOB_QUOTA_EXCEEDED" | "RATE_LIMITED" | "SOURCE_RESTRICTED" | "NOT_IMPLEMENTED" | "INTERNAL_ERROR";
+        ErrorCode: "UNAUTHENTICATED" | "MFA_REQUIRED" | "FORBIDDEN" | "REVOKED_DEVICE" | "NOT_FOUND" | "ALERT_NOT_FOUND" | "CONFLICT" | "VALIDATION_ERROR" | "INSUFFICIENT_DATA" | "UPLOAD_CHECKSUM_MISMATCH" | "JOB_QUOTA_EXCEEDED" | "RATE_LIMITED" | "SOURCE_RESTRICTED" | "NOT_IMPLEMENTED" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
         /** ErrorResponse */
         ErrorResponse: {
             error: components["schemas"]["ApiErrorBody"];
@@ -1621,7 +1621,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
         };
         /**
          * FindingStatus
@@ -1664,7 +1664,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1681,7 +1681,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             status: components["schemas"]["PipelineStatus"];
         };
         /**
@@ -1716,7 +1716,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Started At Utc */
             started_at_utc: string | null;
             status: components["schemas"]["PipelineStatus"];
@@ -1752,7 +1752,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Tenant Id */
             tenant_id: string;
             /** User Id */
@@ -1842,7 +1842,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
         };
         /**
          * MethodRole
@@ -1960,7 +1960,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2074,7 +2074,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2200,7 +2200,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
         };
         /**
          * ReviewStatus
@@ -2313,7 +2313,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["ArtifactStatus"];
@@ -2336,7 +2336,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2381,7 +2381,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2410,7 +2410,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["SourceHealthStatus"];
@@ -2525,7 +2525,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
         };
         /** SourcePreviewRow */
         SourcePreviewRow: {
@@ -2580,7 +2580,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2617,7 +2617,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Source Record Id */
             source_record_id: string;
         };
@@ -2667,7 +2667,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2740,7 +2740,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             /** Upload Id */
             upload_id: string;
         };
@@ -2789,7 +2789,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.1";
+            schema_version: "1.0.0-draft.2";
             source_type: components["schemas"]["SourceType"];
             status: components["schemas"]["PipelineStatus"];
             /** Upload Id */
@@ -2908,6 +2908,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     save_alert_rule_api_v1_admin_alert_rules_put: {
@@ -3004,6 +3013,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     check_source_api_v1_admin_sources__source_id__check_post: {
@@ -3093,6 +3111,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3197,6 +3224,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     update_alert_preferences_api_v1_alerts_preferences_put: {
@@ -3286,6 +3322,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3385,6 +3430,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_alert_api_v1_alerts__alert_id__get: {
@@ -3472,6 +3526,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3579,6 +3642,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_analysis_api_v1_analyses__analysis_run_id__get: {
@@ -3673,6 +3745,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_analysis_methods_api_v1_analyses__analysis_run_id__methods_get: {
@@ -3760,6 +3841,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3869,6 +3959,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_case_api_v1_cases__case_id__get: {
@@ -3956,6 +4055,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4063,6 +4171,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     create_draft_api_v1_cases__case_id__drafts_post: {
@@ -4163,6 +4280,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     export_case_api_v1_cases__case_id__export_get: {
@@ -4250,6 +4376,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4357,6 +4492,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     register_device_api_v1_devices_post: {
@@ -4453,6 +4597,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     revoke_device_api_v1_devices__device_id__delete: {
@@ -4538,6 +4691,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4643,6 +4805,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     list_issues_api_v1_issues_get: {
@@ -4732,6 +4903,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4837,6 +5017,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_job_api_v1_jobs__job_id__get: {
@@ -4924,6 +5113,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5023,6 +5221,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     list_references_api_v1_references_get: {
@@ -5111,6 +5318,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5217,6 +5433,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_source_artifact_api_v1_source_artifacts__artifact_id__get: {
@@ -5304,6 +5529,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5409,6 +5643,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_source_artifact_integrity_api_v1_source_artifacts__artifact_id__integrity_get: {
@@ -5496,6 +5739,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5602,6 +5854,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     list_source_publications_api_v1_source_publications_get: {
@@ -5693,6 +5954,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5799,6 +6069,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_source_record_api_v1_source_records__source_record_id__get: {
@@ -5893,6 +6172,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_source_record_location_api_v1_source_records__source_record_id__source_location_get: {
@@ -5980,6 +6268,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6082,6 +6379,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_source_health_api_v1_sources__source_id__health_get: {
@@ -6169,6 +6475,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6274,6 +6589,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     get_upload_api_v1_uploads__upload_id__get: {
@@ -6368,6 +6692,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     abort_upload_api_v1_uploads__upload_id__abort_post: {
@@ -6455,6 +6788,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6562,6 +6904,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
     };
     create_upload_part_urls_api_v1_uploads__upload_id__parts_post: {
@@ -6653,6 +7004,15 @@ export interface operations {
             };
             /** @description Not Implemented */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

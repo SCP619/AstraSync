@@ -135,7 +135,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-NFR-007 | BE | IMPLEMENTED_UNVERIFIED | Upload init 0.02 s locally | Not on production-like hardware |
 | TR-NFR-008 | BE | VERIFIED | Preview without master transfer (`test_preview_search_and_record_never_touch_the_master`) | |
 | TR-NFR-009 | BE | IN_PROGRESS | Benchmarks record bytes/s, rows/s, RSS, expansion | No runtime metrics endpoint |
-| TR-NFR-010 | OPS | NOT_STARTED | | Backups and restore drill |
+| TR-NFR-010 | BE, OPS | IMPLEMENTED_UNVERIFIED | `astrasync_api.backup` create/verify/restore with hash and count verification (`test_backup.py`); runbook | Encryption and lifecycle of backups, scheduled drills in a real deployment |
 | TR-NFR-011 | BE | IMPLEMENTED_UNVERIFIED | Separate alert lane | Not stress-tested |
 | TR-SEC-001 | OPS | NOT_STARTED | | TLS/encryption are deployment work |
 | TR-SEC-002 | OPS | IMPLEMENTED_UNVERIFIED | No secrets in repo; server-side settings | No secret scan in CI |
@@ -175,7 +175,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | AT-P-05 | IN_PROGRESS | M4 polling verified |
 | AT-P-06 | BLOCKED | Android push gateway |
 | AT-P-07 | BLOCKED | Scientific review of methods |
-| AT-P-08 | NOT_STARTED | Backup/restore |
+| AT-P-08 | IN_PROGRESS | Restore drill verified on SQLite (`test_backup.py`): rows, master SHA-256, datasets; production drill pending |
 | AT-P-09 | BLOCKED | Legal and licence sign-off |
 | AT-P-10 | NOT_STARTED | Usability/accessibility study |
 | AC-01–AC-06 | VERIFIED on synthetic/demo data | Trace, validation, method states, run provenance, metric separation, margin rules |
@@ -198,7 +198,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 1. No authorised ITU BR IFIC data, so no real space or terrestrial investigation (AT-H-03/04, AC-11).
 2. No approved criterion source edition, real `CriterionResolver`, or scientific review of methods.
 3. No production identity provider with MFA; local test IdP only.
-4. No encryption at rest, TLS deployment, backups, restore drill, secret scanning or SBOM.
+4. No encryption at rest or TLS deployment; backup tool and runbook exist but no production restore drill.
 5. Parsers run in the worker process without sandboxing (A16).
 6. Native packages unsigned; Android push gateway missing.
 7. Legal, licence and IP decisions (`LICENSE.md`) pending.

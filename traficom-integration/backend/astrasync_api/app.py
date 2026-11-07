@@ -29,6 +29,7 @@ from .identity import IdentityStore
 from .library import LibraryRuntime
 from .objectstore import LocalObjectStore
 from .oidc import JwksCache, TokenValidator, fetch_jwks_over_http
+from .record_store import ParquetRecordStore
 from .routes import router
 from .security import SecurityRuntime
 
@@ -109,6 +110,11 @@ def create_app(settings: Settings | None = None, *, keys: JwksCache | None = Non
                 else None
             ),
             max_upload_bytes=settings.max_upload_bytes,
+            records=(
+                ParquetRecordStore(settings.record_store_path)
+                if settings.record_store_path is not None
+                else None
+            ),
         )
     app.state.push_cipher = (
         TokenCipher(settings.push_token_key) if settings.push_token_key else None

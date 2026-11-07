@@ -33,6 +33,7 @@ from .ingest import PipelineContext, process_artifact, process_upload
 from .jobs import PermanentJobError, claim, finish, retry_or_fail
 from .library_tables import JobRunRow, UploadSessionRow
 from .objectstore import LocalObjectStore
+from .record_store import ParquetRecordStore
 
 logger = logging.getLogger("astrasync.worker")
 _IDLE_SECONDS = 2.0
@@ -167,6 +168,11 @@ def build_runtime(settings: Settings) -> WorkerRuntime:
             sessions=build_session_factory(build_engine(settings.database_url)),
             store=LocalObjectStore(settings.object_store_path),
             adapters=load_adapters(settings.source_adapters),
+            records=(
+                ParquetRecordStore(settings.record_store_path)
+                if settings.record_store_path is not None
+                else None
+            ),
         ),
         clients=load_clients(settings.source_clients),
         worker_id=f"{socket.gethostname()}-{uuid4().hex[:8]}",

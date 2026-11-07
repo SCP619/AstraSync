@@ -37,6 +37,7 @@ from .library_tables import (
     SourceRecordLocationRow,
     SourceSearchRow,
 )
+from .record_store import ParquetRecordStore, readable_datasets
 
 RULE_VERSION = "frequency-screen/1.0.0"
 RIGHT_READ = "READ"
@@ -220,6 +221,7 @@ def load_references(
     principal: Principal,
     start_mhz: float,
     end_mhz: float,
+    records: ParquetRecordStore | None = None,
 ) -> tuple[list[ReferenceInterval], list[ScreenedReferenceSource]]:
     references: list[ReferenceInterval] = []
     screened: list[ScreenedReferenceSource] = []
@@ -244,14 +246,26 @@ def load_references(
                 SourceSearchRow.artifact_id == artifact.artifact_id, _readable(policy, principal)
             )
         )
+        # The record-level permission filter, applied to the dataset's access columns: an
+        # artifact can be classified more strictly than its source.
+        readable = (
+            readable_datasets(session, policy, principal, artifact.artifact_id)
+            if records is not None
+            else []
+        )
+        dataset = readable[0] if readable else None
         if connector.source_type in ALLOCATION_TYPES:
-            # Allocation intervals are exact in the index, so the overlap test runs in SQL.
-            rows = session.execute(
-                base.where(
-                    SourceSearchRow.frequency_end_mhz >= start_mhz,
-                    SourceSearchRow.frequency_start_mhz <= end_mhz,
-                )
-            ).all()
+            # Allocation intervals are exact in the index, so the overlap test runs in the query.
+            rows: Sequence[Any]
+            if records is not None:
+                rows = records.overlapping(dataset, start_mhz, end_mhz) if dataset else []
+            else:
+                rows = session.execute(
+                    base.where(
+                        SourceSearchRow.frequency_end_mhz >= start_mhz,
+                        SourceSearchRow.frequency_start_mhz <= end_mhz,
+                    )
+                ).all()
             for search, location in rows:
                 lower = location.raw_fields.get("Sub_band_lower_limit__Hz_")
                 upper = location.raw_fields.get("Sub_band_upper_limit__Hz_")
@@ -275,17 +289,21 @@ def load_references(
             # Station intervals depend on the channel bandwidth, so they are built per record.
             # This reads every station row of the artifact: fine for the workbook, not for tens of
             # millions of rows (Stage 6).
-            station_rows = session.execute(
-                select(SourceSearchRow, ReferenceStationRow.fields)
-                .join(
-                    ReferenceStationRow,
-                    ReferenceStationRow.source_record_id == SourceSearchRow.source_record_id,
-                )
-                .where(
-                    SourceSearchRow.artifact_id == artifact.artifact_id,
-                    _readable(policy, principal),
-                )
-            ).all()
+            station_rows: Sequence[Any]
+            if records is not None:
+                station_rows = records.stations(dataset) if dataset else []
+            else:
+                station_rows = session.execute(
+                    select(SourceSearchRow, ReferenceStationRow.fields)
+                    .join(
+                        ReferenceStationRow,
+                        ReferenceStationRow.source_record_id == SourceSearchRow.source_record_id,
+                    )
+                    .where(
+                        SourceSearchRow.artifact_id == artifact.artifact_id,
+                        _readable(policy, principal),
+                    )
+                ).all()
             for row in station_rows:
                 station: SourceSearchRow = row[0]
                 fields: dict[str, Any] = row[1]
@@ -308,8 +326,9 @@ def screen_range(
     principal: Principal,
     start_mhz: float,
     end_mhz: float,
+    records: ParquetRecordStore | None = None,
 ) -> FrequencyRelevanceScreen:
-    references, screened = load_references(session, policy, principal, start_mhz, end_mhz)
+    references, screened = load_references(session, policy, principal, start_mhz, end_mhz, records)
     gates, matches, truncated = screen(start_mhz * 1e6, end_mhz * 1e6, references)
     if not screened:
         gates = gates.model_copy(

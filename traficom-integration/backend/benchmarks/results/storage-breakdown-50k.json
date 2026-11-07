@@ -1,0 +1,199 @@
+{
+  "source_bytes": 5519453,
+  "generated": {
+    "rows": 50000,
+    "bytes_written": 5519453,
+    "missing_tx": 93,
+    "unitless_tx": 52,
+    "negative_agl": 58
+  },
+  "ingest": {
+    "artifact_id": "3313de9b6032461e8b059f73a13f7d49",
+    "status": "READY",
+    "index_seconds": 37.79977560000043
+  },
+  "tables": {
+    "source_record_locations": {
+      "rows": 50000,
+      "heap_bytes": 102400000,
+      "fsm_vm_bytes": 57344,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "source_record_locations_pkey": 4890624,
+        "uq_source_record_ordinal": 3440640,
+        "ix_source_record_locations_tenant_id": 344064
+      },
+      "total_bytes": 111140864,
+      "total_bytes_per_row": 2222.8,
+      "tuple_overhead_bytes": 1400000,
+      "column_bytes": {
+        "field_aliases": 32350000,
+        "raw_fields": 30468712,
+        "analysis_eligibility": 6393421,
+        "raw_record_sha256": 3250000,
+        "source_table_or_sheet": 2300000,
+        "source_record_id": 1938890,
+        "artifact_id": 1650000,
+        "parser_version": 1300000,
+        "schema_version": 1100000,
+        "tenant_id": 650000,
+        "ordinal": 400000,
+        "source_row_or_key": 288906,
+        "source_page": 0,
+        "notice_id": 0
+      }
+    },
+    "source_library_search_index": {
+      "rows": 50000,
+      "heap_bytes": 13213696,
+      "fsm_vm_bytes": 32768,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "source_library_search_index_pkey": 4890624,
+        "ix_search_frequency": 2187264,
+        "ix_source_library_search_index_station_number": 1138688,
+        "ix_source_library_search_index_artifact_id": 352256,
+        "ix_source_library_search_index_source_id": 344064,
+        "ix_source_library_search_index_tenant_id": 344064
+      },
+      "total_bytes": 22511616,
+      "total_bytes_per_row": 450.2,
+      "tuple_overhead_bytes": 1400000,
+      "column_bytes": {
+        "source_record_id": 1938890,
+        "artifact_id": 1650000,
+        "publisher": 1500000,
+        "text_terms": 1250000,
+        "filename_original": 900000,
+        "source_id": 800000,
+        "tenant_id": 650000,
+        "classification": 450000,
+        "frequency_start_mhz": 398840,
+        "frequency_end_mhz": 398840,
+        "station_number": 350000,
+        "record_status": 302204,
+        "is_synthetic": 50000,
+        "issue_key": 0,
+        "network_id": 0,
+        "administration": 0
+      }
+    },
+    "record_quality_findings": {
+      "rows": 120252,
+      "heap_bytes": 21626880,
+      "fsm_vm_bytes": 32768,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "record_quality_findings_pkey": 13713408,
+        "ix_record_quality_findings_source_record_id": 6758400
+      },
+      "total_bytes": 42139648,
+      "total_bytes_per_row": 350.4,
+      "tuple_overhead_bytes": 3367056,
+      "column_bytes": {
+        "finding_id": 4903499,
+        "source_record_id": 4662995,
+        "rule_id": 2734612,
+        "field_key": 2228200,
+        "severity": 602072,
+        "status": 601260,
+        "normalized_value": 475229,
+        "raw_value": 345488,
+        "reviewer_override_id": 0
+      }
+    },
+    "reference_station_records": {
+      "rows": 50000,
+      "heap_bytes": 37208064,
+      "fsm_vm_bytes": 40960,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "reference_station_records_pkey": 4890624
+      },
+      "total_bytes": 42147840,
+      "total_bytes_per_row": 843.0,
+      "tuple_overhead_bytes": 1400000,
+      "column_bytes": {
+        "fields": 30729521,
+        "source_record_id": 1938890
+      }
+    },
+    "source_artifacts": {
+      "rows": 1,
+      "heap_bytes": 8192,
+      "fsm_vm_bytes": 32768,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "source_artifacts_pkey": 16384,
+        "uq_source_artifact_bytes": 16384,
+        "ix_source_artifacts_filename_original": 16384,
+        "ix_source_artifacts_raw_sha256": 16384,
+        "ix_source_artifacts_source_id": 16384,
+        "ix_source_artifacts_status": 16384,
+        "ix_source_artifacts_tenant_id": 16384
+      },
+      "total_bytes": 163840,
+      "total_bytes_per_row": 163840.0,
+      "tuple_overhead_bytes": 28
+    },
+    "artifact_integrity_checks": {
+      "rows": 4,
+      "heap_bytes": 8192,
+      "fsm_vm_bytes": 32768,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "artifact_integrity_checks_pkey": 16384,
+        "ix_artifact_integrity_checks_artifact_id": 16384
+      },
+      "total_bytes": 81920,
+      "total_bytes_per_row": 20480.0,
+      "tuple_overhead_bytes": 112
+    },
+    "job_runs": {
+      "rows": 1,
+      "heap_bytes": 8192,
+      "fsm_vm_bytes": 32768,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "job_runs_pkey": 16384,
+        "uq_job_idempotency": 16384,
+        "ix_job_claim": 16384,
+        "ix_job_runs_tenant_id": 16384
+      },
+      "total_bytes": 114688,
+      "total_bytes_per_row": 114688.0,
+      "tuple_overhead_bytes": 28
+    },
+    "audit_events": {
+      "rows": 2,
+      "heap_bytes": 8192,
+      "fsm_vm_bytes": 32768,
+      "toast_bytes": 8192,
+      "index_bytes": {
+        "audit_events_pkey": 16384,
+        "ix_audit_events_tenant_id": 16384
+      },
+      "total_bytes": 81920,
+      "total_bytes_per_row": 40960.0,
+      "tuple_overhead_bytes": 56
+    }
+  },
+  "distinct_values_in_source_record_locations": {
+    "field_aliases": 1,
+    "analysis_eligibility": 7,
+    "parser_version": 1,
+    "schema_version": 1
+  },
+  "distinct_values_in_search_index": {
+    "publisher": 1,
+    "filename_original": 1,
+    "artifact_id": 1,
+    "source_id": 1,
+    "tenant_id": 1
+  },
+  "database_bytes": 227701219,
+  "template1_bytes": 7500259,
+  "wal_dir_bytes_server_wide": 805306368,
+  "record_tables_bytes": 217939968,
+  "record_tables_over_source": 39.49
+}

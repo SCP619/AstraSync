@@ -355,7 +355,7 @@ def seed_sources(sessions: Any) -> None:
         )
         session.commit()
 
-    store = LocalObjectStore(OBJECTS_PATH)
+    store = LocalObjectStore(Path(_dev_environment()["ASTRASYNC_OBJECT_STORE_PATH"]))
     context = PipelineContext(
         sessions=sessions, store=store, adapters={DemoAdapter.source_type: DemoAdapter()}
     )
@@ -487,6 +487,25 @@ def seed_cases(sessions: Any) -> None:
 
 
 def _dev_environment() -> dict[str, str]:
+    environment = _dev_defaults()
+    # Benchmarks (benchmarks/stage6.py) point the stack at PostgreSQL, another store or parsers.
+    for name in _DEV_OVERRIDES:
+        value = os.environ.get(f"ASTRASYNC_DEV_{name}")
+        if value:
+            environment[f"ASTRASYNC_{name}"] = value
+    return environment
+
+
+_DEV_OVERRIDES = (
+    "DATABASE_URL",
+    "OBJECT_STORE_PATH",
+    "RECORD_STORE_PATH",
+    "SOURCE_ADAPTERS",
+    "MAX_UPLOAD_BYTES",
+)
+
+
+def _dev_defaults() -> dict[str, str]:
     return {
         "ASTRASYNC_ENVIRONMENT": "DEMO",
         "ASTRASYNC_DATABASE_URL": f"sqlite:///{DATABASE_PATH.as_posix()}",

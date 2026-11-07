@@ -91,6 +91,7 @@ from .library import (
     session_factory_of,
 )
 from .library_tables import SourceConnectorRow, SourceRecordLocationRow
+from .record_store import ParquetRecordStore, dataset_for_record
 
 RIGHT_READ = "READ"
 RIGHT_EXPORT = "EXPORT"
@@ -133,7 +134,10 @@ _SORT_COLUMNS: Mapping[CaseSort, Any] = {
 
 
 def upsert_candidate(
-    sessions: sessionmaker[Session], tenant_id: str, candidate: CaseCandidate
+    sessions: sessionmaker[Session],
+    tenant_id: str,
+    candidate: CaseCandidate,
+    records: ParquetRecordStore | None = None,
 ) -> str:
     """Creates one case per notice version. A frequency match alone never exceeds a candidate."""
     with sessions() as session:
@@ -197,7 +201,7 @@ def upsert_candidate(
         )
         session.flush()
         if candidate.source_record_id is not None:
-            location = session.get(SourceRecordLocationRow, candidate.source_record_id)
+            location = _source_location(session, candidate.source_record_id, tenant_id, records)
             if location is None or location.tenant_id != tenant_id:
                 raise ValueError("The source record is not in this tenant")
             session.add(
@@ -229,6 +233,19 @@ def upsert_candidate(
 
 
 # --- Reads ------------------------------------------------------------------------------------
+
+
+def _source_location(
+    session: Session,
+    source_record_id: str,
+    tenant_id: str,
+    records: ParquetRecordStore | None,
+) -> SourceRecordLocationRow | None:
+    if records is None:
+        return session.get(SourceRecordLocationRow, source_record_id)
+    found = dataset_for_record(session, source_record_id, tenant_id)
+    record = records.record(*found) if found is not None else None
+    return record[0] if record is not None else None
 
 
 def _summary_fields(row: CaseRow) -> dict[str, Any]:

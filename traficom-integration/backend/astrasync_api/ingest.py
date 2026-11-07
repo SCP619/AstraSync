@@ -9,13 +9,13 @@ unindexed, and the job says why.
 import hashlib
 import json
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
 from pydantic import ValidationError
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func, insert, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from .contract.enums import (
@@ -33,6 +33,7 @@ from .contract.models import AdapterRecord, ReferenceStationRecord
 from .jobs import PermanentJobError, emit_event, update_progress, utc_now
 from .library_tables import (
     ArtifactIntegrityCheckRow,
+    RecordDatasetRow,
     RecordQualityFindingRow,
     ReferenceStationRow,
     SourceArtifactRow,
@@ -43,6 +44,7 @@ from .library_tables import (
     UploadSessionRow,
 )
 from .objectstore import AssembledObject, ObjectStore
+from .record_store import FORMAT_VERSION, DatasetWriter, ParquetRecordStore, PublishedDataset
 
 TOOL_VERSION = "astrasync-ingest/1"
 BATCH_ROWS = 1000
@@ -57,6 +59,8 @@ class PipelineContext:
     sessions: sessionmaker[Session]
     store: ObjectStore
     adapters: Mapping[str, SourceAdapter]
+    # When set, parsed records go to Parquet datasets instead of the PostgreSQL index tables.
+    records: ParquetRecordStore | None = None
 
 
 @dataclass(frozen=True)
@@ -361,29 +365,41 @@ def process_artifact(context: PipelineContext, job_id: str, artifact_id: str) ->
         object_key = artifact.object_key
         session.commit()
 
-    _clear_partial_index(context.sessions, artifact_id)
+    # A retry replaces whatever an earlier attempt left: partial rows, or unpublished files.
+    writer: DatasetWriter | None = None
+    if context.records is not None:
+        writer = context.records.begin(connector.tenant_id, artifact_id)
+    else:
+        _clear_partial_index(context.sessions, artifact_id)
     update_progress(context.sessions, job_id, status=PipelineStatus.PARSING)
     path = context.store.local_path(object_key)
     counts = {"parsed": 0, "accepted": 0, "flagged": 0, "rejected": 0}
     try:
         for batch in adapter.iter_record_batches(path, batch_rows=BATCH_ROWS):
-            _write_batch(context.sessions, artifact_id, connector, adapter, batch, counts)
+            _write_batch(context.sessions, artifact_id, connector, adapter, batch, counts, writer)
             update_progress(
                 context.sessions,
                 job_id,
                 status=PipelineStatus.NORMALIZING,
                 processed_records=counts["parsed"],
             )
+        published = writer.publish() if writer is not None else None
     except ValueError as exc:
         # The adapter contract's signal for unreadable or unsafe content.
+        if writer is not None:
+            writer.discard()
         _quarantine_after_parse(context.sessions, artifact_id, adapter, exc)
         raise PermanentJobError(
             ErrorCode.VALIDATION_ERROR,
             "The file could not be read by its parser.",
             PipelineStatus.QUARANTINED,
         ) from exc
+    except BaseException:
+        if writer is not None:
+            writer.discard()
+        raise
 
-    return _finish_index(context.sessions, job_id, artifact_id, adapter, counts)
+    return _finish_index(context.sessions, job_id, artifact_id, adapter, counts, published)
 
 
 def _clear_partial_index(sessions: sessionmaker[Session], artifact_id: str) -> None:
@@ -415,7 +431,9 @@ def _write_batch(
     adapter: SourceAdapter,
     batch: list[dict[str, Any]],
     counts: dict[str, int],
+    writer: DatasetWriter | None = None,
 ) -> None:
+    rows = _BatchRows()
     with sessions() as session:
         artifact = session.get_one(SourceArtifactRow, artifact_id)
         for raw in batch:
@@ -456,12 +474,34 @@ def _write_batch(
                 counts["flagged"] += 1
             else:
                 counts["accepted"] += 1
-            _write_record(session, artifact, connector, adapter, record, station, ordinal)
+            _collect_rows(rows, artifact, connector, adapter, record, station, ordinal)
+        if writer is not None:
+            writer.write_batch(rows.locations, rows.searches, rows.stations, rows.findings)
+            session.commit()  # Rejected-record checks only.
+            return
+        # One multi-row insert per table, parents first. A flush per record cost one database
+        # round trip per row (about 450 rows/s on PostgreSQL in the Stage 6 benchmark).
+        for model, values in (
+            (SourceRecordLocationRow, rows.locations),
+            (SourceSearchRow, rows.searches),
+            (RecordQualityFindingRow, rows.findings),
+            (ReferenceStationRow, rows.stations),
+        ):
+            if values:
+                session.execute(insert(model), values)
         session.commit()
 
 
-def _write_record(
-    session: Session,
+@dataclass
+class _BatchRows:
+    locations: list[dict[str, Any]] = field(default_factory=list)
+    searches: list[dict[str, Any]] = field(default_factory=list)
+    findings: list[dict[str, Any]] = field(default_factory=list)
+    stations: list[dict[str, Any]] = field(default_factory=list)
+
+
+def _collect_rows(
+    rows: _BatchRows,
     artifact: SourceArtifactRow,
     connector: SourceConnectorRow,
     adapter: SourceAdapter,
@@ -471,27 +511,26 @@ def _write_record(
 ) -> None:
     record_id = f"{artifact.artifact_id}-{ordinal}"
     canonical = json.dumps(record.raw_fields, sort_keys=True, ensure_ascii=False).encode("utf-8")
-    session.add(
-        SourceRecordLocationRow(
-            source_record_id=record_id,
-            tenant_id=artifact.tenant_id,
-            artifact_id=artifact.artifact_id,
-            ordinal=ordinal,
-            source_table_or_sheet=record.source_table_or_sheet,
-            source_row_or_key=record.source_row_or_key,
-            source_page=record.source_page,
-            notice_id=record.notice_id,
-            raw_record_sha256=hashlib.sha256(canonical).hexdigest(),
-            raw_fields=record.raw_fields,
-            field_aliases=record.field_aliases,
-            analysis_eligibility={
+    rows.locations.append(
+        {
+            "source_record_id": record_id,
+            "tenant_id": artifact.tenant_id,
+            "artifact_id": artifact.artifact_id,
+            "ordinal": ordinal,
+            "source_table_or_sheet": record.source_table_or_sheet,
+            "source_row_or_key": record.source_row_or_key,
+            "source_page": record.source_page,
+            "notice_id": record.notice_id,
+            "raw_record_sha256": hashlib.sha256(canonical).hexdigest(),
+            "raw_fields": record.raw_fields,
+            "field_aliases": record.field_aliases,
+            "analysis_eligibility": {
                 method: status.value for method, status in record.analysis_eligibility.items()
             },
-            parser_version=adapter.parser_version,
-            schema_version=record.schema_version,
-        )
+            "parser_version": adapter.parser_version,
+            "schema_version": record.schema_version,
+        }
     )
-    session.flush()
     terms = " ".join(
         term
         for term in (
@@ -504,45 +543,45 @@ def _write_record(
         )
         if term
     )
-    session.add(
-        SourceSearchRow(
-            source_record_id=record_id,
-            tenant_id=artifact.tenant_id,
-            source_id=artifact.source_id,
-            artifact_id=artifact.artifact_id,
-            issue_key=record.issue_key,
-            publisher=connector.publisher,
-            filename_original=artifact.filename_original,
-            station_number=record.station_number,
-            network_id=record.network_id,
-            administration=record.administration,
-            frequency_start_mhz=record.frequency_start_mhz,
-            frequency_end_mhz=record.frequency_end_mhz,
-            text_terms=terms.lower(),
-            classification=artifact.usage_classification,
-            record_status=record.record_status.value,
-            is_synthetic=artifact.is_synthetic,
-        )
+    rows.searches.append(
+        {
+            "source_record_id": record_id,
+            "tenant_id": artifact.tenant_id,
+            "source_id": artifact.source_id,
+            "artifact_id": artifact.artifact_id,
+            "issue_key": record.issue_key,
+            "publisher": connector.publisher,
+            "filename_original": artifact.filename_original,
+            "station_number": record.station_number,
+            "network_id": record.network_id,
+            "administration": record.administration,
+            "frequency_start_mhz": record.frequency_start_mhz,
+            "frequency_end_mhz": record.frequency_end_mhz,
+            "text_terms": terms.lower(),
+            "classification": artifact.usage_classification,
+            "record_status": record.record_status.value,
+            "is_synthetic": artifact.is_synthetic,
+        }
     )
     for index, finding in enumerate(record.quality_findings):
-        session.add(
-            RecordQualityFindingRow(
-                finding_id=f"{record_id}-{index}",
-                source_record_id=record_id,
-                field_key=finding.field_key,
-                raw_value=finding.raw_value,
-                normalized_value=finding.normalized_value,
-                rule_id=finding.rule_id,
-                severity=finding.severity.value,
-                status="OPEN",
-            )
+        rows.findings.append(
+            {
+                "finding_id": f"{record_id}-{index}",
+                "source_record_id": record_id,
+                "field_key": finding.field_key,
+                "raw_value": finding.raw_value,
+                "normalized_value": finding.normalized_value,
+                "rule_id": finding.rule_id,
+                "severity": finding.severity.value,
+                "status": "OPEN",
+            }
         )
     if station is not None:
-        session.add(
-            ReferenceStationRow(
-                source_record_id=record_id,
-                fields=station.model_dump(mode="json", exclude={"source_record_id"}),
-            )
+        rows.stations.append(
+            {
+                "source_record_id": record_id,
+                "fields": station.model_dump(mode="json", exclude={"source_record_id"}),
+            }
         )
 
 
@@ -552,6 +591,7 @@ def _finish_index(
     artifact_id: str,
     adapter: SourceAdapter,
     counts: dict[str, int],
+    published: PublishedDataset | None = None,
 ) -> PipelineStatus:
     update_progress(
         sessions, job_id, status=PipelineStatus.INDEXING, processed_records=counts["parsed"]
@@ -566,6 +606,30 @@ def _finish_index(
         artifact.indexed_at_utc = utc_now()
         artifact.parser_version = adapter.parser_version
         artifact.row_reconciliation = counts
+        if published is not None:
+            # Committed with the indexed status: the dataset becomes visible with it, or not at all.
+            connector = session.get_one(SourceConnectorRow, artifact.source_id)
+            session.add(
+                RecordDatasetRow(
+                    artifact_id=artifact_id,
+                    tenant_id=artifact.tenant_id,
+                    source_id=artifact.source_id,
+                    classification=artifact.usage_classification,
+                    is_synthetic=artifact.is_synthetic,
+                    publisher=connector.publisher,
+                    filename_original=artifact.filename_original,
+                    relative_path=published.relative_path,
+                    format_version=FORMAT_VERSION,
+                    parser_version=adapter.parser_version,
+                    record_count=published.record_count,
+                    finding_count=published.finding_count,
+                    records_sha256=published.records_sha256,
+                    records_bytes=published.records_bytes,
+                    findings_sha256=published.findings_sha256,
+                    findings_bytes=published.findings_bytes,
+                    published_at_utc=utc_now(),
+                )
+            )
         _add_check(
             session,
             artifact_id,

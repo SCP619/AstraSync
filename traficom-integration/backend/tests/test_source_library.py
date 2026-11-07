@@ -10,6 +10,7 @@ from typing import Any
 from uuid import uuid4
 
 import httpx
+import pyarrow.parquet as pyarrow_parquet
 import pytest
 from conftest import TENANT_A, TENANT_B, Users, oidc_settings
 from fastapi import FastAPI
@@ -51,6 +52,7 @@ from astrasync_api.ingest import PipelineContext
 from astrasync_api.library_tables import (
     JobRunRow,
     OutboxEventRow,
+    RecordDatasetRow,
     SourceConnectorRow,
     SourceRecordLocationRow,
     UploadSessionRow,
@@ -112,9 +114,12 @@ def runtime(
     store: LocalObjectStore,
     adapters: dict[str, Any],
     fake_source: FakeSource,
+    record_store: Any,
 ) -> WorkerRuntime:
     return WorkerRuntime(
-        context=PipelineContext(sessions=sessions, store=store, adapters=adapters),
+        context=PipelineContext(
+            sessions=sessions, store=store, adapters=adapters, records=record_store
+        ),
         clients={"fake": fake_source},
         worker_id="test-worker",
     )
@@ -266,6 +271,32 @@ def ingest(
     return client.get(f"/api/v1/uploads/{upload_id}", headers=headers).json()
 
 
+def stored_records(
+    sessions: sessionmaker[Session], runtime: WorkerRuntime, artifact_id: str | None = None
+) -> int:
+    """Records actually stored, in whichever record store the runtime writes to."""
+    records = runtime.context.records
+    with sessions() as session:
+        if records is None:
+            query = select(func.count()).select_from(SourceRecordLocationRow)
+            if artifact_id is not None:
+                query = query.where(SourceRecordLocationRow.artifact_id == artifact_id)
+            return session.scalar(query) or 0
+        query = select(RecordDatasetRow)
+        if artifact_id is not None:
+            query = query.where(RecordDatasetRow.artifact_id == artifact_id)
+        total = 0
+        for dataset in session.scalars(query):
+            # One published directory per artifact, and no attempt left in staging.
+            artifact_dir = (records.root / dataset.relative_path).parent
+            assert [p.name for p in artifact_dir.iterdir()] == [Path(dataset.relative_path).name]
+            assert not (records.root / "staging" / dataset.artifact_id).exists()
+            assert records.verify(dataset)
+            path = records.root / dataset.relative_path / "records.parquet"
+            total += pyarrow_parquet.read_metadata(path).num_rows
+        return total
+
+
 def artifact_of(
     client: TestClient, headers: dict[str, str], sessions: sessionmaker[Session], upload: dict
 ) -> SourceArtifactDetail:
@@ -408,13 +439,7 @@ def test_same_bytes_again_keep_one_artifact_and_record_the_receipt(
         ingest(secure_client, runtime, headers, data, filename="renamed.txt"),
     )
     assert first.artifact_id == second.artifact_id
-    with sessions() as session:
-        count = session.scalar(
-            select(func.count())
-            .select_from(SourceRecordLocationRow)
-            .where(SourceRecordLocationRow.artifact_id == first.artifact_id)
-        )
-    assert count == 2
+    assert stored_records(sessions, runtime, first.artifact_id) == 2
     report = secure_client.get(
         f"/api/v1/source-artifacts/{first.artifact_id}/integrity", headers=headers
     ).json()
@@ -747,8 +772,7 @@ def test_worker_crash_is_recovered_without_duplicate_records(
     state = secure_client.get(f"/api/v1/jobs/{crashed.job_id}", headers=headers).json()
     assert state["status"] == "READY"
     assert state["attempt"] == 2
-    with sessions() as session:
-        assert session.scalar(select(func.count()).select_from(SourceRecordLocationRow)) == 2
+    assert stored_records(sessions, runtime) == 2
 
 
 def test_failure_mid_parse_retries_without_duplicates(
@@ -782,7 +806,7 @@ def test_failure_mid_parse_retries_without_duplicates(
     run_until_idle(runtime)
     with sessions() as session:
         assert session.scalars(select(JobRunRow)).one().status == "READY"
-        assert session.scalar(select(func.count()).select_from(SourceRecordLocationRow)) == 2
+    assert stored_records(sessions, runtime) == 2
 
 
 def test_repeated_failures_stop_with_a_visible_state(

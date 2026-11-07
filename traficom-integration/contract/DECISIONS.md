@@ -85,6 +85,7 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A33 | A negative antenna height AGL is kept as given, marked BLOCKING, and excluded from power-dependent calculations. The workbook's suggested "minimum 1 m" isn't applied; it would be a named sensitivity scenario | Scientific review |
 | A34 | Ingest counts a record as flagged only for a WARNING or BLOCKING finding or a non-valid status. INFO notes, such as an optional field left blank, don't count | Stage 2 review |
 | A35 | `SPACE_PFD_FREE_SPACE` reads `scenario.space_pfd_free_space` with `eirp_toward_receiver_dbw` and `slant_range_m` stated directly. It derives neither from orbit or pattern data. The result stays in the EIRP's reference bandwidth, or the total channel, with no `10 log10(B)` rescaling. Additional loss defaults to 0 dB (the idealised case) and may not be negative | **Data/AI review**; the notice-to-scenario mapping comes with real IFIC data |
+| A36 | Traficom allocation table (`opendata.traficom.fi/api/v13/Taajuusjakotaulukko`, CC BY 4.0, checked 2026-11-07). The ETag is the provider version; identical bytes still give one artifact if the cache issues a new ETag. `Transmitter_power = 0` is the API's blank, so it stays raw text and is never 0 W. Band limits come from the Hz fields and are checked against the text limits. The API doesn't name the M4 edition, so none is recorded | Confirm with Traficom which M4 edition the API serves |
 
 ## Outside the contract: needs a team decision
 

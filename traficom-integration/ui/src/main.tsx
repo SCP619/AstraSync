@@ -6,6 +6,7 @@ import type { AuthAdapter } from "./auth/adapter";
 import { createWebOidcAdapter } from "./auth/webOidcAdapter";
 import { webPlatform, type PlatformAdapter } from "./platform/types";
 import { readConfig, type AppConfig } from "./config";
+import "./design/tokens.css";
 import "./styles.css";
 
 async function createRuntime(

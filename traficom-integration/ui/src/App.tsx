@@ -25,6 +25,7 @@ import {
 import { AlertDetailPage, AlertsPage } from "./alerts/AlertsPage";
 import { CaseInspectorPage } from "./cases/CaseInspectorPage";
 import { CaseListPage } from "./cases/CaseListPage";
+import { AppShell as ShellLayout } from "./components/AppShell";
 import { webPlatform, type PlatformAdapter, type PushPermission } from "./platform/types";
 import { SourceLibraryPage } from "./sources/SourceLibraryPage";
 
@@ -365,26 +366,14 @@ function AppShell({
   return (
     <MeContext.Provider value={me}>
       <AlertActivityContext.Provider value={activity}>
-      <header className="top-bar">
-        <span className="brand">AstraSync</span>
-        <nav aria-label="Main" className="main-nav">
-          <NavLink to="/dashboard">Overview</NavLink>
-          {me.capabilities.includes("CASE_READ") && <NavLink to="/cases">Cases</NavLink>}
-          {me.capabilities.includes("ALERT_READ") && (
-            <NavLink to="/alerts">
-              Alerts
-              {activity.openCount ? ` (${activity.openCount}${activity.more ? "+" : ""})` : ""}
-            </NavLink>
-          )}
-          {me.capabilities.includes("SOURCE_HEALTH_READ") && <NavLink to="/sources">Source library</NavLink>}
-        </nav>
-        <span className="environment" data-environment={me.environment}>
-          {me.environment} environment
-        </span>
-        <span className="spacer" />
-        {signOutButton}
-      </header>
-      {children}
+      <ShellLayout
+        user={me}
+        openAlerts={activity.openCount ?? 0}
+        moreAlerts={Boolean(activity.more)}
+        onSignOut={() => void signOut()}
+      >
+        {children}
+      </ShellLayout>
       </AlertActivityContext.Provider>
     </MeContext.Provider>
   );

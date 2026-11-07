@@ -333,6 +333,10 @@ class ParquetRecordStore:
         connection.execute("SET autoload_known_extensions = false")
         connection.execute(f"SET memory_limit = '{self._memory_limit}'")
         connection.execute(f"SET threads = {int(self._threads)}")
+        # Dataset files are immutable and never reused under another path, so their footers
+        # can be cached for the life of the connection.
+        connection.execute("SET parquet_metadata_cache = true")
+        connection.execute("SET enable_object_cache = true")
         connection.execute("SET lock_configuration = true")
         return connection
 

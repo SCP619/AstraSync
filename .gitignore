@@ -31,3 +31,6 @@ traficom-integration/ui/e2e/.drivers/
 traficom-integration/ui/e2e/.venv/
 traficom-integration/ui/e2e/.stack.log
 traficom-integration/ui/e2e/*.xml
+
+# Personal Claude Code settings (attribution off for this repo)
+.claude/settings.local.json

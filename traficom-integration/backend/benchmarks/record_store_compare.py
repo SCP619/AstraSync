@@ -68,7 +68,7 @@ class PeakRss:
         self._thread.join()
 
 
-def index(server: str, database: str, csv: Path, work: Path, mode: str) -> dict[str, Any]:
+def index(server: str, database: str, csvs: list[Path], work: Path, mode: str) -> dict[str, Any]:
     _recreate(server, database)
     url = f"{server.replace('postgresql://', 'postgresql+psycopg://')}/{database}"
     engine = build_engine(url)
@@ -94,41 +94,46 @@ def index(server: str, database: str, csv: Path, work: Path, mode: str) -> dict[
     context = PipelineContext(
         sessions=sessions, store=objects, adapters={adapter.source_type: adapter}, records=records
     )
-    staging = objects.new_staging_path()
-    shutil.copyfile(csv, staging)
-    staged = objects.hash_file(staging)
-    artifact = register_bytes(
-        context,
-        IncomingBytes(
-            tenant_id=TENANT,
-            source_id=SOURCE,
-            filename_original=csv.name,
-            classification=UsageClassification.INTERNAL.value,
-            staged=staged,
-            expected_size_bytes=staged.size_bytes,
-            transport_sha256=None,
-            expected_digest=staged.sha256,
-            expected_digest_origin="uploader-supplied-manifest",
-        ),
-    )
-    job = enqueue(
-        sessions,
-        tenant_id=TENANT,
-        job_type=JobType.INGEST,
-        lane=LANE_INGESTION,
-        idempotency_key=f"bench:{artifact.artifact_id}",
-        requested_by="record-store-compare",
-        payload={"artifact_id": artifact.artifact_id},
-    )
+    artifact_ids: list[str] = []
+    seconds = 0.0
     with PeakRss() as rss:
-        started = time.perf_counter()
-        status = process_artifact(context, job.job_id, artifact.artifact_id)
-        seconds = time.perf_counter() - started
+        for csv in csvs:
+            staging = objects.new_staging_path()
+            shutil.copyfile(csv, staging)
+            staged = objects.hash_file(staging)
+            artifact = register_bytes(
+                context,
+                IncomingBytes(
+                    tenant_id=TENANT,
+                    source_id=SOURCE,
+                    filename_original=csv.name,
+                    classification=UsageClassification.INTERNAL.value,
+                    staged=staged,
+                    expected_size_bytes=staged.size_bytes,
+                    transport_sha256=None,
+                    expected_digest=staged.sha256,
+                    expected_digest_origin="uploader-supplied-manifest",
+                ),
+            )
+            job = enqueue(
+                sessions,
+                tenant_id=TENANT,
+                job_type=JobType.INGEST,
+                lane=LANE_INGESTION,
+                idempotency_key=f"bench:{artifact.artifact_id}",
+                requested_by="record-store-compare",
+                payload={"artifact_id": artifact.artifact_id},
+            )
+            started = time.perf_counter()
+            status = process_artifact(context, job.job_id, artifact.artifact_id)
+            seconds += time.perf_counter() - started
+            artifact_ids.append(artifact.artifact_id)
     return {
         "sessions": sessions,
         "engine": engine,
         "records": records,
-        "artifact_id": artifact.artifact_id,
+        "artifact_id": artifact_ids[0],
+        "artifact_ids": artifact_ids,
         "status": status.value,
         "index_seconds": round(seconds, 2),
         "peak_rss_mib": round(rss.peak / MIB, 1),
@@ -167,7 +172,7 @@ def storage(server: str, database: str, records: ParquetRecordStore | None) -> d
     }
 
 
-def _normalized(value: Any, artifact_id: str) -> str:
+def _normalized(value: Any, artifact_ids: list[str]) -> str:
     def strip(item: Any) -> Any:
         if isinstance(item, dict):
             return {
@@ -181,7 +186,9 @@ def _normalized(value: Any, artifact_id: str) -> str:
         return item
 
     text = json.dumps(strip(value.model_dump(mode="json")), sort_keys=True)
-    return text.replace(artifact_id, "<artifact>")
+    for number, artifact_id in enumerate(artifact_ids):
+        text = text.replace(artifact_id, f"<artifact-{number}>")
+    return text
 
 
 def _cursor(value: str) -> str:
@@ -289,7 +296,7 @@ def queries(run: dict[str, Any], rows: int, count: int, dump: Path | None = None
             text = (
                 json.dumps(answer)
                 if name == "aggregate_by_status"
-                else _normalized(answer, artifact_id)
+                else _normalized(answer, run["artifact_ids"])
             )
             digest.update(text.encode())
             answers.append(text)
@@ -311,51 +318,64 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--server", required=True, help="postgresql://user:pass@host:port")
     parser.add_argument("--rows", type=int, default=200_000)
+    parser.add_argument("--modes", nargs="+", default=["postgresql", "parquet"])
+    parser.add_argument(
+        "--artifacts",
+        type=int,
+        default=1,
+        help="split the rows over this many artifacts (answers are compared only for 1, because "
+        "result order depends on the per-database artifact IDs)",
+    )
     parser.add_argument("--queries", type=int, default=30)
     parser.add_argument("--dump", type=Path, help="write every answer here, per store")
     parser.add_argument("--work", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     args.work.mkdir(parents=True, exist_ok=True)
-    csv = args.work / f"compare-{args.rows}.csv"
-    with csv.open("w", encoding="utf-8", newline="") as handle:
-        summary = generate(handle, rows=args.rows)
+    csvs = []
+    for number in range(args.artifacts):
+        csv = args.work / f"compare-{args.rows}-{number}.csv"
+        with csv.open("w", encoding="utf-8", newline="") as handle:
+            summary = generate(handle, rows=args.rows // args.artifacts, seed=6 + number)
+        csvs.append(csv)
     result: dict[str, Any] = {
         "rows": args.rows,
-        "source_bytes": csv.stat().st_size,
-        "generated": summary.__dict__,
+        "artifacts": args.artifacts,
+        "source_bytes": sum(path.stat().st_size for path in csvs),
+        "generated_last_artifact": summary.__dict__,
     }
-    for mode in ("postgresql", "parquet"):
+    for mode in args.modes:
         database = f"bench_compare_{mode}"
-        run = index(args.server, database, csv, args.work, mode)
+        run = index(args.server, database, csvs, args.work, mode)
         entry = {k: run[k] for k in ("status", "index_seconds", "peak_rss_mib", "rss_growth_mib")}
         entry["records_per_s"] = round(args.rows / run["index_seconds"])
         entry["storage"] = storage(args.server, database, run["records"])
         entry["queries"] = queries(
-            run, args.rows, args.queries, args.dump / mode if args.dump else None
+            run, args.rows // args.artifacts, args.queries, args.dump / mode if args.dump else None
         )
         run["engine"].dispose()
         result[mode] = entry
         print(mode, json.dumps(entry, indent=2), flush=True)
-    pg, pq = result["postgresql"], result["parquet"]
-    result["comparison"] = {
-        "storage_ratio_postgresql_over_parquet": round(
-            pg["storage"]["record_bytes_total"] / pq["storage"]["record_bytes_total"], 1
-        ),
-        "postgresql_over_source": round(
-            pg["storage"]["record_bytes_total"] / result["source_bytes"], 2
-        ),
-        "parquet_over_source": round(
-            pq["storage"]["record_bytes_total"] / result["source_bytes"], 2
-        ),
-        "index_speedup": round(pg["index_seconds"] / pq["index_seconds"], 2),
-        "identical_answers": {
-            name: pg["queries"][name]["answers_sha256"] == pq["queries"][name]["answers_sha256"]
-            for name in pg["queries"]
-        },
-    }
+    if {"postgresql", "parquet"} <= set(result):
+        pg, pq = result["postgresql"], result["parquet"]
+        result["comparison"] = {
+            "storage_ratio_postgresql_over_parquet": round(
+                pg["storage"]["record_bytes_total"] / pq["storage"]["record_bytes_total"], 1
+            ),
+            "postgresql_over_source": round(
+                pg["storage"]["record_bytes_total"] / result["source_bytes"], 2
+            ),
+            "parquet_over_source": round(
+                pq["storage"]["record_bytes_total"] / result["source_bytes"], 2
+            ),
+            "index_speedup": round(pg["index_seconds"] / pq["index_seconds"], 2),
+            "identical_answers": {
+                name: pg["queries"][name]["answers_sha256"] == pq["queries"][name]["answers_sha256"]
+                for name in pg["queries"]
+            },
+        }
     args.out.write_text(json.dumps(result, indent=2), encoding="utf-8")
-    print(json.dumps(result["comparison"], indent=2))
+    print(json.dumps(result.get("comparison"), indent=2))
 
 
 if __name__ == "__main__":

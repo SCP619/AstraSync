@@ -1,0 +1,92 @@
+{
+  "rows": 200000,
+  "artifacts": 1,
+  "source_bytes": 22080217,
+  "generated_last_artifact": {
+    "rows": 200000,
+    "bytes_written": 22080217,
+    "missing_tx": 421,
+    "unitless_tx": 207,
+    "negative_agl": 221
+  },
+  "parquet": {
+    "status": "READY",
+    "index_seconds": 43.12,
+    "peak_rss_mib": 213.9,
+    "rss_growth_mib": 89.2,
+    "records_per_s": 4638,
+    "storage": {
+      "postgresql_record_tables_bytes": {
+        "source_record_locations": 32768,
+        "source_library_search_index": 57344,
+        "record_quality_findings": 24576,
+        "reference_station_records": 16384,
+        "record_datasets": 98304
+      },
+      "postgresql_database_bytes": 9822735,
+      "parquet_files_bytes": {
+        "datasets/BENCH-TENANT/eae68820da2c480ba52ce77ea2c82800/e408ebb2ca2540b984398c32e37266b9/findings.parquet": 1611980,
+        "datasets/BENCH-TENANT/eae68820da2c480ba52ce77ea2c82800/e408ebb2ca2540b984398c32e37266b9/records.parquet": 35329135
+      },
+      "record_bytes_total": 37170491
+    },
+    "queries": {
+      "station_lookup": {
+        "n": 30,
+        "p50_ms": 18.1,
+        "p95_ms": 18.7,
+        "max_ms": 19.2,
+        "answers_sha256": "ad95499223171bd736cb551dc8c6ef5f919a3c8939531be22fe3eeeff9b336ea"
+      },
+      "frequency_window_page": {
+        "n": 30,
+        "p50_ms": 26.0,
+        "p95_ms": 27.5,
+        "max_ms": 29.5,
+        "answers_sha256": "4008fe6a78d5888b491038e7d6c15d856fd21a0aff40ec2364377928d9cdc465"
+      },
+      "frequency_wide_page": {
+        "n": 30,
+        "p50_ms": 48.1,
+        "p95_ms": 50.6,
+        "max_ms": 52.4,
+        "answers_sha256": "47a78f5d404b6eddfc4f769b68114eff48d79c3bd30af9c779f22ac5492aea1c"
+      },
+      "text_search_page": {
+        "n": 30,
+        "p50_ms": 23.8,
+        "p95_ms": 25.2,
+        "max_ms": 25.7,
+        "answers_sha256": "f345cc1f99967f096fbe33463359caffa851bcd8f24fd4628a7202c1be119ccf"
+      },
+      "record_detail": {
+        "n": 30,
+        "p50_ms": 31.5,
+        "p95_ms": 34.7,
+        "max_ms": 36.1,
+        "answers_sha256": "ff04d279bc66012412de9ab5d7d30c8ff104e5ea0216ef0dcae929e13d752c31"
+      },
+      "preview_first_page": {
+        "n": 30,
+        "p50_ms": 35.6,
+        "p95_ms": 40.2,
+        "max_ms": 42.4,
+        "answers_sha256": "16da5452c8ea2b6cafadd52424c6f009a14561e129ea7d31b5f4ce55b17f6734"
+      },
+      "preview_deep_page": {
+        "n": 30,
+        "p50_ms": 35.8,
+        "p95_ms": 39.8,
+        "max_ms": 42.1,
+        "answers_sha256": "c339a1f953217b026ac7ac322ff008b3b36fc7211eb914c4011c132af8e4f808"
+      },
+      "aggregate_by_status": {
+        "n": 30,
+        "p50_ms": 12.7,
+        "p95_ms": 13.2,
+        "max_ms": 13.8,
+        "answers_sha256": "93614055c2aa1f2cf8fccbc56f794cf2c1be3ba2766f8a5d7dfc7b20d514e747"
+      }
+    }
+  }
+}

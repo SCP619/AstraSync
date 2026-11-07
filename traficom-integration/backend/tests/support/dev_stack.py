@@ -52,10 +52,22 @@ from astrasync_api.db import (
     build_session_factory,
     run_migrations,
 )
-from astrasync_api.ingest import IncomingBytes, PipelineContext, register_bytes
+from astrasync_api.ingest import (
+    DatasetBuildRefused,
+    IncomingBytes,
+    PipelineContext,
+    build_record_dataset,
+    register_bytes,
+)
 from astrasync_api.jobs import LANE_INGESTION, enqueue
-from astrasync_api.library_tables import SourceConnectorRow, SourceRecordLocationRow
+from astrasync_api.library_tables import (
+    RecordDatasetRow,
+    SourceArtifactRow,
+    SourceConnectorRow,
+    SourceRecordLocationRow,
+)
 from astrasync_api.objectstore import LocalObjectStore
+from astrasync_api.record_store import ParquetRecordStore
 from astrasync_api.worker import WorkerRuntime, build_runtime, run_one, run_until_idle
 
 HOST = "127.0.0.1"
@@ -75,6 +87,7 @@ TENANT_B = "DEMO-TENANT-B"
 DEV_DIR = Path(__file__).resolve().parents[2] / ".dev"
 DATABASE_PATH = DEV_DIR / "astrasync-dev.db"
 OBJECTS_PATH = DEV_DIR / "objects"
+RECORDS_PATH = DEV_DIR / "records"
 
 
 @dataclass(frozen=True)
@@ -315,10 +328,36 @@ def _stage_bytes(store: LocalObjectStore, data: bytes) -> Any:
     return store.hash_file(path)
 
 
+def _build_missing_datasets(sessions: Any) -> None:
+    """A dev database seeded before the record store was on gets its datasets built once."""
+    records_path = _dev_environment().get("ASTRASYNC_RECORD_STORE_PATH")
+    if not records_path:
+        return
+    context = PipelineContext(
+        sessions=sessions,
+        store=LocalObjectStore(Path(_dev_environment()["ASTRASYNC_OBJECT_STORE_PATH"])),
+        adapters={DemoAdapter.source_type: DemoAdapter()},
+        records=ParquetRecordStore(Path(records_path)),
+    )
+    with sessions() as session:
+        missing = session.scalars(
+            select(SourceArtifactRow.artifact_id).where(
+                SourceArtifactRow.status.in_(("INDEXED", "INDEXED_WITH_WARNINGS")),
+                SourceArtifactRow.artifact_id.not_in(select(RecordDatasetRow.artifact_id)),
+            )
+        ).all()
+    for artifact_id in missing:
+        try:
+            build_record_dataset(context, artifact_id)
+        except DatasetBuildRefused as exc:  # Uploaded with a parser the dev stack doesn't load.
+            print(f"record dataset not built for {artifact_id}: {exc}")
+
+
 def seed_sources(sessions: Any) -> None:
     """Made-up records through the real pipeline. Nothing here comes from a real source."""
     with sessions() as session:
         if session.get(SourceConnectorRow, "DEMO-SYNTHETIC") is not None:
+            _build_missing_datasets(sessions)
             return
     common: dict[str, Any] = {
         "tenant_id": TENANT_A,
@@ -356,8 +395,12 @@ def seed_sources(sessions: Any) -> None:
         session.commit()
 
     store = LocalObjectStore(Path(_dev_environment()["ASTRASYNC_OBJECT_STORE_PATH"]))
+    records_path = _dev_environment().get("ASTRASYNC_RECORD_STORE_PATH")
     context = PipelineContext(
-        sessions=sessions, store=store, adapters={DemoAdapter.source_type: DemoAdapter()}
+        sessions=sessions,
+        store=store,
+        adapters={DemoAdapter.source_type: DemoAdapter()},
+        records=ParquetRecordStore(Path(records_path)) if records_path else None,
     )
     rows = "\n".join(
         ("DEMO-STATION-1,100.5 MHz,10", "DEMO-STATION-2,99,20", "DEMO-STATION-3,410.25 MHz,5")
@@ -428,12 +471,22 @@ def seed_cases(sessions: Any) -> None:
             "source_url": "https://example.invalid/demo",
         },
     }
+    records_path = _dev_environment().get("ASTRASYNC_RECORD_STORE_PATH")
+    records = ParquetRecordStore(Path(records_path)) if records_path else None
     with sessions() as session:
-        record_id = session.scalar(
-            select(SourceRecordLocationRow.source_record_id).order_by(
-                SourceRecordLocationRow.source_record_id
+        if records is not None:
+            first = session.scalar(
+                select(RecordDatasetRow.artifact_id)
+                .where(RecordDatasetRow.source_id == "DEMO-SYNTHETIC")
+                .order_by(RecordDatasetRow.artifact_id)
             )
-        )
+            record_id = f"{first}-0" if first else None
+        else:
+            record_id = session.scalar(
+                select(SourceRecordLocationRow.source_record_id).order_by(
+                    SourceRecordLocationRow.source_record_id
+                )
+            )
     scenarios = (
         ("DEMO-SPACE-001", "SPACE", "NEW", 10700.0, {}),
         ("DEMO-SPACE-002", "SPACE", "MODIFIED", 11700.0, {"demo_value": -102.3}),
@@ -483,6 +536,7 @@ def seed_cases(sessions: Any) -> None:
                 scenario_id=f"scenario-{case_id}",
                 scenario=scenario,
             ),
+            records=records,
         )
 
 
@@ -515,6 +569,8 @@ def _dev_defaults() -> dict[str, str]:
         "ASTRASYNC_OIDC_REQUIRED_SCOPES": "astrasync.api",
         "ASTRASYNC_CORS_ORIGINS": ",".join((UI_ORIGIN, *NATIVE_ORIGINS)),
         "ASTRASYNC_OBJECT_STORE_PATH": str(OBJECTS_PATH),
+        # Parsed records go to the Parquet record store (Stage 6), as they will in deployments.
+        "ASTRASYNC_RECORD_STORE_PATH": str(RECORDS_PATH),
         "ASTRASYNC_DRAFT_AGENT": "demo_plugins:DemoDraftAgent",
         "ASTRASYNC_RF_METHODS": "demo_plugins:DemoEchoMethod",
         "ASTRASYNC_CRITERION_RESOLVER": "demo_plugins:DemoEchoResolver",

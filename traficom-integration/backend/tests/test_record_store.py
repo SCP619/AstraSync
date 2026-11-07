@@ -33,10 +33,13 @@ from test_source_library import (  # noqa: F401 - fixtures used by name.
 )
 
 from astrasync_api import ingest as ingest_module
-from astrasync_api.contract.enums import ArtifactStatus, JobType
-from astrasync_api.ingest import PipelineContext, process_artifact
-from astrasync_api.jobs import LANE_INGESTION, enqueue
-from astrasync_api.library_tables import JobRunRow, RecordDatasetRow, SourceArtifactRow
+from astrasync_api.ingest import DatasetBuildRefused, PipelineContext, build_record_dataset
+from astrasync_api.library_tables import (
+    ArtifactIntegrityCheckRow,
+    JobRunRow,
+    RecordDatasetRow,
+    SourceArtifactRow,
+)
 from astrasync_api.objectstore import LocalObjectStore
 from astrasync_api.record_store import DatasetDamaged, DatasetWriter, ParquetRecordStore
 from astrasync_api.worker import WorkerRuntime, run_one, run_until_idle
@@ -143,21 +146,18 @@ def test_api_responses_match_the_postgresql_index(
     )
     artifact_id = artifact_of(secure_client, headers, sessions, upload).artifact_id
 
-    # Index the same verified bytes a second time, into Parquet. The PostgreSQL rows stay.
-    with sessions() as session:
-        session.get_one(SourceArtifactRow, artifact_id).status = ArtifactStatus.VERIFIED_BYTES
-        session.commit()
-    job = enqueue(
-        sessions,
-        tenant_id="DEMO-TENANT-A",
-        job_type=JobType.INGEST,
-        lane=LANE_INGESTION,
-        idempotency_key=f"reindex:{artifact_id}",
-        requested_by="test",
-        payload={"artifact_id": artifact_id},
-    )
+    # Build the record dataset of the already indexed artifact. The PostgreSQL rows stay.
     context = PipelineContext(sessions=sessions, store=store, adapters=adapters, records=parquet)
-    process_artifact(context, job.job_id, artifact_id)
+    dataset = build_record_dataset(context, artifact_id)
+    assert dataset.record_count == 260
+    assert build_record_dataset(context, artifact_id).relative_path == dataset.relative_path
+    with sessions() as session:
+        checks = session.scalars(
+            select(ArtifactIntegrityCheckRow.check_type).where(
+                ArtifactIntegrityCheckRow.artifact_id == artifact_id
+            )
+        ).all()
+    assert checks.count("RECORD_DATASET") == 1
 
     from_index = api_view(secure_client, headers, artifact_id)
     secure_app.state.library = dataclasses.replace(library, records=parquet)
@@ -167,6 +167,37 @@ def test_api_responses_match_the_postgresql_index(
     assert 0 < len(text_hits) < 260  # The text filter really filtered.
     assert from_index["searches"]["station"][0]["items"]
     assert from_parquet == from_index
+
+
+def test_a_build_is_refused_when_the_records_would_differ(
+    secure_client: TestClient,
+    bearer: Bearer,
+    sessions: sessionmaker[Session],
+    store: LocalObjectStore,  # noqa: F811
+    adapters: dict[str, Any],  # noqa: F811
+    parquet: ParquetRecordStore,
+) -> None:
+    headers = bearer("analyst-a")
+    upload = ingest(secure_client, worker(sessions, store, adapters, None), headers, demo_file())
+    artifact_id = artifact_of(secure_client, headers, sessions, upload).artifact_id
+    context = PipelineContext(sessions=sessions, store=store, adapters=adapters, records=parquet)
+    with sessions() as session:
+        artifact = session.get_one(SourceArtifactRow, artifact_id)
+        recorded = dict(artifact.row_reconciliation)
+        artifact.row_reconciliation = {**recorded, "parsed": recorded["parsed"] + 1}
+        session.commit()
+    with pytest.raises(DatasetBuildRefused, match="differ"):
+        build_record_dataset(context, artifact_id)
+    with sessions() as session:
+        artifact = session.get_one(SourceArtifactRow, artifact_id)
+        artifact.row_reconciliation = recorded
+        artifact.parser_version = "some-other-parser/9"
+        session.commit()
+    with pytest.raises(DatasetBuildRefused, match="some-other-parser"):
+        build_record_dataset(context, artifact_id)
+    with sessions() as session:
+        assert session.scalars(select(RecordDatasetRow)).all() == []
+    assert list(parquet.root.rglob("*.parquet")) == []
 
 
 def test_a_dataset_is_invisible_until_its_manifest_commits(

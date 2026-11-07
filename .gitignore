@@ -1,22 +1,13 @@
-# Python / Backend
 __pycache__/
 *.py[cod]
 *.class
 .venv/
 venv/
-env/
 .env
-
-# Node / React / Frontend
 node_modules/
 dist/
 build/
-.npm/
-
-# Tauri / Rust Packaging
 src-tauri/target/
-
-# Data, Parquet & DuckDB (Critical to keep out of Git)
 *.parquet
 *.duckdb
 *.db
@@ -25,8 +16,4 @@ src-tauri/target/
 *.csv
 raw_data/
 dataset/
-
-# OS Generated Files
 .DS_Store
-Thumbs.db
-ehthumbs.db

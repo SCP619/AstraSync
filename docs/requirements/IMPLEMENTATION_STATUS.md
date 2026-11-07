@@ -13,7 +13,7 @@ Last updated: 2026-11-07. Update this file in the PR that changes the status. Re
 | 0 Contract | Verified | Contract tests in CI; OpenAPI `1.0.0-draft.5` | BSD update for DECISIONS entries |
 | 1 Secure skeleton | Verified on the local test IdP | Backend auth/authorization tests, deny-by-default | Real identity provider (TRD §18) |
 | 2 Source library | Verified, synthetic only | Upload, immutable archive, integrity, index, preview, search, RBAC tests. **AT-H-01**: real workbook SHA-256 `bb7f481f…` and 874 rows reconciled through the pipeline (`test_traficom_ingest.py`, run locally with the file; the file is not in git) | Authorised ITU connectors, source monitoring, real-format adapters (blocked, see below) |
-| 3 Space RF | Not started | | Validated PFD method(s), criteria with citations, reference vectors |
+| 3 Space RF | In progress | `SPACE_PFD_FREE_SPACE` (`astrasync_physics.space_pfd`): Tier 1 validation against 40-digit reference values, linear vs dB agreement, the −6.02 dB doubling rule, refusal of missing and invalid inputs; runs through the real analysis runner with no margin and no criterion | Directional/time-series PFD, EPFD, criterion resolver with cited limits, the notice-to-scenario mapping (needs real IFIC data) |
 | 4 Terrestrial RF | Not started | | Two real IFIC issues, P.1546 if validated |
 | 5 Case UI and evidence | Verified with demo plugins | Case workflow, reviewer API, inspector, 91 UI tests | Real relevance detection, RF methods and AI agent wired in |
 | 6 Large data | Not started | | 4/10 GB benchmarks, 10M/50M rows, recovery report |

@@ -84,6 +84,7 @@ TRD section 1.1 says conflicts must not be resolved silently. Each entry is a re
 | A32 | Record search indexes the TX centre frequency only (`frequency_start_mhz = frequency_end_mhz`). A centre ± bandwidth interval would be an assumption, left to the relevance step that labels it | Stage 3/4 relevance design |
 | A33 | A negative antenna height AGL is kept as given, marked BLOCKING, and excluded from power-dependent calculations. The workbook's suggested "minimum 1 m" isn't applied; it would be a named sensitivity scenario | Scientific review |
 | A34 | Ingest counts a record as flagged only for a WARNING or BLOCKING finding or a non-valid status. INFO notes, such as an optional field left blank, don't count | Stage 2 review |
+| A35 | `SPACE_PFD_FREE_SPACE` reads `scenario.space_pfd_free_space` with `eirp_toward_receiver_dbw` and `slant_range_m` stated directly. It derives neither from orbit or pattern data. The result stays in the EIRP's reference bandwidth, or the total channel, with no `10 log10(B)` rescaling. Additional loss defaults to 0 dB (the idealised case) and may not be negative | **Data/AI review**; the notice-to-scenario mapping comes with real IFIC data |
 
 ## Outside the contract: needs a team decision
 

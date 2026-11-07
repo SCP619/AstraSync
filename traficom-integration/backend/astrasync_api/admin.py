@@ -12,8 +12,10 @@ from uuid import uuid4
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session, sessionmaker
 
+from .alerts import seed_default_rules
 from .contract.enums import (
     DiscoveryMode,
+    DomainEventKind,
     IssueDomain,
     SourceHealthStatus,
     SourceType,
@@ -22,6 +24,7 @@ from .contract.enums import (
 from .contract.permissions import Role
 from .db import Tenant, User, UserRoleGrant, build_engine, build_session_factory, run_migrations
 from .identity import IdentityStore
+from .jobs import emit_event
 from .library_tables import SourceConnectorRow
 
 _ACTOR = "cli:operator"
@@ -34,6 +37,8 @@ def create_tenant(sessions: sessionmaker[Session], tenant_id: str, policy_versio
                 tenant_id=tenant_id, policy_version=policy_version, created_at_utc=datetime.now(UTC)
             )
         )
+        session.flush()
+        seed_default_rules(session, tenant_id)
         session.commit()
     _audit(sessions, tenant_id, "create_tenant", "tenants", tenant_id)
 
@@ -113,12 +118,14 @@ def register_source(
 def deactivate_user(sessions: sessionmaker[Session], user_id: str) -> None:
     """Takes effect on the user's next request, even with an unexpired token."""
     user = _update_user(sessions, user_id, active=False)
+    _security_event(sessions, user.tenant_id, user_id, "deactivated")
     _audit(sessions, user.tenant_id, "deactivate_user", "users", user_id)
 
 
 def revoke_sessions(sessions: sessionmaker[Session], user_id: str) -> None:
     """Rejects every token issued before now. The user can sign in again."""
     user = _update_user(sessions, user_id, sessions_revoked_before_utc=datetime.now(UTC))
+    _security_event(sessions, user.tenant_id, user_id, "sessions-revoked")
     _audit(sessions, user.tenant_id, "revoke_sessions", "users", user_id)
 
 
@@ -134,6 +141,22 @@ def revoke_role(sessions: sessionmaker[Session], user_id: str, role: Role) -> No
         )
         session.commit()
     _audit(sessions, user.tenant_id, "revoke_role", "users", user_id)
+
+
+def _security_event(
+    sessions: sessionmaker[Session], tenant_id: str, user_id: str, change: str
+) -> None:
+    with sessions() as session:
+        emit_event(
+            session,
+            tenant_id=tenant_id,
+            event_kind=DomainEventKind.SECURITY_EVENT.value,
+            resource_type="user",
+            resource_id=user_id,
+            dedupe_key=f"security:{user_id}:{change}:{uuid4().hex}",
+            correlation_id=user_id,
+        )
+        session.commit()
 
 
 def _update_user(

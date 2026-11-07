@@ -60,6 +60,22 @@ export interface ApiClient {
   listReviews(caseId: string, signal?: AbortSignal): Promise<Schemas["ReviewEventList"]>;
   createReview(caseId: string, body: Schemas["ReviewCreateRequest"]): Promise<Schemas["ReviewEvent"]>;
   exportCase(caseId: string): Promise<Schemas["EvidencePack"]>;
+  listAlerts(
+    status?: Schemas["AlertStatus"],
+    cursor?: string,
+    signal?: AbortSignal,
+  ): Promise<Schemas["AlertList"]>;
+  getAlert(alertId: string, signal?: AbortSignal): Promise<Schemas["AlertDetail"]>;
+  acknowledgeAlert(alertId: string): Promise<Schemas["AlertAcknowledged"]>;
+  getAlertPreferences(signal?: AbortSignal): Promise<Schemas["AlertPreferences"]>;
+  updateAlertPreferences(body: Schemas["AlertPreferencesUpdate"]): Promise<Schemas["AlertPreferences"]>;
+  registerDevice(platform: Schemas["DevicePlatform"], pushToken: string): Promise<Schemas["Device"]>;
+  /** Reads Server-Sent Events until the connection ends. Uses fetch to keep the token in a header. */
+  streamAlerts(
+    onAlert: (alert: Schemas["AlertSummary"]) => void,
+    signal: AbortSignal,
+    onSessionEnded?: () => void,
+  ): Promise<void>;
   listSources(signal?: AbortSignal): Promise<Schemas["SourceConnectorList"]>;
   searchRecords(search: RecordSearch, cursor?: string, signal?: AbortSignal): Promise<SourceRecordList>;
   getRecord(recordId: string, signal?: AbortSignal): Promise<Schemas["SourceRecordDetail"]>;
@@ -184,6 +200,61 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     listReviews: (caseId, signal) => get(`${casePath(caseId)}/reviews`, signal),
     createReview: (caseId, body) => write("POST", `${casePath(caseId)}/reviews`, body),
     exportCase: (caseId) => get(`${casePath(caseId)}/export`),
+    listAlerts: (status, cursor, signal) => {
+      const params = new URLSearchParams();
+      if (status !== undefined) {
+        params.set("status", status);
+      }
+      params.set("limit", "50");
+      if (cursor !== undefined) {
+        params.set("cursor", cursor);
+      }
+      return get(`/api/v1/alerts?${params}`, signal);
+    },
+    getAlert: (alertId, signal) => get(`/api/v1/alerts/${encodeURIComponent(alertId)}`, signal),
+    acknowledgeAlert: (alertId) =>
+      write("POST", `/api/v1/alerts/${encodeURIComponent(alertId)}/acknowledge`, {}),
+    getAlertPreferences: (signal) => get("/api/v1/alerts/preferences", signal),
+    updateAlertPreferences: (body) => write("PUT", "/api/v1/alerts/preferences", body),
+    registerDevice: (platform, pushToken) =>
+      write("POST", "/api/v1/devices", { platform, push_token: pushToken }),
+    streamAlerts: async (onAlert, signal, onSessionEnded) => {
+      const response = await send("/api/v1/alerts/stream", "text/event-stream", {}, signal);
+      if (!response.ok) {
+        throw failure(response, await readJson(response));
+      }
+      const reader = response.body?.getReader();
+      if (reader === undefined) {
+        throw new ApiError(0, "INVALID_RESPONSE", "The server returned no stream.");
+      }
+      const decoder = new TextDecoder();
+      let buffer = "";
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) {
+          return;
+        }
+        buffer += decoder.decode(value, { stream: true });
+        for (;;) {
+          const end = buffer.indexOf("\n\n");
+          if (end < 0) {
+            break;
+          }
+          const block = buffer.slice(0, end);
+          buffer = buffer.slice(end + 2);
+          const lines = block.split("\n");
+          const event = lines.find((line) => line.startsWith("event: "))?.slice(7);
+          const data = lines.find((line) => line.startsWith("data: "))?.slice(6);
+          if (event === "session-ended") {
+            onSessionEnded?.();
+            return;
+          }
+          if (event === "alert" && data !== undefined) {
+            onAlert(JSON.parse(data) as Schemas["AlertSummary"]);
+          }
+        }
+      }
+    },
     listSources: (signal) => get("/api/v1/sources", signal),
     searchRecords: (search, cursor, signal) => {
       const params = new URLSearchParams();

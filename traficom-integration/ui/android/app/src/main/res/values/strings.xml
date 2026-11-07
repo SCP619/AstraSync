@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AstraSync</string>
+    <string name="title_activity_main">AstraSync</string>
+    <string name="package_name">fi.astrasync.app</string>
+    <string name="custom_url_scheme">fi.astrasync.app</string>
+</resources>

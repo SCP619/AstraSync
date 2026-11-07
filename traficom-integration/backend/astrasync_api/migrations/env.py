@@ -2,7 +2,11 @@
 
 from alembic import context
 
-from astrasync_api import case_tables, library_tables  # noqa: F401 - registers the tables.
+from astrasync_api import (  # noqa: F401 - registers the tables.
+    alert_tables,
+    case_tables,
+    library_tables,
+)
 from astrasync_api.db import Base
 
 connection = context.config.attributes["connection"]

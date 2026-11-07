@@ -64,6 +64,7 @@ ADDED_OPERATIONS = {
     ("get", "/api/v1/cases/{case_id}/drafts"),
     ("put", "/api/v1/cases/{case_id}/drafts/{draft_id}"),
     ("get", "/api/v1/cases/{case_id}/reviews"),
+    ("get", "/api/v1/alerts/preferences"),
 }
 
 

@@ -59,7 +59,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get Alert Preferences */
+        get: operations["get_alert_preferences_api_v1_alerts_preferences_get"];
         /** Update Alert Preferences */
         put: operations["update_alert_preferences_api_v1_alerts_preferences_put"];
         post?: never;
@@ -840,7 +841,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
         };
         /** AlertAcknowledgment */
         AlertAcknowledgment: {
@@ -924,7 +925,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             severity: components["schemas"]["AlertSeverity"];
             status: components["schemas"]["AlertStatus"];
         };
@@ -950,7 +951,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -971,7 +972,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
         };
         /** AlertPreferencesUpdate */
         AlertPreferencesUpdate: {
@@ -1021,7 +1022,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1051,7 +1052,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             severity: components["schemas"]["AlertSeverity"];
             trigger_kind: components["schemas"]["AlertTriggerKind"];
             /** Version */
@@ -1143,7 +1144,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
         };
         /**
          * AnalysisRun
@@ -1185,7 +1186,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Software Commit Sha */
             software_commit_sha: string;
         };
@@ -1251,7 +1252,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             status: components["schemas"]["ArtifactStatus"];
         };
         /**
@@ -1360,7 +1361,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Source Issue Id */
             source_issue_id: string;
             /**
@@ -1391,7 +1392,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1517,7 +1518,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             status: components["schemas"]["DeviceStatus"];
         };
         /**
@@ -1573,7 +1574,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Tenant Id */
             tenant_id: string;
         };
@@ -1581,7 +1582,7 @@ export interface components {
          * DomainEventKind
          * @enum {string}
          */
-        DomainEventKind: "SOURCE_PUBLISHED" | "SOURCE_REVISED" | "SOURCE_FAILED" | "SOURCE_STALE" | "ARTIFACT_QUARANTINED" | "ARTIFACT_INDEXED" | "CANDIDATE_SCREENED" | "METHOD_COMPLETED" | "CRITERION_CHECKED" | "CASE_REVIEWED" | "ALERT_CREATED" | "ALERT_ACKNOWLEDGED" | "SECURITY_EVENT";
+        DomainEventKind: "SOURCE_PUBLISHED" | "SOURCE_REVISED" | "SOURCE_FAILED" | "SOURCE_STALE" | "ARTIFACT_QUARANTINED" | "ARTIFACT_INDEXED" | "CANDIDATE_SCREENED" | "METHOD_COMPLETED" | "CRITERION_CHECKED" | "CASE_REVIEWED" | "CASE_ESCALATED" | "ALERT_CREATED" | "ALERT_ACKNOWLEDGED" | "SECURITY_EVENT";
         /** DownloadLink */
         DownloadLink: {
             /** Artifact Id */
@@ -1604,7 +1605,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Url */
             url: string;
         };
@@ -1653,7 +1654,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             status: components["schemas"]["DraftStatus"];
@@ -1703,7 +1704,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Source Analysis Run Id */
             source_analysis_run_id: string;
             /**
@@ -1731,7 +1732,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1813,7 +1814,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
         };
         /**
          * FindingStatus
@@ -1856,7 +1857,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -1873,7 +1874,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             status: components["schemas"]["PipelineStatus"];
         };
         /**
@@ -1908,7 +1909,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Started At Utc */
             started_at_utc: string | null;
             status: components["schemas"]["PipelineStatus"];
@@ -1944,7 +1945,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Tenant Id */
             tenant_id: string;
             /** User Id */
@@ -2034,7 +2035,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
         };
         /**
          * MethodRole
@@ -2152,7 +2153,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2266,7 +2267,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2349,7 +2350,7 @@ export interface components {
          * ReviewAction
          * @enum {string}
          */
-        ReviewAction: "ACCEPT_FINDING" | "REJECT_FINDING" | "NEEDS_MORE_DATA" | "FOLLOW_UP" | "CLOSE_NO_CONCERN" | "APPROVE_DRAFT" | "REJECT_DRAFT";
+        ReviewAction: "ACCEPT_FINDING" | "REJECT_FINDING" | "NEEDS_MORE_DATA" | "FOLLOW_UP" | "CLOSE_NO_CONCERN" | "APPROVE_DRAFT" | "REJECT_DRAFT" | "ESCALATE";
         /** ReviewCreateRequest */
         ReviewCreateRequest: {
             action: components["schemas"]["ReviewAction"];
@@ -2392,7 +2393,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
         };
         /** ReviewEventList */
         ReviewEventList: {
@@ -2411,7 +2412,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2526,7 +2527,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["ArtifactStatus"];
@@ -2549,7 +2550,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2595,7 +2596,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2624,7 +2625,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Source Id */
             source_id: string;
             status: components["schemas"]["SourceHealthStatus"];
@@ -2712,7 +2713,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Source Page */
             source_page: number | null;
             /** Source Record Id */
@@ -2744,7 +2745,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
         };
         /** SourcePreviewRow */
         SourcePreviewRow: {
@@ -2799,7 +2800,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2836,7 +2837,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Source Record Id */
             source_record_id: string;
         };
@@ -2886,7 +2887,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
         };
@@ -2964,7 +2965,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             /** Upload Id */
             upload_id: string;
         };
@@ -3013,7 +3014,7 @@ export interface components {
              * Schema Version
              * @constant
              */
-            schema_version: "1.0.0-draft.4";
+            schema_version: "1.0.0-draft.5";
             source_type: components["schemas"]["SourceType"];
             status: components["schemas"]["PipelineStatus"];
             /** Upload Id */
@@ -3374,6 +3375,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AlertList"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_alert_preferences_api_v1_alerts_preferences_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertPreferences"];
                 };
             };
             /** @description Unauthorized */

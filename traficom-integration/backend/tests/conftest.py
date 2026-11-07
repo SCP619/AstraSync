@@ -183,7 +183,11 @@ def secure_app(
         object_store_path=tmp_path / "objects",
         max_upload_bytes=1024 * 1024,
     )
-    return create_app(settings, keys=JwksCache(lambda: jwks_document))
+    app = create_app(settings, keys=JwksCache(lambda: jwks_document))
+    # Route sweeps call every route, so the stream must end on its own.
+    app.state.alert_stream_poll_seconds = 0.02
+    app.state.alert_stream_max_seconds = 0.1
+    return app
 
 
 @pytest.fixture

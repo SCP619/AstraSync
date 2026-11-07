@@ -935,6 +935,18 @@ def create_review(
         occurred_at_utc=now,
     )
     session.add(row)
+    session.flush()
+    if body.action is ReviewAction.ESCALATE:
+        emit_event(
+            session,
+            tenant_id=case.tenant_id,
+            event_kind=DomainEventKind.CASE_ESCALATED.value,
+            resource_type="case",
+            resource_id=case_id,
+            dedupe_key=f"escalated:{row.review_event_id}",
+            correlation_id=row.review_event_id,
+            payload={"review_event_id": row.review_event_id},
+        )
     next_status = _REVIEW_STATUS.get(body.action)
     if next_status is not None:
         case.review_status = next_status.value

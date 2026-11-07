@@ -415,6 +415,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/operations/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Operations Metrics */
+        get: operations["get_operations_metrics_api_v1_operations_metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/references": {
         parameters: {
             query?: never;
@@ -2248,6 +2265,31 @@ export interface components {
          */
         ObservationStatus: "NEW" | "REVISED" | "UNCHANGED" | "RETRACTED" | "UNKNOWN";
         /**
+         * OperationsMetrics
+         * @description Tenant-scoped counts for operators (TR-NFR-004/009). No payloads or error details.
+         */
+        OperationsMetrics: {
+            /** Failed Jobs Last 24H */
+            failed_jobs_last_24h: number;
+            /**
+             * Generated At Utc
+             * Format: date-time
+             */
+            generated_at_utc: string;
+            /** Outbox Pending */
+            outbox_pending: number;
+            /** Queues */
+            queues: components["schemas"]["QueueBacklog"][];
+            record_store: components["schemas"]["RecordStoreUsage"];
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.5";
+            /** Tenant Id */
+            tenant_id: string;
+        };
+        /**
          * PipelineStatus
          * @description Upload and job lifecycle (DATA_PIPELINE_AND_SCALABILITY.md section 3).
          * @enum {string}
@@ -2284,6 +2326,17 @@ export interface components {
          * @enum {string}
          */
         QualitySeverity: "INFO" | "WARNING" | "BLOCKING";
+        /** QueueBacklog */
+        QueueBacklog: {
+            /** Count */
+            count: number;
+            /** Lane */
+            lane: string;
+            /** Oldest Age Seconds */
+            oldest_age_seconds: number | null;
+            /** Status */
+            status: string;
+        };
         /** RecordQualityFinding */
         RecordQualityFinding: {
             /** Field Key */
@@ -2309,6 +2362,17 @@ export interface components {
          * @enum {string}
          */
         RecordStatus: "VALID" | "VALID_WITH_WARNINGS" | "INVALID" | "INSUFFICIENT_DATA" | "REVIEW_REQUIRED";
+        /** RecordStoreUsage */
+        RecordStoreUsage: {
+            /** Bytes */
+            bytes: number;
+            /** Datasets */
+            datasets: number;
+            /** Enabled */
+            enabled: boolean;
+            /** Records */
+            records: number;
+        };
         /** ReferenceDocument */
         ReferenceDocument: {
             /** Authority */
@@ -5995,6 +6059,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Me"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_operations_metrics_api_v1_operations_metrics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperationsMetrics"];
                 };
             };
             /** @description Unauthorized */

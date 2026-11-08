@@ -84,6 +84,8 @@ def test_a_grounded_reply_is_accepted_and_evidence_travels_as_data() -> None:
     draft = AgentDraftResponse.model_validate(agent.create_draft(EVIDENCE, "TECHNICAL_INQUIRY"))
     assert draft.cited_evidence_ids == ["c1-record"]
     assert "never an" in agent.seen["system"] and "<EVIDENCE>" in agent.seen["user"]  # type: ignore[attr-defined]
+    seen_user = agent.seen["user"]  # type: ignore[attr-defined]
+    assert "Allowed citations (cite only these, exactly as written): [E:c1-record]." in seen_user
 
 
 @pytest.mark.parametrize(

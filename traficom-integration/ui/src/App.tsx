@@ -29,6 +29,7 @@ import { CaseListPage } from "./cases/CaseListPage";
 import { AppShell as ShellLayout } from "./components/AppShell";
 import { OperationsPanel } from "./components/OperationsPanel";
 import { FinlandRelevancePage } from "./relevance/FinlandRelevancePage";
+import { IficIssuesPage } from "./relevance/IficIssuesPage";
 import { webPlatform, type PlatformAdapter, type PushPermission } from "./platform/types";
 import { SourceLibraryPage } from "./sources/SourceLibraryPage";
 import { UploadPage } from "./sources/UploadPage";
@@ -544,6 +545,10 @@ export function App({
         <Route
           path="/finland"
           element={shell(<RequireCapability capability="SOURCE_READ"><FinlandRelevancePage /></RequireCapability>)}
+        />
+        <Route
+          path="/ific"
+          element={shell(<RequireCapability capability="SOURCE_READ"><IficIssuesPage /></RequireCapability>)}
         />
         <Route
           path="/admin/users"

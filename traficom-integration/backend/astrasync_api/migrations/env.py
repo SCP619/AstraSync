@@ -5,6 +5,7 @@ from alembic import context
 from astrasync_api import (  # noqa: F401 - registers the tables.
     alert_tables,
     case_tables,
+    ific_tables,
     library_tables,
 )
 from astrasync_api.db import Base

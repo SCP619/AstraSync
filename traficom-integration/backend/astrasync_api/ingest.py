@@ -399,7 +399,13 @@ def process_artifact(context: PipelineContext, job_id: str, artifact_id: str) ->
             writer.discard()
         raise
 
-    return _finish_index(context.sessions, job_id, artifact_id, adapter, counts, published)
+    status = _finish_index(context.sessions, job_id, artifact_id, adapter, counts, published)
+    if connector.source_type in ("SPACE_IFIC", "TERRESTRIAL_IFIC"):
+        from .ific_pipeline import enqueue_relevance
+
+        # The issue analysis runs as its own job, so a failure there never un-indexes the issue.
+        enqueue_relevance(context.sessions, connector.tenant_id, artifact_id, "system:ingest")
+    return status
 
 
 def _clear_partial_index(sessions: sessionmaker[Session], artifact_id: str) -> None:

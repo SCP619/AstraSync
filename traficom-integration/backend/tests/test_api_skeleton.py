@@ -57,6 +57,8 @@ DOCUMENTED_OPERATIONS = {
 }
 # Recorded in contract/DECISIONS.md: needed by the documented flows but absent from the BSD tables.
 ADDED_OPERATIONS = {
+    ("get", "/api/v1/ific/analyses"),
+    ("get", "/api/v1/ific/analyses/{analysis_id}/findings"),
     ("post", "/api/v1/uploads/{upload_id}/parts"),
     ("get", "/api/v1/source-records/{source_record_id}"),
     ("put", "/api/v1/uploads/{upload_id}/parts/{part_number}"),

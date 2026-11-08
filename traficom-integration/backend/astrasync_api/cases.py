@@ -715,6 +715,8 @@ def build_case_evidence(session: Session, case: CaseRow, run: AnalysisRunRow) ->
     return {
         "case_id": case.case_id,
         "notice_id": case.notice_id,
+        "administration": case.administration,
+        "change_type": case.change_type,
         "source_issue_id": case.source_issue_id,
         "domain": case.domain,
         "frequency_start_mhz": case.frequency_start_mhz,

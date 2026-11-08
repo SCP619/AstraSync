@@ -1,4 +1,7 @@
 # Runtime pins for astrasync-core. Development tools come from the backend lock.
+access-parser==0.0.6
+construct==2.10.70
 defusedxml==0.7.1
 et_xmlfile==2.0.0
 openpyxl==3.1.5
+tabulate==0.10.0

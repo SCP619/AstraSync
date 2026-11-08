@@ -95,6 +95,13 @@ export interface ApiClient {
   /** Transfers the whole original. Only ever called after the user confirms the size. */
   downloadArtifact(artifactId: string): Promise<Blob>;
   // User administration (ADMIN_USERS). The server enforces tenant scope and refuses self-changes.
+  listIficAnalyses(signal?: AbortSignal): Promise<Schemas["IficAnalysisList"]>;
+  listIficFindings(
+    analysisId: string,
+    tier?: "HIGH" | "MEDIUM" | "LOW",
+    cursor?: string,
+    signal?: AbortSignal,
+  ): Promise<Schemas["IficFindingList"]>;
   listUsers(cursor?: string, signal?: AbortSignal): Promise<Schemas["AdminUserList"]>;
   getUser(userId: string, signal?: AbortSignal): Promise<Schemas["AdminUserDetail"]>;
   createUser(body: Schemas["AdminUserCreateRequest"]): Promise<Schemas["AdminUserDetail"]>;
@@ -328,6 +335,17 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
         throw failure(response, await readJson(response));
       }
       return response.blob();
+    },
+    listIficAnalyses: (signal) => get("/api/v1/ific/analyses?limit=50", signal),
+    listIficFindings: (analysisId, tier, cursor, signal) => {
+      const params = new URLSearchParams({ limit: "50" });
+      if (tier !== undefined) {
+        params.set("tier", tier);
+      }
+      if (cursor !== undefined) {
+        params.set("cursor", cursor);
+      }
+      return get(`/api/v1/ific/analyses/${encodeURIComponent(analysisId)}/findings?${params}`, signal);
     },
     listUsers: (cursor, signal) => {
       const params = new URLSearchParams({ limit: "50" });

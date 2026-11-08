@@ -4,7 +4,7 @@
  * app's router, capabilities and live alert counts. Only one navigation is rendered at a time,
  * so links are never announced twice.
  */
-import { Bell, Briefcase, FlaskConical, Gauge, Library, LogOut, MapPin, Radio, Upload, Users } from "lucide-react";
+import { Bell, Briefcase, FileSearch, FlaskConical, Gauge, Library, LogOut, MapPin, Radio, Upload, Users } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "./cn";
@@ -23,6 +23,7 @@ const ITEMS: Item[] = [
   { to: "/alerts", label: "Alerts", icon: Bell, capability: "ALERT_READ" },
   { to: "/sources", label: "Source library", icon: Library, capability: "SOURCE_HEALTH_READ" },
   { to: "/uploads", label: "Upload", icon: Upload, capability: "UPLOAD_MANAGE" },
+  { to: "/ific", label: "IFIC issues", icon: FileSearch, capability: "SOURCE_READ" },
   { to: "/finland", label: "Finland relevance", icon: MapPin, capability: "SOURCE_READ" },
   { to: "/admin/users", label: "Users and access", icon: Users, capability: "ADMIN_USERS" },
 ];

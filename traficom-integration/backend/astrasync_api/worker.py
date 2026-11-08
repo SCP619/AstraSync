@@ -63,6 +63,12 @@ def _dispatch(runtime: WorkerRuntime, job: JobRunRow) -> PipelineStatus:
         )
     if job.job_type == JobType.ACQUIRE.value:
         return acquire(context, runtime.clients, job.job_id, payload["observation_id"])
+    if job.job_type == JobType.RELEVANCE.value:
+        from .ific_pipeline import run_relevance
+
+        return run_relevance(
+            context, dict(runtime.analysis.methods), job.job_id, payload["artifact_id"]
+        )
     raise PermanentJobError(
         ErrorCode.NOT_IMPLEMENTED, "This job type has no handler.", PipelineStatus.FAILED
     )

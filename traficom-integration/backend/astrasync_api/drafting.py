@@ -9,9 +9,11 @@ immutable facts) and both checked again by ``cases.create_draft``:
   unless it is grounded: valid structure, cited evidence IDs that exist, every number in the
   draft present in the evidence, and no wording that asserts interference or a violation.
   Configure with ``ASTRASYNC_DRAFT_AGENT=astrasync_api.drafting:GroundedLlmDraftAgent`` and the
-  server-side settings ``ASTRASYNC_LLM_PROVIDER=anthropic``, ``ASTRASYNC_LLM_MODEL`` and
-  ``ASTRASYNC_LLM_API_KEY`` (never sent to clients). Which classifications may reach the
-  provider is ``ASTRASYNC_AI_CLASSIFICATIONS``, enforced before the agent is called.
+  server-side settings ``ASTRASYNC_LLM_PROVIDER`` (``n8n`` for the local n8n webhook that runs
+  Ollama, or ``anthropic``), ``ASTRASYNC_LLM_MODEL``, ``ASTRASYNC_LLM_API_KEY`` (the webhook
+  secret for ``n8n``; never sent to clients) and, for ``n8n``, ``ASTRASYNC_LLM_N8N_URL`` (loopback
+  only unless a host is named in ``ASTRASYNC_LLM_N8N_ALLOWED_HOSTS``). Which classifications
+  may reach the provider is ``ASTRASYNC_AI_CLASSIFICATIONS``, enforced before the agent is called.
 
 Prompt injection: notice text (site names, remarks) comes from external publications. It is
 passed only inside a JSON evidence block that the instructions declare to be data, never
@@ -214,17 +216,126 @@ def anthropic_transport(api_key: str, timeout: float = 60.0) -> Transport:
     return send
 
 
+N8N_SECRET_HEADER = "X-AstraSync-Secret"  # noqa: S105 - a header name, not a secret
+N8N_MAX_REQUEST_BYTES = 512 * 1024
+N8N_MAX_RESPONSE_BYTES = 256 * 1024
+_LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1", "[::1]"}
+
+
+class LlmTransportError(RuntimeError):
+    """The local model service failed or replied outside its contract. Never carries secrets."""
+
+
+def validate_n8n_url(url: str, allowed_hosts: frozenset[str] | None = None) -> str:
+    """Accept only an http(s) URL on a loopback host (or an explicitly allowed local host).
+
+    Protected evidence travels in the request, so the destination must stay on this machine or
+    on a named local service (for example a container name), never an arbitrary host.
+    """
+    parsed = httpx.URL(url)
+    host = (parsed.host or "").lower()
+    allowed = _LOOPBACK_HOSTS | set(allowed_hosts or ())
+    if parsed.scheme not in {"http", "https"} or host not in allowed:
+        raise ValueError("ASTRASYNC_LLM_N8N_URL must be http(s) on a loopback or allowed host")
+    if parsed.userinfo:
+        raise ValueError("ASTRASYNC_LLM_N8N_URL must not contain credentials")
+    return str(parsed)
+
+
+def n8n_transport(
+    url: str,
+    secret: str,
+    timeout: float = 120.0,
+    allowed_hosts: frozenset[str] | None = None,
+    client: httpx.Client | None = None,
+) -> Transport:
+    """POST {system, user, model} to a local n8n webhook that runs the model on local Ollama.
+
+    The webhook authenticates the call with ``X-AstraSync-Secret`` before any node runs. The
+    reply must be ``{"text": str}``. Redirects are refused, sizes are capped, and errors never
+    include the secret or the prompt.
+    """
+    target = validate_n8n_url(url, allowed_hosts)
+    if not secret:
+        raise ValueError("The n8n webhook secret is empty")
+
+    def send(system: str, user: str, model: str) -> str:
+        body = json.dumps({"system": system, "user": user, "model": model}, ensure_ascii=False)
+        if len(body.encode()) > N8N_MAX_REQUEST_BYTES:
+            raise LlmTransportError("The prompt exceeds the local model request limit")
+        http = client or httpx.Client(follow_redirects=False, timeout=timeout)
+        try:
+            with http.stream(
+                "POST",
+                target,
+                content=body.encode(),
+                headers={N8N_SECRET_HEADER: secret, "content-type": "application/json"},
+            ) as response:
+                if response.is_redirect:
+                    raise LlmTransportError("The local model service redirected; refused")
+                if response.status_code != 200:
+                    raise LlmTransportError(
+                        f"The local model service returned HTTP {response.status_code}"
+                    )
+                raw = b""
+                for chunk in response.iter_bytes():
+                    raw += chunk
+                    if len(raw) > N8N_MAX_RESPONSE_BYTES:
+                        raise LlmTransportError("The local model reply exceeds the size limit")
+        except httpx.HTTPError as exc:
+            raise LlmTransportError(
+                f"The local model service is unavailable ({type(exc).__name__})"
+            ) from None
+        finally:
+            if client is None:
+                http.close()
+        try:
+            payload = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            raise LlmTransportError("The local model reply is not JSON") from None
+        if isinstance(payload, list) and len(payload) == 1:
+            payload = payload[0]
+        text = payload.get("text") if isinstance(payload, dict) else None
+        if not isinstance(text, str) or not text.strip():
+            raise LlmTransportError('The local model reply has no "text" string')
+        return text
+
+    return send
+
+
+def transport_from_environment() -> Transport:
+    """Build the configured transport. Only ``n8n`` (local Ollama) and ``anthropic`` exist."""
+    provider = os.environ.get("ASTRASYNC_LLM_PROVIDER", "")
+    key = os.environ.get("ASTRASYNC_LLM_API_KEY", "")
+    if provider == "n8n":
+        url = os.environ.get("ASTRASYNC_LLM_N8N_URL", "")
+        extra = frozenset(
+            h.strip().lower()
+            for h in os.environ.get("ASTRASYNC_LLM_N8N_ALLOWED_HOSTS", "").split(",")
+            if h.strip()
+        )
+        timeout = float(os.environ.get("ASTRASYNC_LLM_TIMEOUT_SECONDS", "120"))
+        if not url or not key:
+            raise RuntimeError("No approved LLM provider is configured")
+        return n8n_transport(url, key, timeout=timeout, allowed_hosts=extra)
+    if provider == "anthropic" and key:
+        return anthropic_transport(key)
+    raise RuntimeError("No approved LLM provider is configured")
+
+
+def _default_model() -> str:
+    if os.environ.get("ASTRASYNC_LLM_PROVIDER") == "n8n":
+        return os.environ.get("ASTRASYNC_LLM_MODEL", "qwen3:8b")
+    return os.environ.get("ASTRASYNC_LLM_MODEL", "claude-sonnet-5-5")
+
+
 class GroundedLlmDraftAgent:
     """A language model words the draft; the output is accepted only if it is grounded."""
 
     def __init__(self, transport: Transport | None = None, model: str | None = None) -> None:
-        self.model_id = model or os.environ.get("ASTRASYNC_LLM_MODEL", "claude-sonnet-5-5")
+        self.model_id = model or _default_model()
         if transport is None:
-            provider = os.environ.get("ASTRASYNC_LLM_PROVIDER", "")
-            key = os.environ.get("ASTRASYNC_LLM_API_KEY", "")
-            if provider != "anthropic" or not key:
-                raise RuntimeError("No approved LLM provider is configured")
-            transport = anthropic_transport(key)
+            transport = transport_from_environment()
         self._transport = transport
 
     def create_draft(self, case_evidence: Mapping[str, Any], draft_type: str) -> dict[str, Any]:

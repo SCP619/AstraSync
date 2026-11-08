@@ -672,6 +672,18 @@ def _dev_environment() -> dict[str, str]:
         value = setting(f"ASTRASYNC_DEV_{name}")
         if value:
             environment[f"ASTRASYNC_{name}"] = value
+    # Local AI: the n8n webhook that runs Ollama on this machine. The secret lives only in the
+    # git-ignored dev_stack.local.env (or the environment) and is never sent to the browser.
+    n8n_url = setting("ASTRASYNC_DEV_LLM_N8N_URL")
+    n8n_secret = setting("ASTRASYNC_DEV_LLM_N8N_SECRET")
+    if n8n_url and n8n_secret:
+        environment.update({
+            "ASTRASYNC_DRAFT_AGENT": "astrasync_api.drafting:GroundedLlmDraftAgent",
+            "ASTRASYNC_LLM_PROVIDER": "n8n",
+            "ASTRASYNC_LLM_N8N_URL": n8n_url,
+            "ASTRASYNC_LLM_API_KEY": n8n_secret,
+            "ASTRASYNC_LLM_MODEL": setting("ASTRASYNC_DEV_LLM_MODEL") or "qwen3:8b",
+        })
     return environment
 
 

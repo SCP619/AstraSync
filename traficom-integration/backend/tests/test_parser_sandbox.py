@@ -110,3 +110,18 @@ def test_in_process_parsing_is_refused_outside_demo() -> None:
     Settings(environment=Environment.DEMO, parser_isolation="none")
     with pytest.raises(SettingsError):
         Settings(parser_isolation="thread")
+
+
+def test_memory_check_tolerates_a_parser_that_has_already_exited() -> None:
+    """A finished child can leave its last lines in the pipe; the check must not raise."""
+    import subprocess
+    import sys
+
+    import psutil
+
+    from astrasync_api.parser_sandbox import _tree_rss
+
+    child = subprocess.Popen([sys.executable, "-c", "pass"])  # noqa: S603
+    watched = psutil.Process(child.pid)
+    child.wait()
+    assert _tree_rss(watched) == 0

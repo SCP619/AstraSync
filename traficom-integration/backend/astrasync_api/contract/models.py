@@ -751,6 +751,49 @@ class AdminEntitlementGrantRequest(ContractModel):
     expires_at_utc: UtcDatetime | None = None
 
 
+class IficAnalysis(ContractModel):
+    """One analysed IFIC issue (DECISIONS G27). Priority is for ordering work, not a finding."""
+
+    analysis_id: StableId
+    source_id: StableId
+    artifact_id: StableId
+    previous_artifact_id: StableId | None
+    kind: SourceType
+    issue: NonNegativeInt
+    rule_version: str
+    status: str
+    findings_count: NonNegativeInt
+    cases_created: NonNegativeInt
+    findings_sha256: Sha256Hex | None
+    summary: dict[str, Any]
+    created_at_utc: UtcDatetime
+
+
+class IficAnalysisList(Page[IficAnalysis]):
+    pass
+
+
+class IficFinding(ContractModel):
+    """One screened notice. ``detail`` holds every stage result, calculation and assumption."""
+
+    rank: Annotated[int, Field(ge=1)]
+    notice_id: StableId
+    domain: CaseDomain
+    administration: str | None
+    label: str | None
+    change_type: str
+    priority_score: int
+    priority_tier: str
+    finding_status: str
+    max_value: float | None
+    max_value_unit: str | None
+    detail: dict[str, Any]
+
+
+class IficFindingList(Page[IficFinding]):
+    analysis_id: StableId
+
+
 class QueueBacklog(ContractModel):
     lane: Annotated[str, Field(min_length=1, max_length=32)]
     status: StableCode

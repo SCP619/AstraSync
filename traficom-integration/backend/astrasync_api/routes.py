@@ -7,14 +7,14 @@ objects must also call ``ObjectAccessPolicy`` (see authz.py).
 
 from collections.abc import Iterator
 from datetime import UTC, datetime
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from fastapi import APIRouter, Depends, Header, Path, Query, Request, Response
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
-from . import admin_api, alert_api, cases, library, operations, relevance
+from . import admin_api, alert_api, cases, ific_api, library, operations, relevance
 from .contract import CONTRACT_VERSION
 from .contract.enums import (
     AlertSeverity,
@@ -64,6 +64,8 @@ from .contract.models import (
     ErrorResponse,
     EvidencePack,
     FrequencyRelevanceScreen,
+    IficAnalysisList,
+    IficFindingList,
     IngestRequest,
     IssueList,
     JobAccepted,
@@ -847,6 +849,39 @@ def check_source(
     session: DbSession,
 ) -> Any:
     return library.check_source(session, principal, source_id)
+
+
+@router.get(
+    "/ific/analyses",
+    response_model=IficAnalysisList,
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
+)
+def list_ific_analyses(
+    request: Request, principal: CurrentPrincipal, session: DbSession, limit: Limit = 50
+) -> Any:
+    return ific_api.list_analyses(session, _library(request).policy, principal, limit)
+
+
+@router.get(
+    "/ific/analyses/{analysis_id}/findings",
+    response_model=IficFindingList,
+    **_policy(Capability.SOURCE_READ, _IMPLEMENTED),
+)
+def list_ific_findings(
+    analysis_id: ResourceId,
+    request: Request,
+    principal: CurrentPrincipal,
+    session: DbSession,
+    tier: Annotated[Literal["HIGH", "MEDIUM", "LOW"] | None, Query()] = None,
+    limit: Limit = 50,
+    cursor: Cursor = None,
+) -> Any:
+    runtime = _library(request)
+    if runtime.store is None:
+        raise ApiError(503, ErrorCode.SERVICE_UNAVAILABLE, "The object store is not configured.")
+    return ific_api.list_findings(
+        session, runtime.policy, principal, runtime.store, analysis_id, tier, limit, cursor
+    )
 
 
 @router.get(

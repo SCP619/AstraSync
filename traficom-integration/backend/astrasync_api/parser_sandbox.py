@@ -59,7 +59,12 @@ def _child_environment() -> dict[str, str]:
 
 def _tree_rss(process: psutil.Process) -> int:
     total = 0
-    for item in (process, *process.children(recursive=True)):
+    try:
+        children = process.children(recursive=True)
+    except psutil.Error:
+        # The parser has already exited (its last lines may still be in the pipe): no memory.
+        return 0
+    for item in (process, *children):
         try:
             total += item.memory_info().rss
         except psutil.Error:

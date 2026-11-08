@@ -39,6 +39,7 @@ from astrasync_api import admin, alerts, cases
 from astrasync_api.case_tables import CaseRow
 from astrasync_api.config import Settings
 from astrasync_api.contract.enums import (
+    DiscoveryMode,
     IssueDomain,
     JobType,
     SourceType,
@@ -360,6 +361,8 @@ def seed_accounts(database_url: str) -> None:
                 sessions, tenant_id=tenant, issuer=ISSUER, subject=subject, roles=roles
             )
     seed_sources(sessions)
+    if real_sources_enabled():
+        seed_real_sources(sessions)
     seed_cases(sessions)
     engine.dispose()
 
@@ -582,8 +585,88 @@ def seed_cases(sessions: Any) -> None:
         )
 
 
+# Opt-in (ASTRASYNC_DEV_REAL_SOURCES=1): the real public sources and parsers next to the demo
+# data, so the IFIC pipeline can be run end to end locally. Nothing is downloaded until an
+# administrator asks for a source check; no polling interval is set.
+REAL_SOURCES = (
+    ("ITU-SPACE-IFIC", "ITU Radiocommunication Bureau", IssueDomain.SPACE, SourceType.SPACE_IFIC,
+     DiscoveryMode.DOCUMENTED_FEED, "itu-space-ific",
+     "Space Circular Online, public download (free trial service, ITU), "
+     "https://www.itu.int/sns/wic/demowic.html"),
+    ("ITU-TERRESTRIAL-IFIC", "ITU Radiocommunication Bureau", IssueDomain.TERRESTRIAL,
+     SourceType.TERRESTRIAL_IFIC, DiscoveryMode.DOCUMENTED_FEED, "itu-terrestrial-ific",
+     "BR IFIC (Terrestrial) MDB extract, public download, "
+     "https://www.itu.int/en/ITU-R/terrestrial/brific/Pages/default.aspx"),
+    ("TRAFICOM-M4", "Traficom", IssueDomain.FINNISH_REFERENCE, SourceType.M4_ALLOCATION,
+     DiscoveryMode.API_POLL, "traficom-m4",
+     "Traficom open data, CC BY 4.0, https://opendata.traficom.fi/api/v13/Taajuusjakotaulukko"),
+)
+REAL_ENVIRONMENT = {
+    "ASTRASYNC_SOURCE_ADAPTERS": ",".join((
+        "astrasync_data.itu_ific:ItuSpaceIficAdapter",
+        "astrasync_data.itu_ific:ItuTerrestrialIficAdapter",
+        "astrasync_data.traficom_m4_table:TraficomM4TableAdapter",
+        "astrasync_data.traficom_workbook:TraficomWorkbookAdapter",
+    )),
+    "ASTRASYNC_SOURCE_CLIENTS": ",".join((
+        "itu-space-ific=astrasync_api.connectors.itu_brific:ItuSpaceIficClient",
+        "itu-terrestrial-ific=astrasync_api.connectors.itu_brific:ItuTerrestrialIficClient",
+        "traficom-m4=astrasync_api.connectors.traficom_opendata:TraficomFrequencyTableClient",
+    )),
+    "ASTRASYNC_RF_METHODS": ",".join((
+        "astrasync_physics.terrestrial_p1546:TerrestrialP1546",
+        "astrasync_physics.space_pfd:SpacePfdFreeSpace",
+    )),
+    "ASTRASYNC_DRAFT_AGENT": "astrasync_api.drafting:DeterministicDraftAgent",
+    # The two mandatory issues and the issues before them, for change comparison.
+    "ASTRASYNC_ITU_SPACE_ISSUES": "3073-3074",
+    "ASTRASYNC_ITU_TERRESTRIAL_ISSUES": "3075-3076",
+    # The Space IFIC database is about 300 MB unpacked; its parser needs more than the default.
+    "ASTRASYNC_PARSER_MEMORY_MB": "6144",
+}
+
+
+def real_sources_enabled() -> bool:
+    return setting("ASTRASYNC_DEV_REAL_SOURCES") == "1"
+
+
+def seed_real_sources(sessions: Any) -> None:
+    for source_id, publisher, domain, kind, mode, ref, rights in REAL_SOURCES:
+        with sessions() as session:
+            if session.get(SourceConnectorRow, source_id) is not None:
+                continue
+        admin.register_source(
+            sessions,
+            tenant_id=TENANT_A,
+            source_id=source_id,
+            publisher=publisher,
+            domain=domain,
+            source_type=kind,
+            classification=UsageClassification.PUBLIC,
+            rights_basis=rights,
+            discovery_mode=mode,
+            endpoint_ref=ref,
+        )
+    with sessions() as session:
+        if session.get(SourceConnectorRow, "CHALLENGE-WORKBOOK") is not None:
+            return
+    admin.register_source(
+        sessions,
+        tenant_id=TENANT_A,
+        source_id="CHALLENGE-WORKBOOK",
+        publisher="Traficom (Since AI 2026 challenge platform)",
+        domain=IssueDomain.FINNISH_REFERENCE,
+        source_type=SourceType.CHALLENGE_SYNTHETIC_REFERENCE,
+        classification=UsageClassification.INTERNAL,
+        rights_basis="Challenge dataset, synthetic, provided for the Since AI 2026 challenge",
+        is_synthetic=True,
+    )
+
+
 def _dev_environment() -> dict[str, str]:
     environment = _dev_defaults()
+    if real_sources_enabled():
+        environment.update(REAL_ENVIRONMENT)
     # Benchmarks (benchmarks/stage6.py) point the stack at PostgreSQL, another store or parsers.
     for name in _DEV_OVERRIDES:
         value = setting(f"ASTRASYNC_DEV_{name}")

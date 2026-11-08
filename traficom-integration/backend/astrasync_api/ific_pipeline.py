@@ -224,7 +224,8 @@ def run_relevance(
         )
         if candidate is None:
             continue
-        cases.upsert_candidate(context.sessions, tenant_id, candidate, context.records)
+        case_id = cases.upsert_candidate(context.sessions, tenant_id, candidate, context.records)
+        cases.record_screening(context.sessions, case_id, screening_summary(finding, issue))
         created += 1
 
     tiers: dict[str, int] = {}
@@ -358,6 +359,56 @@ def _candidate(
         scenario_id=digest[:32],
         scenario=scenario,
     )
+
+
+def screening_summary(finding: dict[str, Any], issue: int) -> dict[str, Any] | None:
+    """The IFIC finding's criterion comparison, as shown on its case. Screening, not a finding."""
+    concern = finding.get("concern") or {}
+    if not concern.get("classification"):
+        return None
+    base = {
+        "ific_issue": issue,
+        "classification": concern["classification"],
+        "margin_db": concern.get("margin_db"),
+        "statement": "Screening result for expert review; not a finding of harmful interference "
+        "or non-compliance.",
+    }
+    if finding.get("domain") == "TERRESTRIAL":
+        criterion = finding.get("criterion") or {}
+        border = finding.get("border_screening") or {}
+        point = border.get("max_point") or {}
+        coordination = finding.get("coordination") or {}
+        return {
+            **base,
+            "criterion": "ECC T/R 25-08 A1.2.3 indicative coordination threshold",
+            "criterion_basis": criterion.get("basis"),
+            "citation": criterion.get("citation"),
+            "threshold": criterion.get("threshold_dbuv_m"),
+            "value": border.get("max_field_strength_dbuv_m"),
+            "unit": "dB(uV/m)",
+            "where": point.get("label"),
+            "assumptions": criterion.get("assumptions") or [],
+            "coordination_with_finland": coordination.get("finland_mentioned"),
+        }
+    checks = finding.get("criterion_checks") or []
+    worst = (checks[0].get("worst_check") if checks else None) or {}
+    return {
+        **base,
+        "criterion": "ITU RR Article 21 Table 21-4 (Edition of 2024)",
+        "criterion_basis": worst.get("entry_id"),
+        "citation": (finding.get("criterion") or {}).get("citation"),
+        "threshold": worst.get("limit_db_w_m2"),
+        "value": worst.get("pfd_db_w_m2"),
+        "unit": "dB(W/m2) in "
+        + (f"{worst['reference_bandwidth_hz'] / 1e3:g} kHz" if worst else "reference bandwidth"),
+        "where": (
+            f"angle of arrival {worst['angle_of_arrival_deg']} deg"
+            if worst.get("angle_of_arrival_deg") is not None
+            else None
+        ),
+        "assumptions": ["Worst-case upper bound: peak beam gain toward Finland, free space."],
+        "coordination_with_finland": None,
+    }
 
 
 def latest_analyses(session: Session, tenant_id: str) -> list[IficAnalysisRow]:

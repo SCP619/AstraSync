@@ -53,6 +53,10 @@ from the case evidence only. The question is sent as data, citations and numbers
 and the answer is not stored. The UI shows it in the case's **Ask** tab. A refused reply is
 retried once with the refusal reason (`ASTRASYNC_LLM_MAX_ATTEMPTS`, default 2, maximum 3).
 Live run 2026-11-08: draft plus question passed 3 of 3 with the retry.
+If every attempt is refused, the server falls back to fixed wording built from the evidence: answers
+carry `generation: DETERMINISTIC_FALLBACK` and drafts `generation_provenance: deterministic-fallback`
+with a warning, and the UI labels them. The model only ever sees method results (no calculation
+traces), and refusal reasons are logged without prompts, evidence or secrets.
 
 ## Backend configuration (git-ignored)
 

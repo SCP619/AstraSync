@@ -268,6 +268,10 @@ class EvidenceLink(ContractModel):
 class CaseDetail(CaseSummary, Envelope):
     """Method runs load from ``GET /analyses/{id}`` so values have one canonical source."""
 
+    # The IFIC screening comparison (T/R 25-08 or RR Table 21-4) of the finding that opened the
+    # case; null for cases not opened from an IFIC finding. Screening, not a regulatory finding.
+    screening: dict[str, Any] | None
+
     relevance: RelevanceGates
     evidence: list[EvidenceLink]
     latest_analysis_run_id: StableId | None
@@ -497,6 +501,9 @@ class CaseAnswer(Envelope):
     cited_evidence_ids: list[StableId]
     ai_model_id: str | None
     requires_human_review: bool
+    # MODEL: the local model's checked answer. DETERMINISTIC_FALLBACK: the model's reply was
+    # refused, so a fixed-wording summary of the evidence is returned instead.
+    generation: Literal["MODEL", "DETERMINISTIC_FALLBACK"]
 
 
 class Draft(Envelope):

@@ -2033,6 +2033,14 @@
             "title": "Generated At Utc",
             "type": "string"
           },
+          "generation": {
+            "enum": [
+              "MODEL",
+              "DETERMINISTIC_FALLBACK"
+            ],
+            "title": "Generation",
+            "type": "string"
+          },
           "requires_human_review": {
             "title": "Requires Human Review",
             "type": "boolean"
@@ -2059,7 +2067,8 @@
           "uncertainties",
           "cited_evidence_ids",
           "ai_model_id",
-          "requires_human_review"
+          "requires_human_review",
+          "generation"
         ],
         "title": "CaseAnswer",
         "type": "object"
@@ -2350,6 +2359,18 @@
             "title": "Schema Version",
             "type": "string"
           },
+          "screening": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Screening"
+          },
           "source_issue_id": {
             "maxLength": 128,
             "minLength": 1,
@@ -2381,6 +2402,7 @@
           "criterion_status",
           "finding_status",
           "review_status",
+          "screening",
           "relevance",
           "evidence",
           "latest_analysis_run_id",

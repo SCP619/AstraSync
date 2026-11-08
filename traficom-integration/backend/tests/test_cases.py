@@ -1,5 +1,6 @@
 """IPD stage 5: method matrix, criterion gate, drafts, human review and evidence export."""
 
+import json
 import os
 from collections.abc import Callable
 from typing import Any
@@ -1296,3 +1297,72 @@ def test_without_an_answering_agent_questions_are_unavailable(
     secure_app.state.draft_agent = DemoDraftAgent()
     response = _ask(secure_client, bearer(), case_id, run.analysis_run_id)
     assert response.status_code == 503
+
+
+def _refusing_llm(secure_app: FastAPI) -> None:
+    from astrasync_api.drafting import GroundedLlmDraftAgent
+
+    def transport(system: str, user: str, model: str) -> str:
+        return json.dumps(
+            {
+                "answer_markdown": "It violates the rules [E:FAKE].",
+                "draft_markdown": "It violates the rules [E:FAKE].",
+                "explanation_markdown": "x",
+                "uncertainties": [],
+            }
+        )
+
+    secure_app.state.draft_agent = GroundedLlmDraftAgent(transport=transport, model="test-model")
+
+
+def test_a_refused_model_answer_falls_back_to_a_labelled_evidence_summary(
+    secure_app: FastAPI,
+    secure_client: TestClient,
+    bearer: Bearer,
+    sessions: sessionmaker[Session],
+    runtime: WorkerRuntime,
+) -> None:
+    case_id = _evidence_case(sessions)
+    run = analyse(secure_client, runtime, bearer(), case_id)
+    _refusing_llm(secure_app)
+    response = _ask(secure_client, bearer(), case_id, run.analysis_run_id)
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["generation"] == "DETERMINISTIC_FALLBACK"
+    assert body["ai_model_id"] is None
+    assert body["cited_evidence_ids"] == [f"{case_id}-record"]
+    assert "violates" not in body["answer_markdown"]
+    assert any("refused" in u for u in body["uncertainties"])
+
+
+def test_a_refused_model_draft_falls_back_to_fixed_wording(
+    secure_app: FastAPI,
+    secure_client: TestClient,
+    bearer: Bearer,
+    sessions: sessionmaker[Session],
+    runtime: WorkerRuntime,
+) -> None:
+    case_id = _evidence_case(sessions)
+    run = analyse(secure_client, runtime, bearer(), case_id)
+    _refusing_llm(secure_app)
+    created = make_draft(secure_client, bearer(), case_id, run.analysis_run_id)
+    assert created.status_code == 201, created.text
+    draft = created.json()
+    assert draft["generation_provenance"] == "deterministic-fallback"
+    assert draft["requires_human_review"] is True
+    assert any("refused" in w for w in draft["warnings"])
+    assert "violates" not in draft["content_markdown"]
+
+
+def test_case_detail_carries_the_ific_screening_result(
+    secure_client: TestClient, bearer: Bearer, sessions: sessionmaker[Session]
+) -> None:
+    case_id = candidate(sessions)
+    screening = {"classification": "VERIFIED_CRITERION_EXCEEDANCE", "margin_db": 14.84}
+    cases.record_screening(sessions, case_id, screening)
+    detail = secure_client.get(f"/api/v1/cases/{case_id}", headers=bearer()).json()
+    assert detail["screening"] == screening
+    cases.record_screening(sessions, case_id, None)
+    assert (
+        secure_client.get(f"/api/v1/cases/{case_id}", headers=bearer()).json()["screening"] is None
+    )

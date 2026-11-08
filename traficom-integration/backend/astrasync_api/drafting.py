@@ -402,13 +402,57 @@ def check_grounded(text: str, evidence_json: str, known: set[str]) -> list[str]:
     return cited
 
 
+def deterministic_answer(case_evidence: Mapping[str, Any]) -> dict[str, Any]:
+    """A fixed-wording summary of the case evidence, used when the model's reply is refused.
+
+    It does not interpret the question; it states what the evidence holds, with citations.
+    """
+    ids = [item["evidence_id"] for item in case_evidence.get("evidence", [])]
+    if not ids:
+        raise ValueError("No evidence to summarise")
+    cite = " ".join(f"[E:{i}]" for i in ids)
+    adm = case_evidence.get("administration") or "an unknown administration"
+    domain = "space" if case_evidence.get("domain") == "SPACE" else "terrestrial"
+    lines = [
+        f"Case summary from the stored evidence (fixed wording): {domain} notice "
+        f"{case_evidence.get('notice_id')} from {adm}, "
+        f"{_fmt(case_evidence.get('frequency_start_mhz'), 4)}-"
+        f"{_fmt(case_evidence.get('frequency_end_mhz'), 4)} MHz {cite}.",
+    ]
+    for run in _runs(case_evidence):
+        value = run.get("numeric_value")
+        if value is None:
+            missing = ", ".join(run.get("missing_fields") or []) or "inputs"
+            lines.append(f"{run.get('method_id')}: not calculated; missing {missing} {cite}.")
+        else:
+            lines.append(
+                f"{run.get('method_id')}: {_fmt(value)} {run.get('unit') or ''} "
+                f"({run.get('metric_kind')}) {cite}."
+            )
+    return {
+        "answer_markdown": "\n".join(lines),
+        "uncertainties": [
+            "The local model's reply was refused by the evidence checks; this is a fixed "
+            "summary of the evidence, not an answer to the specific question.",
+            "Screening results, not regulatory findings.",
+        ],
+        "cited_evidence_ids": ids,
+    }
+
+
 class GroundedLlmDraftAgent:
     """A language model words the draft; the output is accepted only if it is grounded.
+
+    ``fallback_to_deterministic``: when every attempt is refused, the server uses fixed wording
+    from the evidence instead (labelled as such), so the user still gets a reviewable draft or a
+    summary.
 
     A refused reply is retried with the refusal reason (never the evidence check internals or
     any secret) up to ``ASTRASYNC_LLM_MAX_ATTEMPTS`` times in total (default 2). Every attempt
     is checked in full; nothing unchecked is ever returned.
     """
+
+    fallback_to_deterministic = True
 
     def __init__(
         self,

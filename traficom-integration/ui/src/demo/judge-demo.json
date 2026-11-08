@@ -659,8 +659,40 @@
    "id": "DEMO-S-1",
    "domain": "SPACE",
    "title": "Space PFD upper bound",
-   "story": "Worst case: the maximum beam gain is assumed to point at the nearest node of the Finland grid. The value is an upper bound, not EPFD; no RR Table 21-4 limit is configured, so no comparison is made.",
+   "story": "Worst case: the maximum beam gain is assumed to point at the nearest node of the Finland grid. The upper bound is compared with ITU RR Table 21-4 (10.7-11.7 GHz FSS GSO, 4 kHz); it is not EPFD and not a finding.",
    "max_pfd_db_w_m2_hz_upper_bound": -190.89615701856675,
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -8.26,
+    "groups_compared": 1,
+    "groups_by_classification": {
+     "BELOW_SCREENING_THRESHOLD": 1
+    },
+    "meaning": null
+   },
+   "criterion_check": {
+    "entry_id": "T21-4-11",
+    "bands": [
+     "10700-11700 MHz"
+    ],
+    "orbit_condition": "GSO",
+    "printed_page": 288,
+    "footnotes": [],
+    "parameter": null,
+    "reference_bandwidth_hz": 4000.0,
+    "bandwidth_used_hz": 4000.0,
+    "bandwidth_basis": "reference bandwidth (group bandwidth unknown or wider)",
+    "margin_db": -8.26,
+    "pfd_db_w_m2": -155.11,
+    "limit_db_w_m2": -146.85,
+    "angle_of_arrival_deg": 11.301,
+    "slant_range_km": 40450.129,
+    "location": {
+     "lat": 70.0,
+     "lon": 27.5
+    },
+    "classification": "BELOW_SCREENING_THRESHOLD"
+   },
    "geometry": {
     "status": "VISIBLE",
     "nominal_longitude_deg": 20.0,
@@ -697,7 +729,7 @@
     "method": "SPACE_PFD_FREE_SPACE",
     "groups_with_pfd": 1
    },
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured"
+   "regulatory_finding": "SCREENING_ONLY: worst-case PFD upper bound compared with ITU RR Article 21 Table 21-4 (Edition of 2024); not a finding of harmful interference or non-compliance"
   },
   {
    "id": "DEMO-S-2",
@@ -705,6 +737,16 @@
    "title": "Missing satellite beam data",
    "story": "The notice gives no beam gain, so no PFD can be computed. AstraSync reports insufficient evidence instead of guessing a gain.",
    "max_pfd_db_w_m2_hz_upper_bound": null,
+   "concern": {
+    "classification": "INSUFFICIENT_EVIDENCE",
+    "margin_db": null,
+    "groups_compared": 0,
+    "groups_by_classification": {
+     "INSUFFICIENT_EVIDENCE": 1
+    },
+    "meaning": null
+   },
+   "criterion_check": null,
    "geometry": {
     "status": "VISIBLE",
     "nominal_longitude_deg": 20.0,
@@ -741,7 +783,7 @@
     "method": "SPACE_PFD_FREE_SPACE",
     "groups_with_pfd": 0
    },
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured"
+   "regulatory_finding": "NOT_EVALUATED: no applicable Table 21-4 entry established or inputs missing"
   }
  ]
 }

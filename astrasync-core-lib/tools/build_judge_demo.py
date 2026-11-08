@@ -204,10 +204,11 @@ def build() -> dict[str, Any]:
             "beam_max_gain_dbi": 34.0,
             "service_area_countries": [],
             "special_sections": ["DEMO"],
+            "station_classes_services": ["EC/CP"],
             "submission_occurrence": "F",
         }
         fields.update(over)
-        return _record("grp", key, 11700.0, 11750.0, **fields)
+        return _record("grp", key, 10950.0, 10986.0, **fields)
 
     space = A.analyse_space(
         [group("1"), group("2", notice_id="DEMO-S-2", beam_max_gain_dbi=None)],
@@ -223,13 +224,15 @@ def build() -> dict[str, Any]:
                 "title": "Space PFD upper bound" if has_pfd else "Missing satellite beam data",
                 "story": (
                     "Worst case: the maximum beam gain is assumed to point at the nearest "
-                    "node of the Finland grid. The value is an upper bound, not EPFD; no RR "
-                    "Table 21-4 limit is configured, so no comparison is made."
+                    "node of the Finland grid. The upper bound is compared with ITU RR Table 21-4 "
+                    "(10.7-11.7 GHz FSS GSO, 4 kHz); it is not EPFD and not a finding."
                     if has_pfd
                     else "The notice gives no beam gain, so no PFD can be computed. AstraSync "
                     "reports insufficient evidence instead of guessing a gain."
                 ),
                 "max_pfd_db_w_m2_hz_upper_bound": finding["max_pfd"],
+                "concern": finding["concern"],
+                "criterion_check": (finding["criterion_checks"] or [{}])[0].get("worst_check"),
                 "geometry": finding["stage_c_geometry"],
                 "readiness": finding["stage_d_readiness"],
                 "regulatory_finding": finding["regulatory_finding"],

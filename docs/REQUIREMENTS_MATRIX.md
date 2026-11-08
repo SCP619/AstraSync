@@ -34,8 +34,8 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | ID | Component | Status | Evidence / tests | Limitations |
 | --- | --- | --- | --- | --- |
 | TR-SRC-001 | BE | VERIFIED | Source registry with rights, mode, classification | Retention policy field not enforced |
-| TR-SRC-002 | BE | VERIFIED | Polling with ETag versions, dedupe, MANUAL_REQUIRED (`test_traficom_opendata_*`) | Traficom M4 only; no IFIC feed |
-| TR-SRC-003 | CORE, BE | BLOCKED | Adapter interface and two real adapters exist | No authorised ITU BR IFIC sample (API/A, CR/C, AP30) |
+| TR-SRC-002 | BE | VERIFIED | Polling with ETag versions, dedupe, MANUAL_REQUIRED (`test_traficom_opendata_*`); ITU Space and Terrestrial IFIC index discovery with issue ranges (`test_itu_connectors.py`); live dev-stack run discovered and downloaded Space 3073–3074 and Terrestrial 3075–3076 | Scheduled polling interval for ITU sources left to the operator (none set by default) |
+| TR-SRC-003 | CORE, BE | VERIFIED (real data) | Space IFIC (SNS v10 `.mdb`) and Terrestrial BR IFIC MDB adapters; 3074 (196 notices, 34,365 groups; API/A 72, CR/C 148 special-section links) and 3076 (3,481 notices) parsed; 3076 reconciles with the ITU ReadMe per part (`test_itu_ific.py`, `ASTRASYNC_IFIC_DATA`) | AP30/30A/30B content only as present in the Space IFIC database; the sold BR IFIC DVD (full terrestrial data, PDFs) is not used |
 | TR-SRC-004 | CORE, BE | VERIFIED | M4 (`M4_ALLOCATION`) and special-interest workbook are distinct source types; live M4 run 5,917 rows; real workbook 874 rows | |
 | TR-SRC-005 | BE | IMPLEMENTED_UNVERIFIED | Server-side clients only; outage never read as retraction | No credentialed source yet |
 | TR-SRC-006 | BE | VERIFIED | Resumable multipart upload, 4 GiB L1 run (resume, SHA-256, crash recovery) | Upload path; source-side resumable download not exercised at 4 GB |
@@ -47,7 +47,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-SRC-012 | BE | IMPLEMENTED_UNVERIFIED | `records_cli build` reproducible dataset rebuild with count check | Issue backfill from publishers not built |
 | TR-INT-001 | BE | VERIFIED | Assembled SHA-256 and byte count recomputed; L1 4 GiB match | |
 | TR-INT-002 | BE | VERIFIED | Uploader manifest match never reported as publisher verification | |
-| TR-INT-003 | BE, CORE | IMPLEMENTED_UNVERIFIED | Magic-byte dispatch, XLSX via defusedxml/openpyxl, quarantine on parser refusal | No archive-bomb or spoofing corpus |
+| TR-INT-003 | BE, CORE | VERIFIED | Magic-byte dispatch, XLSX via defusedxml/openpyxl, IFIC zip: one safe member, size and compression-ratio limits, quarantine on refusal (`test_itu_ific.py`) | No spoofing corpus |
 | TR-INT-004 | CORE, BE | VERIFIED | Sheet/row identities preserved; deterministic reparse; adapters isolated in a child process (A16, `test_parser_sandbox.py`) | Process isolation only |
 | TR-INT-005 | CORE | VERIFIED | Raw values kept beside parsed units (`test_units.py`, workbook golden) | |
 | TR-INT-006 | CORE | VERIFIED | Field-level findings block dependent calculations | |
@@ -55,7 +55,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-INT-008 | BE | VERIFIED | Quarantine on mismatch and parser refusal | |
 | TR-INT-009 | BE | VERIFIED | Parsed/accepted/flagged/rejected reconciliation; Parquet manifest counts | |
 | TR-INT-010 | BE | VERIFIED | Lineage artifact → record → case evidence | |
-| TR-INT-011 | CORE | NOT_STARTED | Unknown formats are refused | No `.mdb`/`.accdb` adapter |
+| TR-INT-011 | CORE | VERIFIED (real data) | `.mdb` (Microsoft Access) IFIC databases read with `access-parser` inside the parser sandbox; unknown formats refused | `.accdb` not seen in IFIC downloads, untested |
 | TR-LIB-001 | BE, UI | IMPLEMENTED_UNVERIFIED | Rights-filtered search by text, station, frequency | No date/notice-type/satellite filters (needs IFIC fields) |
 | TR-LIB-002 | BE, UI | VERIFIED | Indexed record, original preview, separately authorised download | |
 | TR-LIB-003 | BE, UI | VERIFIED | Inspector shows artifact hash, trust level, location, raw and normalised fields | |
@@ -69,20 +69,20 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | ID | Component | Status | Evidence / tests | Limitations |
 | --- | --- | --- | --- | --- |
 | TR-REL-001 | BE | VERIFIED | Distinct domains and source types | |
-| TR-REL-002 | BE | BLOCKED | | Needs consecutive real IFIC issues |
-| TR-REL-003 | BE | BLOCKED | | Same |
-| TR-REL-004 | BE, UI | IN_PROGRESS | Frequency stage on real data (`test_relevance.py`); `/finland` screen shows the stages, unassessed ones as not assessed (PR #21, browser-checked) | Service, geometry, technical stages need IFIC fields |
+| TR-REL-002 | CORE, BE | VERIFIED (real data) | Change from the publication itself: terrestrial intent ADD/MODIFY/SUPPRESS with field-level diff against the targeted recorded assignment; space tgt_ntc_id / f_int_ext / ntf_occurs / API/A; previous issue matched for context (3076 vs 3075, 3074 vs 3073; `test_ific_analysis.py`) | Space `act_code` kept raw (NOTE 3 of the SNS dictionary not available) |
+| TR-REL-003 | CORE | VERIFIED | Absence from a later issue is never a withdrawal (each IFIC carries its own notices only); WITHDRAWN only from an explicit publication flag (`test_ific_analysis.py`) | |
+| TR-REL-004 | CORE, BE, UI | IMPLEMENTED, real data | Stages A frequency, B service, C geography/orbit, D readiness, E priority per notice (`ific_analysis.py`), stored per issue and shown on `/ific` | Rules are AstraSync's, not approved by Traficom; special-interest stations are synthetic |
 | TR-REL-005 | BE, UI | VERIFIED | Overlap labelled a screening signal | |
 | TR-REL-006 | BE | VERIFIED | `INSUFFICIENT_DATA` candidates kept with reasons | |
-| TR-REL-007 | BE | NOT_STARTED | | Prioritisation rules need agreement |
+| TR-REL-007 | CORE | IMPLEMENTED_UNVERIFIED | Documented additive priority score with components per finding; tiers per domain | Weights need expert agreement; no ground truth for accuracy |
 | TR-RF-001 | BE | VERIFIED | Method registry from plugins with versions | |
 | TR-RF-002 | BE | VERIFIED | Applicability separate from run status | |
 | TR-RF-003 | BE | VERIFIED | All applicable methods run; analysis lane separate | |
-| TR-RF-004 | CORE | IMPLEMENTED_UNVERIFIED | `SPACE_PFD_FREE_SPACE`, Tier 1 vectors (`test_space_pfd.py`) | Needs scientific review (A35) and a real notice |
+| TR-RF-004 | CORE | IMPLEMENTED, real data | `SPACE_PFD_FREE_SPACE`, Tier 1 vectors (`test_space_pfd.py`); applied to 3074 downlink groups as an upper bound (max density + max gain, minimum slant range) | Directional patterns and EPFD not implemented; scientific review (A35) pending |
 | TR-RF-005 | CORE | NOT_STARTED | | Orbit/pattern data needed |
 | TR-RF-006 | CORE | NOT_STARTED | | |
 | TR-RF-007 | CORE | NOT_STARTED | | |
-| TR-RF-008 | CORE | BLOCKED | | Validated P.1546 implementation and real terrestrial inputs |
+| TR-RF-008 | CORE | VERIFIED (against reference implementation) | ITU-R P.1546-6 port of the WP 3K reference; 54/54 reference validation cases within 5.1e-5 dB (`test_p1546.py`); used on 3076 land mobile notices | No terrain database (heff = ha); no approved trigger criterion (ECC T/R 25-08 values not entered) |
 | TR-RF-009 | CORE | NOT_STARTED | | |
 | TR-RF-010 | BE | VERIFIED | Immutable method runs with input snapshot, versions, build SHA | |
 | TR-RF-011 | BE, CORE | VERIFIED | Missing/invalid inputs refused with reasons | |
@@ -103,11 +103,11 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-CASE-002 | UI | VERIFIED | Split-pane inspector (UI tests) | |
 | TR-CASE-003 | BE, UI | IMPLEMENTED_UNVERIFIED | `GET /cases/{id}/export` (`CASE_EXPORT`) returns the evidence pack: evidence links (artifact hash, record, relevance), analysis runs with method and criterion checks, drafts marked unapproved, review events; audited (`test_cases.py::test_export_contains_the_chain_and_marks_unapproved_drafts`, restricted-export test) | Links are not re-verified (hash re-check) at export time; JSON only, no signed bundle |
 | TR-CASE-004 | BE | VERIFIED | Append-only review events, role-protected | |
-| TR-CASE-005 | BE, UI | IMPLEMENTED_UNVERIFIED | Drafts from evidence, pending approval, demo agent | No real `EvidenceDraftAgent` |
-| TR-AI-001 | BE | IMPLEMENTED_UNVERIFIED | Agent cannot write method results (API) | No real agent |
-| TR-AI-002 | BE | IMPLEMENTED_UNVERIFIED | Citation check on drafts | No real agent |
+| TR-CASE-005 | BE, UI | IMPLEMENTED | Drafts from evidence, pending approval; `DeterministicDraftAgent` (no model) and `GroundedLlmDraftAgent` (G28) | Live LLM provider not configured or exercised |
+| TR-AI-001 | BE | VERIFIED | Agent cannot write method results (API); grounded agent receives evidence only | |
+| TR-AI-002 | BE | VERIFIED | Citation check on drafts; grounded agent also refuses numbers absent from the evidence and violation wording (`test_drafting.py`) | Live model output not evaluated |
 | TR-AI-003 | BE | VERIFIED | Classification policy (`ASTRASYNC_AI_CLASSIFICATIONS`) | |
-| TR-AI-004 | BE | NOT_STARTED | | Needs agent and adversarial corpus |
+| TR-AI-004 | BE | IMPLEMENTED_UNVERIFIED | Evidence passed as data; output checks independent of model compliance; injection case tested with a stub model (`test_drafting.py`) | No adversarial corpus run against a live model |
 | TR-AI-005 | BE | VERIFIED | Workflows run with no agent configured | |
 | TR-ALT-001 | BE | VERIFIED | Versioned rule-based events (`test_alerts.py`) | |
 | TR-ALT-002 | BE | VERIFIED | Outbox and separate lane | |

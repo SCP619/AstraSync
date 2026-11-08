@@ -19,10 +19,10 @@ verified only on challenge or made-up data. *Blocked*: needs an external input, 
 | --- | --- | --- | --- |
 | 0 Contract | Verified | Contract tests in CI; OpenAPI `1.0.0-draft.5` | BSD update for DECISIONS entries |
 | 1 Secure skeleton | Verified on the local test IdP | Auth/authorization tests, deny by default | Real identity provider |
-| 2 Source library | Verified; real data for the workbook and M4 | AT-H-01: real workbook SHA-256 `bb7f481f…`, 874 rows. Live Traficom M4 table: 5,917 rows discovered, archived, parsed, indexed (`ASTRASYNC_LIVE_SOURCES=1`) | Authorised IFIC adapters (blocked) |
-| 3 Space RF | In progress | `SPACE_PFD_FREE_SPACE`, Tier 1 vectors, runs through the analysis runner with no margin | Directional/NGSO PFD, EPFD, criterion resolver, notice mapping (need IFIC data) |
-| 4 Terrestrial RF | Blocked | | Two real IFIC issues, validated P.1546 |
-| 5 Case UI and evidence | Verified with demo plugins | Case workflow, reviewer API, inspector, 91 UI tests | Real relevance stages, methods and draft agent |
+| 2 Source library | Verified on real data, including ITU IFIC | Workbook (874 rows) and live M4 (5,917 rows); ITU Space IFIC 3073/3074 and Terrestrial BR IFIC 3075/3076 discovered, downloaded, verified and parsed by the live pipeline; 3076 reconciles with the ITU ReadMe per part. Pipeline: [`architecture/IFIC_PIPELINE.md`](architecture/IFIC_PIPELINE.md) | Full BR IFIC DVD content (sold by ITU) not used |
+| 3 Space RF | In progress, real data | Every 3074 notice screened (stages A–E, change vs 3073); free-space PFD upper bounds for downlink groups; GSO visibility and NGSO reach of Finland; published-data anomaly detection | Directional/NGSO PFD with patterns, EPFD, approved RR Article 21 criteria |
+| 4 Terrestrial RF | Implemented and validated method; real data | ITU-R P.1546-6 port reproduces all 54 WP 3K reference cases (≤ 5.1e-5 dB); 3076 land mobile notices screened with field strengths at Finland and at special-interest stations; change vs 3075 with field diffs; neighbour trends | Approved coordination criterion (ECC T/R 25-08 values), terrain data |
+| 5 Case UI and evidence | Verified; IFIC cases from real data | HIGH findings open cases automatically (G27); `/ific` screen with ranked findings and stage reasons; deterministic and grounded-LLM drafting agents (G28) | Live LLM provider not configured |
 | 6 Large data | In progress, synthetic only | L1 4 GiB upload resilience; storage analysis (39.5× in PostgreSQL); Parquet/DuckDB record store with identical API answers; re-index command; dev stack on the record store. Report: [`architecture/STAGE6_RECORD_STORE.md`](architecture/STAGE6_RECORD_STORE.md) | 10M/50M rows, checkpoint resume inside a parse |
 | 7 Native and alerts | Verified on CI package and emulator (PR #7) | Windows W1–W3, W5–W12; Android A1–A8 | Android push gateway, signed packages, real IdP |
 | 8 Security and operations | Largely implemented | Secret scan, dependency audits, SBOMs (`supply-chain.yml`); parser process isolation (A16); `/operations/metrics`, `/healthz`, `/readyz` (G25); verified backup/restore; runbook `docs/operations/RUNBOOK.md`; PostgreSQL connection lifecycle fixed (engine disposed per app) | TLS, encryption at rest, OS-level parser sandbox, metrics export, threat model |
@@ -35,6 +35,7 @@ Frontend-to-backend coverage (production React app, real API client, no sample d
 
 | Workflow | Screen | Status |
 | --- | --- | --- |
+| IFIC issue analysis | `/ific` | Real data: Space 3073/3074 and Terrestrial 3075/3076 through the live dev-stack pipeline; ranked findings with stage reasons |
 | A Source acquisition | `/uploads` → `/sources` | Browser-verified against the dev stack (PR #23) |
 | B Finland relevance | `/finland` → record inspector | Browser-verified (PR #21); service/geometry/technical stages not assessed (IFIC fields) |
 | C Case investigation | `/cases`, `/cases/:id` | Verified in UI tests and on devices (Stage 5/7); methods are demo plugins plus `SPACE_PFD_FREE_SPACE` |
@@ -45,12 +46,13 @@ Frontend-to-backend coverage (production React app, real API client, no sample d
 
 Next tasks:
 
-1. Port the Lovable case-detail method table and provenance timeline into `CaseInspectorPage`.
-2. Administration follow-ups needing a policy decision: moving users between tenants, and
-   per-case grants (case access follows source entitlements today).
-3. Scientific: no teammate modules in the repo (`traficom-integration/agent` is empty);
-   `RegistryCriterionResolver` ships no criteria; service, geometry and technical relevance
-   gates need IFIC field definitions.
+1. Criteria: enter and approve, with citations, the ECC T/R 25-08 trigger field strengths and the
+   RR Article 21 PFD limits (A43); only then can margins be computed.
+2. Space methods: directional PFD with notified patterns, NGSO time series, EPFD (S.1503).
+3. Terrain data for P.1546 (heff, clearance angles) instead of heff = ha.
+4. Configure and evaluate an approved LLM provider for `GroundedLlmDraftAgent`.
+5. Administration follow-ups needing a policy decision: tenant moves and per-case grants.
+6. Port the Lovable case-detail method table and provenance timeline into `CaseInspectorPage`.
 
 ## Launching the application (local demonstration)
 
@@ -78,6 +80,14 @@ subject. The dev database had its personas under `http://127.0.0.1:8801`; after 
 dev issuer at start (keeping their user IDs and grants) and provisions any missing ones. No
 other identity is ever created or moved.
 
+**Real sources (optional).** With `ASTRASYNC_DEV_REAL_SOURCES=1` in `dev_stack.local.env`, the
+stack also registers the ITU Space and Terrestrial IFIC sources, Traficom M4 and a workbook
+source, with the real parsers, P.1546 and PFD methods and the deterministic drafting agent.
+Nothing downloads until an administrator checks a source (Source library, or
+`POST /api/v1/admin/sources/{id}/check`); the dev issue range is 3073–3074 (space) and 3075–3076
+(terrestrial). Upload the challenge workbook to `CHALLENGE-WORKBOOK`. Each indexed IFIC issue is
+analysed automatically and appears under **IFIC issues**.
+
 **Accounts.** There is no self-registration or automatic grant. Outside the dev stack the first
 administrator is provisioned with `python -m astrasync_api.admin provision-user --tenant <t>
 --issuer <iss> --subject <sub> --role ADMINISTRATOR`; after that, administrators use
@@ -91,7 +101,7 @@ The dev stack is for local demonstration only: it is not packaged and refuses no
 
 | Blocker | Affects | Needed |
 | --- | --- | --- |
-| No authorised ITU BR IFIC sample or access route | Stages 2 (IFIC), 3, 4, 9; AT-H-03/04, AC-11 | An authorised IFIC file and its terms |
+| Full BR IFIC (DVD/ISO, ITU sales) | Terrestrial data beyond the MDB extract; IFICs no longer online | Purchase decision; the public Space databases and terrestrial extracts are in use |
 | No approved criterion edition | TR-REG-001/002, margins | User-approved, cited RR edition and table references |
 | Lovable workspace | Priority D | The connected account shows workspace "My Lovable" with one unrelated 2025 project. Confirm it is Aosaf's sponsored workspace before creating a project |
 | `LICENSE.md` background-IP statement | `astrasync-core-lib`, AT-H-09 | Team and legal decision |
@@ -130,7 +140,8 @@ Worker and API settings:
 | #22 | merged | TR-NFR-006 case-list benchmark (50,000 cases, p95 ≤ 657 ms), records |
 | #23 | `19b5660` | Source upload and processing status |
 | #24 | `3f3136e` | Records and frontend coverage |
-| branch `scp619/dev-auth-admin` | not committed | Dev sign-in root cause and fix, configurable dev ports, user administration API and screen (G26) |
+| #25 | open | Dev sign-in fix, configurable dev ports, user administration (G26) |
+| branch `scp619/ific-pipeline` | see PR | ITU IFIC acquisition and parsing, issue analysis (G27), P.1546-6, drafting agents (G28), `/ific` screen, evaluation outputs for 3074 and 3076 |
 
 Seven commits up to `65997b2` carry a Claude co-author trailer; they are left unchanged (no
 history rewrite). New commits carry no attribution.

@@ -1,0 +1,12 @@
+{
+ "issue": 3074,
+ "previous_issue": 3073,
+ "change_types": {
+  "NEW": 96,
+  "MODIFIED": 55,
+  "INDETERMINATE": 45
+ },
+ "also_published_in_previous_issue": 0,
+ "rules": "NEW, MODIFIED and WITHDRAWN come from the notice itself (terrestrial intent ADD/MODIFY/SUPPRESS; space ntf_occurs, tgt_ntc_id, f_int_ext). An item absent from an issue is never treated as withdrawn: each IFIC carries that issue's notices only.",
+ "trends": null
+}

@@ -42,6 +42,9 @@ and backups (TR-SEC-001), and container/OS confinement of parser processes.
 | Verify every record dataset | `python -m astrasync_api.records_cli verify` (exit 1 on any damage) |
 | First administrator of a tenant | `python -m astrasync_api.admin provision-user --tenant <t> --issuer <iss> --subject <sub> --role ADMINISTRATOR` (no self-registration, no automatic administrator) |
 | Users, roles, sessions, source entitlements | **Users and access** screen (`/admin/users`, `ADMIN_USERS`); CLI fallback `deactivate-user`, `revoke-sessions`, `revoke-role` |
+| Fetch new IFIC issues | Check `ITU-SPACE-IFIC` / `ITU-TERRESTRIAL-IFIC` in the source library (or set a poll interval on the connector); ranges `ASTRASYNC_ITU_SPACE_ISSUES`, `ASTRASYNC_ITU_TERRESTRIAL_ISSUES` |
+| Re-run an issue analysis | Delete its `ific_analyses` row and queue `ific_pipeline.enqueue_relevance` for the artifact; the analysis is deterministic for the same references |
+| Evaluate an issue offline | `python -m astrasync_data.ific_evaluate space|terrestrial --issue … --previous … --m4 … --workbook … --out …` |
 | Back up | `python -m astrasync_api.backup create <empty dir>` |
 | Check a backup | `python -m astrasync_api.backup verify <dir>` |
 | Restore drill | Point the settings at an **empty** database and empty stores, then `python -m astrasync_api.backup restore <dir>` |
@@ -67,6 +70,8 @@ check.
 | Record API returns 500 for one artifact; `records_cli verify` reports DAMAGED | Dataset file differs from its manifest | Restore the dataset from backup, or delete its manifest row and rebuild with `records_cli build` |
 | `/readyz` 503 | Database unreachable | Check database health and credentials; the API refuses work meanwhile |
 | Signed-in user gets 403 `USER_NOT_PROVISIONED` | No user with this token's issuer plus subject (often the IdP issuer URL changed) | Provision the identity under the issuer in the token; never match on email |
+| Space IFIC parse fails with `ParserLimitExceeded` (memory) | The SNS database is ~300 MB unpacked | Raise `ASTRASYNC_PARSER_MEMORY_MB` (6144 is enough for 3074) |
+| RELEVANCE job `PARSER_UNAVAILABLE` | No adapter for the IFIC, M4 or workbook source type | Configure `ASTRASYNC_SOURCE_ADAPTERS` |
 | Source health stale | Publisher unreachable or changed | Outages never count as withdrawals; follow `MANUAL_REQUIRED` steps |
 
 ## 5. Security notes

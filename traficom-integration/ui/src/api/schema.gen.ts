@@ -450,6 +450,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/ific/analyses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Ific Analyses */
+        get: operations["list_ific_analyses_api_v1_ific_analyses_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ific/analyses/{analysis_id}/findings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Ific Findings */
+        get: operations["list_ific_findings_api_v1_ific_analyses__analysis_id__findings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/ingest/ific": {
         parameters: {
             query?: never;
@@ -2153,6 +2187,117 @@ export interface components {
             schema_version: "1.0.0-draft.5";
             /** Sources Screened */
             sources_screened: components["schemas"]["ScreenedReferenceSource"][];
+        };
+        /**
+         * IficAnalysis
+         * @description One analysed IFIC issue (DECISIONS G27). Priority is for ordering work, not a finding.
+         */
+        IficAnalysis: {
+            /** Analysis Id */
+            analysis_id: string;
+            /** Artifact Id */
+            artifact_id: string;
+            /** Cases Created */
+            cases_created: number;
+            /**
+             * Created At Utc
+             * Format: date-time
+             */
+            created_at_utc: string;
+            /** Findings Count */
+            findings_count: number;
+            /** Findings Sha256 */
+            findings_sha256: string | null;
+            /** Issue */
+            issue: number;
+            kind: components["schemas"]["SourceType"];
+            /** Previous Artifact Id */
+            previous_artifact_id: string | null;
+            /** Rule Version */
+            rule_version: string;
+            /** Source Id */
+            source_id: string;
+            /** Status */
+            status: string;
+            /** Summary */
+            summary: {
+                [key: string]: unknown;
+            };
+        };
+        /** IficAnalysisList */
+        IficAnalysisList: {
+            /**
+             * Generated At Utc
+             * Format: date-time
+             */
+            generated_at_utc: string;
+            /** Items */
+            items: components["schemas"]["IficAnalysis"][];
+            /** Limit */
+            limit: number;
+            /** Next Cursor */
+            next_cursor: string | null;
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.5";
+            /** Total If Known */
+            total_if_known: number | null;
+        };
+        /**
+         * IficFinding
+         * @description One screened notice. ``detail`` holds every stage result, calculation and assumption.
+         */
+        IficFinding: {
+            /** Administration */
+            administration: string | null;
+            /** Change Type */
+            change_type: string;
+            /** Detail */
+            detail: {
+                [key: string]: unknown;
+            };
+            domain: components["schemas"]["CaseDomain"];
+            /** Finding Status */
+            finding_status: string;
+            /** Label */
+            label: string | null;
+            /** Max Value */
+            max_value: number | null;
+            /** Max Value Unit */
+            max_value_unit: string | null;
+            /** Notice Id */
+            notice_id: string;
+            /** Priority Score */
+            priority_score: number;
+            /** Priority Tier */
+            priority_tier: string;
+            /** Rank */
+            rank: number;
+        };
+        /** IficFindingList */
+        IficFindingList: {
+            /** Analysis Id */
+            analysis_id: string;
+            /**
+             * Generated At Utc
+             * Format: date-time
+             */
+            generated_at_utc: string;
+            /** Items */
+            items: components["schemas"]["IficFinding"][];
+            /** Limit */
+            limit: number;
+            /** Next Cursor */
+            next_cursor: string | null;
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.5";
+            /** Total If Known */
+            total_if_known: number | null;
         };
         /**
          * IngestRequest
@@ -6607,6 +6752,216 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FrequencyRelevanceScreen"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_ific_analyses_api_v1_ific_analyses_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IficAnalysisList"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_ific_findings_api_v1_ific_analyses__analysis_id__findings_get: {
+        parameters: {
+            query?: {
+                tier?: ("HIGH" | "MEDIUM" | "LOW") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                analysis_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IficFindingList"];
                 };
             };
             /** @description Unauthorized */

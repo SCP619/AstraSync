@@ -1,0 +1,1649 @@
+{
+ "criterion_set_id": "ITU-RR-ART21-TABLE21-4",
+ "version": "1.0.0",
+ "source": {
+  "document": "ITU Radio Regulations, Volume 1 (Articles), Edition of 2024",
+  "article": "Article 21, Section V, No. 21.16 and Table 21-4 (Rev.WRC-23), printed pages 286-294",
+  "source_url": "https://search.itu.int/history/HistoryDigitalCollectionDocLibrary/1.49.48.en.101.pdf",
+  "source_sha256": "040907a35846479b1f34ba628e35964dd4ce6d2b3fc05c2ff9b45e8ff215f5de",
+  "retrieved": "2026-11-08"
+ },
+ "class_of_station_source": {
+  "document": "Preface to the BR IFIC (Space Services), Table 3, Edition October 2026",
+  "source_url": "https://www.itu.int/en/ITU-R/space/Preface/preface_e.pdf"
+ },
+ "metric": "PFD at the Earth's surface under free-space propagation, dB(W/m2) in the reference bandwidth",
+ "angle": "delta: angle of arrival above the horizontal plane, degrees",
+ "scope_note": "21.16: the limits apply to space-station emissions of the service indicated where the band is shared with equal rights with the fixed or mobile service, unless otherwise stated. 21.17: they may be exceeded on the territory of a country whose administration has so agreed. Only entries applicable to Region 1 / Finland without unresolved conditions are listed.",
+ "highly_inclined_orbit": {
+  "inclination_deg": [
+   35,
+   145
+  ],
+  "apogee_km_greater_than": 18000,
+  "source": "21.16.6B, 21.16.6C, 21.16.17"
+ },
+ "class_of_station_services": {
+  "EC": "FIXED_SATELLITE",
+  "EB": "BROADCASTING_SATELLITE",
+  "EV": "BROADCASTING_SATELLITE",
+  "EI": "MOBILE_SATELLITE",
+  "EG": "MOBILE_SATELLITE",
+  "EJ": "MOBILE_SATELLITE",
+  "EU": "MOBILE_SATELLITE",
+  "EF": "RADIODETERMINATION_SATELLITE",
+  "EM": "METEOROLOGICAL_SATELLITE",
+  "EH": "SPACE_RESEARCH",
+  "ET": "SPACE_OPERATION",
+  "ER": "SPACE_OPERATION",
+  "EK": "SPACE_OPERATION",
+  "ED": "SPACE_OPERATION",
+  "EW": "EARTH_EXPLORATION_SATELLITE",
+  "ES": "INTER_SATELLITE"
+ },
+ "entries": [
+  {
+   "entry_id": "T21-4-01",
+   "bands": [
+    {
+     "min_mhz": 1670,
+     "max_mhz": 1700,
+     "label": "1670-1700 MHz"
+    }
+   ],
+   "services": [
+    "EARTH_EXPLORATION_SATELLITE",
+    "METEOROLOGICAL_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 90,
+       "base_db": -133,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1500000.0
+    }
+   ],
+   "printed_page": 287,
+   "footnotes": [],
+   "notes": [
+    "Value based on sharing with the meteorological aids service."
+   ]
+  },
+  {
+   "entry_id": "T21-4-02",
+   "bands": [
+    {
+     "min_mhz": 1525,
+     "max_mhz": 1530,
+     "label": "1 525-1 530 MHz (Region 1)"
+    },
+    {
+     "min_mhz": 1700,
+     "max_mhz": 1710,
+     "label": "1700-1710 MHz"
+    },
+    {
+     "min_mhz": 2025,
+     "max_mhz": 2110,
+     "label": "2025-2110 MHz"
+    },
+    {
+     "min_mhz": 2200,
+     "max_mhz": 2300,
+     "label": "2200-2300 MHz"
+    }
+   ],
+   "services": [
+    "METEOROLOGICAL_SATELLITE",
+    "SPACE_RESEARCH",
+    "SPACE_OPERATION",
+    "EARTH_EXPLORATION_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -154,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -154,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -144,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    }
+   ],
+   "printed_page": 287,
+   "footnotes": [
+    "21.16.3"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-03a",
+   "bands": [
+    {
+     "min_mhz": 2500,
+     "max_mhz": 2690,
+     "label": "2500-2690 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -136,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -136,
+       "slope_db_per_deg": 0.55,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -125,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 287,
+   "footnotes": [
+    "21.16.3A (Resolution 903 (Rev.WRC-19) applies)"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-03b",
+   "bands": [
+    {
+     "min_mhz": 2520,
+     "max_mhz": 2670,
+     "label": "2520-2670 MHz"
+    }
+   ],
+   "services": [
+    "BROADCASTING_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -136,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -136,
+       "slope_db_per_deg": 0.55,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -125,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 287,
+   "footnotes": [
+    "21.16.3A"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-03c",
+   "bands": [
+    {
+     "min_mhz": 2500,
+     "max_mhz": 2520,
+     "label": "2500-2520 MHz"
+    }
+   ],
+   "services": [
+    "MOBILE_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -136,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -136,
+       "slope_db_per_deg": 0.55,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -125,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 287,
+   "footnotes": [
+    "21.16.3A"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-04",
+   "bands": [
+    {
+     "min_mhz": 3400,
+     "max_mhz": 4200,
+     "label": "3400-4200 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -152,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -152,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -142,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    }
+   ],
+   "printed_page": 287,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-05",
+   "bands": [
+    {
+     "min_mhz": 3400,
+     "max_mhz": 4200,
+     "label": "3400-4200 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "NGSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -138,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -138,
+       "slope_db_per_deg": 0.6,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -126,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 287,
+   "footnotes": [
+    "21.16.15",
+    "21.16.16"
+   ],
+   "notes": [],
+   "parameter": {
+    "name": "Y",
+    "definition": "21.16.15: Y = 0 for max(NN, NS) <= 2, else 5 log(max(NN, NS))",
+    "segments_use": "Y = 0, the least strict value; Y > 0 only lowers the limit"
+   }
+  },
+  {
+   "entry_id": "T21-4-06",
+   "bands": [
+    {
+     "min_mhz": 4500,
+     "max_mhz": 4800,
+     "label": "4500-4800 MHz"
+    },
+    {
+     "min_mhz": 7250,
+     "max_mhz": 7900,
+     "label": "7250-7900 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "METEOROLOGICAL_SATELLITE",
+    "MOBILE_SATELLITE",
+    "SPACE_RESEARCH"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -152,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -152,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -142,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-07",
+   "bands": [
+    {
+     "min_mhz": 5150,
+     "max_mhz": 5216,
+     "label": "5150-5216 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 90,
+       "base_db": -164,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-08",
+   "bands": [
+    {
+     "min_mhz": 6700,
+     "max_mhz": 6825,
+     "label": "6700-6825 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -137,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -137,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -127,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [
+    "21.16.7"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-09",
+   "bands": [
+    {
+     "min_mhz": 6825,
+     "max_mhz": 7075,
+     "label": "6825-7075 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -154,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -154,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -144,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    },
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -134,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -134,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -124,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [],
+   "notes": [
+    "Both limits apply (4 kHz and 1 MHz)."
+   ]
+  },
+  {
+   "entry_id": "T21-4-10",
+   "bands": [
+    {
+     "min_mhz": 8025,
+     "max_mhz": 8500,
+     "label": "8025-8500 MHz"
+    }
+   ],
+   "services": [
+    "EARTH_EXPLORATION_SATELLITE",
+    "SPACE_RESEARCH"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -150,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -150,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -140,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-11",
+   "bands": [
+    {
+     "min_mhz": 10700,
+     "max_mhz": 11700,
+     "label": "10700-11700 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -150,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -150,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -140,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-12",
+   "bands": [
+    {
+     "min_mhz": 10700,
+     "max_mhz": 11700,
+     "label": "10700-11700 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "NGSO_NOT_HIO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -126,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -126,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -116,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [
+    "21.16.18"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-13",
+   "bands": [
+    {
+     "min_mhz": 10700,
+     "max_mhz": 11700,
+     "label": "10700-11700 MHz"
+    },
+    {
+     "min_mhz": 11700,
+     "max_mhz": 12500,
+     "label": "11.7-12.5 GHz (Region 1)"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "NGSO_HIO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -129,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -129,
+       "slope_db_per_deg": 0.75,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -114,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 288,
+   "footnotes": [
+    "21.16.16",
+    "21.16.17"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-14",
+   "bands": [
+    {
+     "min_mhz": 11700,
+     "max_mhz": 12500,
+     "label": "11.7-12.5 GHz (Region 1)"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "NGSO_NOT_HIO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -124,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -124,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -114,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 289,
+   "footnotes": [
+    "21.16.18"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-15",
+   "bands": [
+    {
+     "min_mhz": 13400,
+     "max_mhz": 13650,
+     "label": "13.4-13.65 GHz (Region 1)"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 25,
+       "base_db": -159,
+       "slope_db_per_deg": 0.4,
+       "ref_deg": 0
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 80,
+       "base_db": -149,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 80,
+       "to_deg": 84,
+       "base_db": -149,
+       "slope_db_per_deg": -0.5,
+       "ref_deg": 80
+      },
+      {
+       "from_deg": 84,
+       "to_deg": 90,
+       "base_db": -151,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 4000.0
+    }
+   ],
+   "printed_page": 289,
+   "footnotes": [
+    "21.16.9"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-16a",
+   "bands": [
+    {
+     "min_mhz": 17700,
+     "max_mhz": 19300,
+     "label": "17700-19300 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "INTER_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -115,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 289,
+   "footnotes": [
+    "21.16.1",
+    "21.16.2",
+    "21.16.6A"
+   ],
+   "notes": [
+    "21.16.2: the additional 18.6-18.8 GHz limit (-95 dB(W/m2) across 200 MHz) is not modelled."
+   ]
+  },
+  {
+   "entry_id": "T21-4-16b",
+   "bands": [
+    {
+     "min_mhz": 17700,
+     "max_mhz": 19300,
+     "label": "17700-19300 MHz"
+    }
+   ],
+   "services": [
+    "METEOROLOGICAL_SATELLITE"
+   ],
+   "orbit": "ANY_NOT_HIO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -115,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 289,
+   "footnotes": [
+    "21.16.6A"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-16c",
+   "bands": [
+    {
+     "min_mhz": 17700,
+     "max_mhz": 19300,
+     "label": "17700-19300 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "INTER_SATELLITE"
+   ],
+   "orbit": "NGSO_NOT_HIO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -115,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 289,
+   "footnotes": [
+    "21.16.6"
+   ],
+   "notes": [],
+   "parameter": {
+    "name": "X",
+    "definition": "21.16.6: X depends on the number N of satellites in the NGSO FSS constellation (0 dB for N <= 50)",
+    "segments_use": "X = 0, the least strict value; X > 0 only lowers the limit"
+   }
+  },
+  {
+   "entry_id": "T21-4-17",
+   "bands": [
+    {
+     "min_mhz": 19300,
+     "max_mhz": 19700,
+     "label": "19300-19700 MHz"
+    },
+    {
+     "min_mhz": 21400,
+     "max_mhz": 22000,
+     "label": "21.4-22 GHz (Regions 1 and 3)"
+    },
+    {
+     "min_mhz": 22550,
+     "max_mhz": 23550,
+     "label": "22550-23550 MHz"
+    },
+    {
+     "min_mhz": 24450,
+     "max_mhz": 24750,
+     "label": "24450-24750 MHz"
+    },
+    {
+     "min_mhz": 25250,
+     "max_mhz": 27500,
+     "label": "25250-27500 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "BROADCASTING_SATELLITE",
+    "EARTH_EXPLORATION_SATELLITE",
+    "INTER_SATELLITE",
+    "SPACE_RESEARCH"
+   ],
+   "orbit": "ANY_NOT_HIO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -115,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [
+    "21.16.6B"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-18",
+   "bands": [
+    {
+     "min_mhz": 27500,
+     "max_mhz": 27501,
+     "label": "27500-27501 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -115,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-19",
+   "bands": [
+    {
+     "min_mhz": 31800,
+     "max_mhz": 32300,
+     "label": "31800-32300 MHz"
+    }
+   ],
+   "services": [
+    "SPACE_RESEARCH"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -120,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -120,
+       "slope_db_per_deg": 0.75,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [
+    "21.16.10"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-20",
+   "bands": [
+    {
+     "min_mhz": 32300,
+     "max_mhz": 33000,
+     "label": "32300-33000 MHz"
+    }
+   ],
+   "services": [
+    "INTER_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -135,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -135,
+       "slope_db_per_deg": 1.0,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-21a",
+   "bands": [
+    {
+     "min_mhz": 37000,
+     "max_mhz": 38000,
+     "label": "37000-38000 MHz"
+    }
+   ],
+   "services": [
+    "SPACE_RESEARCH"
+   ],
+   "orbit": "NGSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -120,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -120,
+       "slope_db_per_deg": 0.75,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [
+    "21.16.10"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-21b",
+   "bands": [
+    {
+     "min_mhz": 37000,
+     "max_mhz": 38000,
+     "label": "37000-38000 MHz"
+    }
+   ],
+   "services": [
+    "SPACE_RESEARCH"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -125,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -125,
+       "slope_db_per_deg": 1.0,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-22",
+   "bands": [
+    {
+     "min_mhz": 37500,
+     "max_mhz": 40000,
+     "label": "37500-40000 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "MOBILE_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -127,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 20,
+       "base_db": -127,
+       "slope_db_per_deg": 1.3333333333333333,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 20,
+       "to_deg": 25,
+       "base_db": -107,
+       "slope_db_per_deg": 0.4,
+       "ref_deg": 20
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [
+    "21.16.14"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-23",
+   "bands": [
+    {
+     "min_mhz": 40000,
+     "max_mhz": 40500,
+     "label": "40000-40500 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "MOBILE_SATELLITE"
+   ],
+   "orbit": "ANY",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -115,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 290,
+   "footnotes": [],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-24",
+   "bands": [
+    {
+     "min_mhz": 40500,
+     "max_mhz": 42000,
+     "label": "40500-42000 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "BROADCASTING_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -120,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 15,
+       "base_db": -120,
+       "slope_db_per_deg": 1.0,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 15,
+       "to_deg": 25,
+       "base_db": -110,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 15
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 291,
+   "footnotes": [
+    "21.16.14"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-25",
+   "bands": [
+    {
+     "min_mhz": 42000,
+     "max_mhz": 42500,
+     "label": "42000-42500 MHz"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE",
+    "BROADCASTING_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -127,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 20,
+       "base_db": -127,
+       "slope_db_per_deg": 1.3333333333333333,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 20,
+       "to_deg": 25,
+       "base_db": -107,
+       "slope_db_per_deg": 0.4,
+       "ref_deg": 20
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 291,
+   "footnotes": [
+    "21.16.14"
+   ],
+   "notes": []
+  },
+  {
+   "entry_id": "T21-4-26",
+   "bands": [
+    {
+     "min_mhz": 47500,
+     "max_mhz": 47900,
+     "label": "47.5-47.9 GHz (Region 1)"
+    },
+    {
+     "min_mhz": 48200,
+     "max_mhz": 48540,
+     "label": "48.2-48.54 GHz (Region 1)"
+    },
+    {
+     "min_mhz": 49440,
+     "max_mhz": 50200,
+     "label": "49.44-50.2 GHz (Region 1)"
+    }
+   ],
+   "services": [
+    "FIXED_SATELLITE"
+   ],
+   "orbit": "GSO",
+   "limits": [
+    {
+     "segments": [
+      {
+       "from_deg": 0,
+       "to_deg": 5,
+       "base_db": -115,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      },
+      {
+       "from_deg": 5,
+       "to_deg": 25,
+       "base_db": -115,
+       "slope_db_per_deg": 0.5,
+       "ref_deg": 5
+      },
+      {
+       "from_deg": 25,
+       "to_deg": 90,
+       "base_db": -105,
+       "slope_db_per_deg": 0.0,
+       "ref_deg": 0.0
+      }
+     ],
+     "reference_bandwidth_hz": 1000000.0
+    }
+   ],
+   "printed_page": 291,
+   "footnotes": [],
+   "notes": []
+  }
+ ],
+ "excluded": [
+  {
+   "entry": "1 518-1 525 MHz",
+   "reason": "Territory of the United States in Region 2 only"
+  },
+  {
+   "entry": "1 670-1 690 MHz (second entry, footnote 12)",
+   "reason": "21.16.5: only where shared with equal rights with the meteorological aids service; not established for Finland"
+  },
+  {
+   "entry": "1 690-1 700 MHz (Nos. 5.381, 5.382)",
+   "reason": "Country footnotes; Finland's inclusion not established"
+  },
+  {
+   "entry": "2 500-2 516.5 MHz (No. 5.404), 2 520-2 535 MHz (No. 5.403)",
+   "reason": "Country footnotes; Finland's inclusion not established"
+  },
+  {
+   "entry": "5 670-5 725 MHz (Nos. 5.453, 5.455)",
+   "reason": "Country footnotes; Finland's inclusion not established"
+  },
+  {
+   "entry": "9 900-10 400 MHz EESS (active)",
+   "reason": "21.16.8: mean pfd of a SAR from pulse parameters, not the notified power density"
+  },
+  {
+   "entry": "12.5-12.75 GHz (Region 1 countries in Nos. 5.494, 5.496); 12.2-12.75 GHz (Region 3)",
+   "reason": "Country or Region condition not established for Finland"
+  },
+  {
+   "entry": "17.7-19.7 GHz highly-inclined orbits (21.16.6B, 21.16.6C)",
+   "reason": "Depends on Resolution 147 status and Bureau receipt dates not in the screening data"
+  },
+  {
+   "entry": "27.5-30.0 GHz inter-satellite NGSO (21.16.19)",
+   "reason": "Resolution 679 Annex 2 methodology required"
+  },
+  {
+   "entry": "31.0-31.3 GHz, 34.7-35.2 GHz space research (Nos. 5.549, 5.550)",
+   "reason": "Country footnotes"
+  },
+  {
+   "entry": "37.5-40 GHz, 40.5-42.5 GHz NGSO (21.16.4)",
+   "reason": "Valid only for systems with 99 or fewer satellites; the count is not in the screening data"
+  }
+ ],
+ "approval": {
+  "approved_by": "SCP619 (AstraSync team lead), per the Traficom organizers' confirmation that RR Article 21 PFD limits are the primary reference",
+  "approved_at": "2026-11-08",
+  "review_reference": "docs/TRAFICOM_CHALLENGE_CLARIFICATIONS.md C10"
+ }
+}

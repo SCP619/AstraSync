@@ -29,7 +29,7 @@ from .contract.enums import (
     RecordStatus,
 )
 from .contract.interfaces import SourceAdapter
-from .contract.models import AdapterRecord, ReferenceStationRecord
+from .contract.models import STATION_FIELDS_ADDED_LATER, AdapterRecord, ReferenceStationRecord
 from .jobs import PermanentJobError, emit_event, update_progress, utc_now
 from .library_tables import (
     ArtifactIntegrityCheckRow,
@@ -452,6 +452,7 @@ def _write_batch(
                 station = (
                     ReferenceStationRecord.model_validate(
                         {
+                            **dict.fromkeys(STATION_FIELDS_ADDED_LATER),
                             **record.reference_station,
                             "source_record_id": f"{artifact_id}-{ordinal}",
                             "is_synthetic": artifact.is_synthetic,

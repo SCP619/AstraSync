@@ -207,6 +207,8 @@ def parse_row(excel_row: int, cells: tuple[Any, ...]) -> dict[str, Any]:
         "transmission_bandwidth", units.bandwidth_designation_hz(raw["transmission_bandwidth"])
     )
 
+    effective_hz, bandwidth_rule = _effective_bandwidth(row, channel_hz, emission_hz)
+
     ground_m = row.parsed("ground_height_m", units.number(raw["ground_height_m"]))
     mast_m = row.parsed("mast_height_m", units.number(raw["mast_height_m"]))
     agl_m = row.parsed("antenna_height_agl_m", units.number(raw["antenna_height_agl_m"]))
@@ -264,6 +266,7 @@ def parse_row(excel_row: int, cells: tuple[Any, ...]) -> dict[str, Any]:
         "reference_station": {
             "station_number_raw": raw["station_number"],
             "licence_class_code": _code(raw["licence_class"]),
+            "licence_class_normalized": _licence_class(raw["licence_class"]),
             "longitude_deg": longitude,
             "latitude_deg": latitude,
             "ground_elevation_m": ground_m,
@@ -275,6 +278,8 @@ def parse_row(excel_row: int, cells: tuple[Any, ...]) -> dict[str, Any]:
             "rx_frequency_hz": rx_hz,
             "channel_bandwidth_hz": channel_hz,
             "emission_bandwidth_hz": emission_hz,
+            "effective_bandwidth_hz": effective_hz,
+            "effective_bandwidth_rule": bandwidth_rule,
             "polarization_code": _code(raw["polarisation"]),
             "radiation_power_value": power,
             "radiation_power_unit": power_unit,
@@ -283,6 +288,43 @@ def parse_row(excel_row: int, cells: tuple[Any, ...]) -> dict[str, Any]:
             "directivity_code": _code(raw["directivity"]),
         },
     }
+
+
+# Licence classes kept as published; anything else (or blank) screens as MUUT ("others"), with the
+# original value preserved in ``licence_class_code`` and ``raw_fields``. Organizer guidance: the
+# licence class is not the key field for relevance (docs/TRAFICOM_CHALLENGE_CLARIFICATIONS.md, C2).
+KNOWN_LICENCE_CLASSES = frozenset({"BC", "BT", "FX", "MVV", "MUUT"})
+# Channel and transmission bandwidths that differ by more than this are a data-quality mismatch.
+BANDWIDTH_MISMATCH_TOLERANCE = 0.01
+
+
+def _licence_class(raw: str | None) -> str:
+    code = _code(raw)
+    return code if code in KNOWN_LICENCE_CLASSES else "MUUT"
+
+
+def _effective_bandwidth(
+    row: _Row, channel_hz: float | None, emission_hz: float | None
+) -> tuple[float | None, str | None]:
+    """Screening bandwidth, stored beside (never over) the raw channel and transmission widths.
+
+    Organizer clarification C3/C4: the workbook has transcription errors (station 440557: 2500 kHz
+    channel, 118600k transmission); where the two disagree the smaller valid value is used. For
+    the BC 9 kHz / 10 kHz pairs this selects the 9 kHz European broadcast channel. This is not an
+    occupied, regulatory-reference or receiver bandwidth; those are handled by the RF methods.
+    """
+    values = [v for v in (channel_hz, emission_hz) if v is not None and v > 0]
+    if not values:
+        return None, None
+    if len(values) == 1:
+        return values[0], (
+            "CHANNEL_BANDWIDTH_ONLY" if channel_hz is not None else "TRANSMISSION_BANDWIDTH_ONLY"
+        )
+    if abs(values[0] - values[1]) <= BANDWIDTH_MISMATCH_TOLERANCE * max(values):
+        return values[0], "CONSISTENT"
+    smaller = min(values)
+    row.flag("transmission_bandwidth", "BANDWIDTH_MISMATCH", "WARNING", smaller)
+    return smaller, "MISMATCH_SMALLER_VALID_VALUE"
 
 
 def _status(findings: list[dict[str, Any]]) -> str | None:

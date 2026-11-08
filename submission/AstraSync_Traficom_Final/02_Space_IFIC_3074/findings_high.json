@@ -1,0 +1,269 @@
+{
+ "issue": 3074,
+ "kind": "SPACE_IFIC",
+ "findings": [
+  {
+   "domain": "SPACE",
+   "notice_id": "126545119",
+   "administration": "D",
+   "notice_type": "NON_GSO_SPACE_STATION",
+   "satellite_name": "SOLAR SENTRY",
+   "earth_station_name": null,
+   "provision": "9.1/IA",
+   "special_sections": [
+    "API/A/14387"
+   ],
+   "ific_part": null,
+   "change": {
+    "change_type": "NEW",
+    "basis": "Special Section API/A (advance publication), no target notice",
+    "action_code_raw": "A",
+    "in_previous_issue": false
+   },
+   "stage_a_frequency": {
+    "groups": 4,
+    "groups_overlapping_special_interest_stations": 2,
+    "downlink_groups_overlapping_special_interest_stations": 2,
+    "note": "M4 overlap is recorded per group; every frequency lies in some M4 band."
+   },
+   "stage_b_service": {
+    "status": "MATCH",
+    "downlink_in_band_with_finnish_terrestrial_service": true,
+    "service_area_includes_finland": true
+   },
+   "stage_c_geometry": {
+    "status": "REACHES_FINLAND_LATITUDES",
+    "inclination_deg_range": [
+     97.4000015258789,
+     97.69999694824219
+    ],
+    "perigee_km_range": [
+     510.0,
+     590.0
+    ],
+    "apogee_km_range": [
+     510.0,
+     590.0
+    ],
+    "min_slant_range_km": 510.0,
+    "basis": "Highest inclination and altitude; minimum slant range at the lowest perigee and 59.7 N (spherical Earth, circular-orbit approximation)."
+   },
+   "stage_d_readiness": {
+    "status": "READY",
+    "method": "SPACE_PFD_FREE_SPACE",
+    "groups_with_pfd": 3
+   },
+   "data_quality_anomalies": [],
+   "data_quality_anomaly_count": 0,
+   "groups": [
+    {
+     "group_id": 126664723,
+     "beam": "TXS",
+     "direction": "TRANSMIT",
+     "range_mhz": [
+      2244.0,
+      2246.0
+     ],
+     "classes_services": [
+      "ET/CV"
+     ],
+     "service_area_includes_finland": false,
+     "frequency_status": "MATCH",
+     "special_interest_overlaps": [
+      "Station 800027 RX",
+      "Station 800028 RX",
+      "Station 800029 RX",
+      "Station 800057 TX",
+      "Station 800058 TX"
+     ],
+     "finnish_terrestrial_service_in_band": true,
+     "pfd_db_w_m2_hz_upper_bound": -179.74
+    },
+    {
+     "group_id": 126664724,
+     "beam": "TXSLOW",
+     "direction": "TRANSMIT",
+     "range_mhz": [
+      2244.0,
+      2246.0
+     ],
+     "classes_services": [
+      "ET/CV"
+     ],
+     "service_area_includes_finland": false,
+     "frequency_status": "MATCH",
+     "special_interest_overlaps": [
+      "Station 800027 RX",
+      "Station 800028 RX",
+      "Station 800029 RX",
+      "Station 800057 TX",
+      "Station 800058 TX"
+     ],
+     "finnish_terrestrial_service_in_band": true,
+     "pfd_db_w_m2_hz_upper_bound": -180.74
+    },
+    {
+     "group_id": 126664722,
+     "beam": "TXUHF",
+     "direction": "TRANSMIT",
+     "range_mhz": [
+      401.0,
+      401.05
+     ],
+     "classes_services": [
+      "ET/CV"
+     ],
+     "service_area_includes_finland": true,
+     "frequency_status": "M4_ONLY",
+     "special_interest_overlaps": [],
+     "finnish_terrestrial_service_in_band": true,
+     "pfd_db_w_m2_hz_upper_bound": -165.94
+    },
+    {
+     "group_id": 126664721,
+     "beam": "RXUHF",
+     "direction": "RECEIVE",
+     "range_mhz": [
+      401.0,
+      401.05
+     ],
+     "classes_services": [
+      "EW/CV"
+     ],
+     "service_area_includes_finland": true,
+     "frequency_status": "M4_ONLY",
+     "special_interest_overlaps": [],
+     "finnish_terrestrial_service_in_band": false
+    }
+   ],
+   "calculations": [
+    {
+     "method_id": "SPACE_PFD_FREE_SPACE",
+     "method_version": "1.0.0",
+     "metric_kind": "PFD",
+     "numeric_value": -165.94350211449597,
+     "unit": "dB(W/m^2)",
+     "reference_bandwidth_hz": 1.0,
+     "time_percentage": null,
+     "location_percentage": null,
+     "inputs": {
+      "eirp_toward_receiver_dbw": -40.799999952316284,
+      "slant_range_m": 510000.0,
+      "additional_loss_db": 0.0,
+      "eirp_reference_bandwidth_hz": 1.0
+     },
+     "assumptions": [
+      "Idealised free space: inverse-square spreading only.",
+      "The scenario states the EIRP toward this receive point and the slant range to it; neither is derived here.",
+      "Single emitter; no aggregation and no time variation.",
+      "No additional propagation loss (A_additional = 0 dB).",
+      "UPPER_BOUND: notified maximum power density (dBW/Hz) + maximum beam gain, as if the beam peak pointed at Finland"
+     ],
+     "diagnostics": {
+      "role": "SCREENING"
+     },
+     "result_trace": {
+      "formula": "PFD = EIRP_toward_receiver - 10*log10(4*pi*r^2) - A_additional",
+      "spreading_loss_db_m2": 125.14350216217969,
+      "additional_loss_db": 0.0,
+      "pfd_w_per_m2": 2.5447773377396247e-17
+     },
+     "implementation_sha": "d9e450a01059dff4de12ce20d4c12ab30061186d8e69a01e41014d0cb0f7d40f",
+     "calculation_sha256": "f9af5f23d34b5cd03915073663928bfdb93e8363143a65928e9128b3528ed4b7",
+     "group_id": 126664722
+    },
+    {
+     "method_id": "SPACE_PFD_FREE_SPACE",
+     "method_version": "1.0.0",
+     "metric_kind": "PFD",
+     "numeric_value": -179.7435025436494,
+     "unit": "dB(W/m^2)",
+     "reference_bandwidth_hz": 1.0,
+     "time_percentage": null,
+     "location_percentage": null,
+     "inputs": {
+      "eirp_toward_receiver_dbw": -54.60000038146973,
+      "slant_range_m": 510000.0,
+      "additional_loss_db": 0.0,
+      "eirp_reference_bandwidth_hz": 1.0
+     },
+     "assumptions": [
+      "Idealised free space: inverse-square spreading only.",
+      "The scenario states the EIRP toward this receive point and the slant range to it; neither is derived here.",
+      "Single emitter; no aggregation and no time variation.",
+      "No additional propagation loss (A_additional = 0 dB).",
+      "UPPER_BOUND: notified maximum power density (dBW/Hz) + maximum beam gain, as if the beam peak pointed at Finland"
+     ],
+     "diagnostics": {
+      "role": "SCREENING"
+     },
+     "result_trace": {
+      "formula": "PFD = EIRP_toward_receiver - 10*log10(4*pi*r^2) - A_additional",
+      "spreading_loss_db_m2": 125.14350216217969,
+      "additional_loss_db": 0.0,
+      "pfd_w_per_m2": 1.0608396550246168e-18
+     },
+     "implementation_sha": "d9e450a01059dff4de12ce20d4c12ab30061186d8e69a01e41014d0cb0f7d40f",
+     "calculation_sha256": "dd9e3ece8cc5e0bcde0fcc33a55ff4bdb7f0db7c16ffb37342dba5df93740da4",
+     "group_id": 126664723
+    },
+    {
+     "method_id": "SPACE_PFD_FREE_SPACE",
+     "method_version": "1.0.0",
+     "metric_kind": "PFD",
+     "numeric_value": -180.7435025436494,
+     "unit": "dB(W/m^2)",
+     "reference_bandwidth_hz": 1.0,
+     "time_percentage": null,
+     "location_percentage": null,
+     "inputs": {
+      "eirp_toward_receiver_dbw": -55.60000038146973,
+      "slant_range_m": 510000.0,
+      "additional_loss_db": 0.0,
+      "eirp_reference_bandwidth_hz": 1.0
+     },
+     "assumptions": [
+      "Idealised free space: inverse-square spreading only.",
+      "The scenario states the EIRP toward this receive point and the slant range to it; neither is derived here.",
+      "Single emitter; no aggregation and no time variation.",
+      "No additional propagation loss (A_additional = 0 dB).",
+      "UPPER_BOUND: notified maximum power density (dBW/Hz) + maximum beam gain, as if the beam peak pointed at Finland"
+     ],
+     "diagnostics": {
+      "role": "SCREENING"
+     },
+     "result_trace": {
+      "formula": "PFD = EIRP_toward_receiver - 10*log10(4*pi*r^2) - A_additional",
+      "spreading_loss_db_m2": 125.14350216217969,
+      "additional_loss_db": 0.0,
+      "pfd_w_per_m2": 8.426548905012202e-19
+     },
+     "implementation_sha": "d9e450a01059dff4de12ce20d4c12ab30061186d8e69a01e41014d0cb0f7d40f",
+     "calculation_sha256": "acfaa5652c0146b64884f890def3aa6e45c8f52baab3e7e3c76f640d3c1dfafe",
+     "group_id": 126664724
+    }
+   ],
+   "max_pfd": -165.94350211449597,
+   "max_pfd_unit": "dB(W/m^2) in 1 Hz (upper bound)",
+   "priority": {
+    "score": 12,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap_downlink": 3,
+     "service_area_includes_finland": 3,
+     "visible_from_or_reaches_finland": 2,
+     "finnish_terrestrial_service_in_downlink_band": 1,
+     "api_a_or_cr_c_special_section": 1,
+     "ap30_30a_30b": 0,
+     "pfd_upper_bound_available": 1
+    }
+   },
+   "finding_status": "EXPERT_REVIEW_REQUIRED",
+   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "rule_version": "ific-finland-relevance/1.0.0"
+  }
+ ],
+ "skipped": null,
+ "note": "HIGH tier only; findings.json.gz holds every finding."
+}

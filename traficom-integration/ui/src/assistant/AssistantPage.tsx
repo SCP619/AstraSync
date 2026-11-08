@@ -131,6 +131,11 @@ export function AssistantPage() {
                 {turn.answer && (
                   <div className="message assistant">
                     <p className="pre-wrap">{turn.answer.answer_markdown}</p>
+                    {turn.answer.generation === "DETERMINISTIC_FALLBACK" && (
+                      <p className="small review">
+                        Fixed summary of the evidence: the local model's reply was refused by the checks.
+                      </p>
+                    )}
                     <p className="small muted">
                       {turn.answer.cited_evidence_ids.map((id) => (
                         <span key={id} className="citation">evidence {id.slice(-8)}</span>

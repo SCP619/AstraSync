@@ -593,6 +593,8 @@ def _terrestrial_finding(
         "administration": record["administration"],
         "station_class": norm(record, "station_class"),
         "site_name": norm(record, "site_name"),
+        # Notified transmitter location (lat, lon degrees), for maps; null when not notified.
+        "site_coordinates": [lat, lon] if lat is not None and lon is not None else None,
         "frequency_mhz": norm(record, "assigned_frequency_mhz"),
         "bandwidth_khz": norm(record, "bandwidth_khz"),
         "publications": norm(record, "publications"),

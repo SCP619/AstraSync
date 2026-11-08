@@ -1,0 +1,48 @@
+{
+  "criterion_set_id": "ECC-TR2508-A1.2.3",
+  "version": "1.0.0",
+  "source": {
+    "document": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz",
+    "edition": "Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025)",
+    "edition_date": "2025-06-06",
+    "section": "Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems",
+    "source_url": "https://docdb.cept.org/document/909",
+    "download_url": "https://docdb.cept.org/download/4789",
+    "retrieved": "2026-11-08"
+  },
+  "metric": "FIELD_STRENGTH",
+  "unit": "dB(uV/m)",
+  "conditions": {
+    "interference_scenario": "co-channel",
+    "location_percentage": 50.0,
+    "time_percentage": 10.0,
+    "rx_height_agl_m": 10.0,
+    "reference_bandwidth_khz": 25.0,
+    "evaluation_location": "at the border-line"
+  },
+  "time_percentage_note": "Footnote 2 of A1.2.3: in certain situations the 1% time curves should be used for digital systems, e.g. to better protect analogue systems. Not applied by default (no organizer instruction); 10% time is used.",
+  "bands": [
+    {"min_mhz": 29.7, "max_mhz": 47.0, "threshold_dbuv_m": 0.0},
+    {"min_mhz": 47.0, "max_mhz": 108.0, "threshold_dbuv_m": 6.0},
+    {"min_mhz": 108.0, "max_mhz": 380.0, "threshold_dbuv_m": 12.0},
+    {"min_mhz": 380.0, "max_mhz": 400.0, "threshold_dbuv_m": 18.0},
+    {"min_mhz": 400.0, "max_mhz": 470.0, "threshold_dbuv_m": 20.0}
+  ],
+  "bandwidth_correction": {
+    "formula": "BC = 10 x log10(channel spacing / 25 kHz) dB, added to the threshold for channel spacing greater than 25 kHz",
+    "condition": "Valid when the spectral power distribution within the channel spacing is uniform; otherwise the threshold applies within every 25 kHz. AstraSync uses the notified bandwidth as the channel spacing and records uniform distribution as an assumption."
+  },
+  "challenge_extension_above_470_mhz": {
+    "enabled": true,
+    "max_mhz": 4000.0,
+    "threshold_dbuv_m": 20.0,
+    "basis": "Since AI 2026 Traficom challenge organizer clarification: the general land-mobile criterion for the band above 400 MHz may be applied to IFIC 3076 land-mobile records above 470 MHz. This is a challenge-specific extension, not normative coverage of T/R 25-08 (whose scope ends at 470 MHz).",
+    "upper_limit_basis": "ITU-R P.1546-6 frequency range (30-4000 MHz)"
+  },
+  "approval": {
+    "approved_by": "SCP619 (AstraSync team lead), applying the Traficom challenge organizers' clarification",
+    "approved_at": "2026-11-08",
+    "review_reference": "docs/TRAFICOM_CHALLENGE_CLARIFICATIONS.md C12-C13"
+  },
+  "interpretation": "An indicative coordination threshold: a field strength above it at the border means the assignment should not be brought into use without coordination with Finland. Exceeding it is a coordination concern, not harmful interference and not non-compliance."
+}

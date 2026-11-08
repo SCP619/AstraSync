@@ -262,7 +262,8 @@ def test_an_indexed_issue_is_analysed_into_findings_and_cases(
     assert near["stage_a_frequency"]["status"] == "MATCH"
     assert near["stage_b_service"]["finnish_mobile_allocation"] is True
     assert near["calculations"][0]["method_id"] == "TERR_P1546"
-    assert near["regulatory_finding"].startswith("NOT_EVALUATED")
+    assert near["regulatory_finding"].startswith(("SCREENING_ONLY", "NOT_EVALUATED"))
+    assert "concern" in near and "border_screening" in near
 
     listed = secure_client.get("/api/v1/ific/analyses", headers=bearer("analyst-a"))
     assert listed.status_code == 200, listed.text

@@ -119,7 +119,16 @@ def test_terrestrial_stages_and_priority_for_a_border_station() -> None:
     assert far["priority"]["tier"] != "HIGH"
     assert far["stage_c_geography"]["distance_to_finland_km"] > 500
     # No approved criterion: never more than expert review.
-    assert all(f["regulatory_finding"].startswith("NOT_EVALUATED") for f in result["findings"])
+    # Screening against the T/R 25-08 coordination threshold, never a regulatory finding.
+    assert near["regulatory_finding"].startswith("SCREENING_ONLY")
+    assert near["border_screening"]["status"] == "READY"
+    assert near["criterion"]["basis"] == "NORMATIVE_T/R_25-08_A1.2.3"
+    assert near["criterion"]["threshold_dbuv_m"] == 20.0
+    assert near["concern"]["classification"] == "VERIFIED_CRITERION_EXCEEDANCE"
+    assert all(
+        f["regulatory_finding"].startswith(("SCREENING_ONLY", "NOT_EVALUATED"))
+        for f in result["findings"]
+    )
 
 
 def test_missing_power_blocks_the_calculation_instead_of_guessing() -> None:

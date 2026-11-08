@@ -27,6 +27,7 @@ include = ["astrasync_data*", "astrasync_physics*"]
 
 [tool.setuptools.package-data]
 astrasync_physics = ["p1546_tables.json"]
+astrasync_data = ["*.json", "criteria/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

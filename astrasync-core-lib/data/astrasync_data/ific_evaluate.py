@@ -26,7 +26,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from . import border_screening
+from . import border_screening, space_criteria
 from . import ific_analysis as A
 from . import itu_ific as I
 from .traficom_m4_table import TraficomM4TableAdapter
@@ -180,7 +180,19 @@ def evaluate(
                 "with Finland, not harmful interference or non-compliance.",
             }
             if kind == I.TERRESTRIAL_SOURCE_TYPE
-            else "None approved for space. No PFD limit comparison is made."
+            else {
+                "space": space_criteria.registry()["source"],
+                "criterion_set_id": space_criteria.registry()["criterion_set_id"],
+                "version": space_criteria.registry()["version"],
+                "entries": len(space_criteria.registry()["entries"]),
+                "excluded_entries": space_criteria.registry()["excluded"],
+                "assessment_version": space_criteria.ASSESSMENT_VERSION,
+                "concern_margin_db": space_criteria.DEFAULT_CONCERN_MARGIN_DB,
+                "meaning": "Worst-case free-space PFD upper bound (peak beam gain toward Finland) "
+                "against RR Table 21-4: a negative margin shows the notified maxima stay below "
+                "the limit everywhere in Finland; a positive margin is a worst-case exceedance "
+                "needing the real antenna pattern, not a finding of non-compliance.",
+            }
         ),
         "environment": {"python": sys.version.split()[0], "platform": platform.platform()},
     }
@@ -204,6 +216,23 @@ def evaluate(
     )
     _write_json(out / "comparison.json", {**comparison, "trends": trends})
     _write_csv(out / "findings.csv", findings, kind)
+    if kind == I.SPACE_SOURCE_TYPE:
+        space_concerns = Counter((f.get("concern") or {}).get("classification") for f in findings)
+        _write_json(
+            out / f"space_ific_{summary.issue}_cases.json",
+            {
+                "issue": summary.issue,
+                "data_status": "REAL_IFIC_SCREENING_RESULTS (expert review required)",
+                "criterion": space_criteria.registry()["source"],
+                "concern_counts": dict(space_concerns),
+                "cases": [
+                    f
+                    for f in findings
+                    if (f.get("concern") or {}).get("classification")
+                    in ("WORST_CASE_EXCEEDANCE", "POTENTIAL_CONCERN")
+                ],
+            },
+        )
     if kind == I.TERRESTRIAL_SOURCE_TYPE:
         _write_border_points(out / "border_points.csv", findings)
         concerns = Counter((f.get("concern") or {}).get("classification") for f in findings)
@@ -337,6 +366,24 @@ def _border_columns(f: dict[str, Any]) -> list[Any]:
         concern.get("classification"),
         coordination.get("finland_mentioned"),
         json.dumps(coordination.get("rows") or [], ensure_ascii=False),
+    ]
+
+
+def _space_columns(f: dict[str, Any]) -> list[Any]:
+    concern = f.get("concern") or {}
+    checks = f.get("criterion_checks") or []
+    worst = (checks[0].get("worst_check") if checks else None) or {}
+    return [
+        worst.get("entry_id"),
+        " ".join(worst.get("bands") or []) or None,
+        worst.get("reference_bandwidth_hz"),
+        worst.get("bandwidth_used_hz"),
+        worst.get("pfd_db_w_m2"),
+        worst.get("limit_db_w_m2"),
+        worst.get("angle_of_arrival_deg"),
+        concern.get("margin_db"),
+        concern.get("classification"),
+        concern.get("groups_compared"),
     ]
 
 
@@ -489,6 +536,16 @@ def _write_csv(path: Path, findings: list[dict[str, Any]], kind: str) -> None:
                     "groups",
                     "downlink_groups_on_special_interest_frequencies",
                     "max_pfd_db_w_m2_hz_upper_bound",
+                    "table21_4_entry",
+                    "table21_4_bands",
+                    "reference_bandwidth_hz",
+                    "bandwidth_used_hz",
+                    "pfd_db_w_m2_in_reference_bw",
+                    "limit_db_w_m2",
+                    "angle_of_arrival_deg",
+                    "margin_db",
+                    "concern_classification",
+                    "groups_compared",
                     "priority_score",
                     "tier",
                     "status",
@@ -510,6 +567,7 @@ def _write_csv(path: Path, findings: list[dict[str, Any]], kind: str) -> None:
                             "downlink_groups_overlapping_special_interest_stations"
                         ],
                         None if f["max_pfd"] is None else round(f["max_pfd"], 2),
+                        *_space_columns(f),
                         f["priority"]["score"],
                         f["priority"]["tier"],
                         f["finding_status"],
@@ -547,9 +605,13 @@ def _report(
             "organizers. An exceedance indicates coordination with Finland; it is not harmful "
             "interference or non-compliance. Every flagged item needs expert review."
             if kind == I.TERRESTRIAL_SOURCE_TYPE
-            else "**What it is not.** No approved space PFD criterion is configured, so nothing "
-            "here is a limit exceedance or a statement of harmful interference. Every "
-            "high-priority item needs expert review."
+            else "**Criterion.** Downlink groups are compared with ITU RR Article 21 Table 21-4 "
+            "(No. 21.16, Edition of 2024, Rev.WRC-23) where band, service (class of station) and "
+            "orbit condition establish an entry. The PFD is a free-space upper bound with the peak "
+            "beam gain toward the worst point of a Finland grid (GSO) or the closest pass (NGSO): "
+            "a negative margin shows the notified maxima stay below the limit; a positive margin "
+            "is a worst-case exceedance needing the real antenna pattern, never a finding of "
+            "non-compliance (21.17 also allows agreed exceedance)."
         ),
         "",
         "## Inputs",
@@ -674,8 +736,11 @@ def _report(
         "- Boundaries: Natural Earth 1:10m land borders and the Traficom territorial-sea limit "
         "(WFS); screening geometry, not legal boundaries. The territorial-sea layer ends near "
         "65.5 N in the Bay of Bothnia.",
-        "- Space: no approved PFD criterion; RR Article 21 Table 21-4 values must be entered "
-        "from the authoritative edition before comparison.",
+        "- Space criterion: RR Table 21-4 entries with country, Region, Resolution or satellite-"
+        "count conditions that the IFIC data cannot establish are not applied (listed in the "
+        "manifest). Limits depending on X or Y use the least strict value, so only an "
+        "exceedance is conclusive there. The 18.6-18.8 GHz aggregate limit (21.16.2) is not "
+        "modelled. EPFD (Article 22) is not computed.",
         "- Special-interest stations are synthetic challenge data.",
         "- Terrestrial: no terrain database (heff = ha, no clearance-angle correction); "
         "antenna patterns are not applied, so values are for the direction of maximum "

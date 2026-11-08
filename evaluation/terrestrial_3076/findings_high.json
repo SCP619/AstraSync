@@ -4,323 +4,6 @@
  "findings": [
   {
    "domain": "TERRESTRIAL",
-   "notice_id": "93082392",
-   "record_key": "fxm_terra!93082392",
-   "assignment_id": 126080975,
-   "administration": "RUS",
-   "station_class": "FB",
-   "site_name": "KRL RUSKEALA",
-   "frequency_mhz": 793.5,
-   "bandwidth_khz": 5000.0,
-   "publications": [
-    "NTFD_RR:1"
-   ],
-   "change": {
-    "change_type": "MODIFIED",
-    "basis": "NOTICE_INTENT_MODIFY",
-    "field_changes": [
-     {
-      "field": "radiated_power_dbw",
-      "before": 9.9,
-      "after": 4.8
-     },
-     {
-      "field": "antenna_height_agl_m",
-      "before": 40.0,
-      "after": 55.0
-     },
-     {
-      "field": "azimuth_max_radiation_deg",
-      "before": null,
-      "after": 355.0
-     },
-     {
-      "field": "beamwidth_deg",
-      "before": null,
-      "after": 65.0
-     }
-    ],
-    "targets": [
-     [
-      "92326149",
-      "MODIFY"
-     ],
-     [
-      "92861282",
-      "CONFORM"
-     ]
-    ],
-    "compared_with": "fxm_terra!92326149 (RECORDED, same extract)"
-   },
-   "stage_a_frequency": {
-    "status": "MATCH",
-    "range_mhz": [
-     791.0,
-     796.0
-    ],
-    "m4": [
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3121",
-      "label": "Mobile radio",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 788.0,
-      "reference_end_mhz": 791.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 791.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3122",
-      "label": "Mobile radio",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 788.0,
-      "reference_end_mhz": 791.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 791.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3123",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3124",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3125",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     }
-    ],
-    "m4_count": 5,
-    "stations": [
-     {
-      "reference_kind": "SPECIAL_INTEREST_STATION",
-      "reference_key": "Frequencies of interest!844:RX",
-      "label": "Station 988251 RX",
-      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
-      "reference_start_mhz": 793.9,
-      "reference_end_mhz": 798.9,
-      "overlap_start_mhz": 793.9,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": null,
-      "station_classes_in_finland": null,
-      "is_synthetic_reference": true
-     }
-    ],
-    "station_count": 1
-   },
-   "stage_b_service": {
-    "status": "MATCH",
-    "notice_service": "LAND_MOBILE",
-    "finnish_mobile_allocation": true,
-    "same_station_class_in_finland": true,
-    "special_interest_stations_on_frequency": 1
-   },
-   "stage_c_geography": {
-    "status": "WITHIN_1000_KM",
-    "distance_to_finland_km": 14.65,
-    "nearest_finland_point": [
-     61.9918,
-     30.3399
-    ],
-    "site_country": "RUS",
-    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
-   },
-   "stage_d_readiness": {
-    "status": "READY",
-    "method": "TERR_P1546",
-    "missing_inputs": []
-   },
-   "calculations": [
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": 31.754492558237796,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 793.5,
-      "time_percent": 10.0,
-      "distance_km": 14.651571270493546,
-      "erp_dbw": 4.8,
-      "tx_height_agl_m": 55.0,
-      "rx_height_agl_m": 10.0,
-      "rx_area": "Rural",
-      "effective_height_m": 55.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
-       [
-        14.651571270493548,
-        "Land"
-       ]
-      ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
-     },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
-     ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
-     },
-     "result_trace": {
-      "h1_m": 55.0,
-      "emax_dbuv_m": 83.5822749926592,
-      "e_after_mixed_path_dbuv_m": 56.95453352568347,
-      "rx_height_correction_db": 0.0,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -4.096744567447228e-05,
-      "basic_transmission_loss_db": 140.33644606357956,
-      "standard": "ITU-R P.1546-6"
-     },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "773e9524b060da63feecffd4c33cf7026c0e27197ea26b9fd6ed441ed8346357",
-     "receiver": "Nearest point of Finland"
-    },
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": -31.94300997920562,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 793.5,
-      "time_percent": 10.0,
-      "distance_km": 296.12528951590804,
-      "erp_dbw": 4.8,
-      "tx_height_agl_m": 55.0,
-      "rx_height_agl_m": 13.0,
-      "rx_area": "Rural",
-      "effective_height_m": 55.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
-       [
-        296.12528951590804,
-        "Land"
-       ]
-      ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
-     },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
-     ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
-     },
-     "result_trace": {
-      "h1_m": 55.0,
-      "emax_dbuv_m": 57.470489945991005,
-      "e_after_mixed_path_dbuv_m": -9.156010023720485,
-      "rx_height_correction_db": 2.413000131878741,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -8.73638760132622e-08,
-      "basic_transmission_loss_db": 204.03394860102298,
-      "standard": "ITU-R P.1546-6"
-     },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "76f8f7cb179fbae992b9450ea63c144194594c1e16cfa4ba2253c1cb536679f1",
-     "receiver": "Station 988251 RX"
-    }
-   ],
-   "max_field_strength": 31.754492558237796,
-   "priority": {
-    "score": 10,
-    "tier": "HIGH",
-    "components": {
-     "change_new_or_modified": 1,
-     "special_interest_frequency_overlap": 3,
-     "finnish_land_mobile_allocation": 1,
-     "within_100_km_of_finland": 2,
-     "within_300_km_of_finland": 1,
-     "neighbouring_administration": 1,
-     "calculation_available": 1
-    }
-   },
-   "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
-   "rule_version": "ific-finland-relevance/1.0.0"
-  },
-  {
-   "domain": "TERRESTRIAL",
    "notice_id": "93082383",
    "record_key": "fxm_terra!93082383",
    "assignment_id": 126080966,
@@ -603,8 +286,183 @@
     }
    ],
    "max_field_strength": 26.835856481989033,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 172,
+    "max_field_strength_dbuv_m": 26.836,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 195,
+     "lat": 64.66236,
+     "lon": 30.1878,
+     "distance_km": 28.455,
+     "path_zones": [
+      [
+       28.45476373043657,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 26.836,
+     "calculation_sha256": "0e60a9fbbfa7f280a1eea1f321c3779e0679b9295189907da6bcbbaf10b2790c"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 195,
+      "lat": 64.66236,
+      "lon": 30.1878,
+      "distance_km": 28.455,
+      "path_zones": [
+       [
+        28.45476373043657,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.836,
+      "calculation_sha256": "0e60a9fbbfa7f280a1eea1f321c3779e0679b9295189907da6bcbbaf10b2790c"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 195,
+      "lat": 64.66236,
+      "lon": 30.1878,
+      "distance_km": 28.455,
+      "path_zones": [
+       [
+        28.45476373043657,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.836,
+      "calculation_sha256": "0e60a9fbbfa7f280a1eea1f321c3779e0679b9295189907da6bcbbaf10b2790c"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 196,
+      "lat": 64.64277,
+      "lon": 30.18082,
+      "distance_km": 28.635,
+      "path_zones": [
+       [
+        28.63522563960294,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.722,
+      "calculation_sha256": "1556c53a024aaaff81fc044458bb6dd894b8b123e9a75053f22a129af4e40a99"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 194,
+      "lat": 64.68169,
+      "lon": 30.17054,
+      "distance_km": 29.573,
+      "path_zones": [
+       [
+        29.573192747739657,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.138,
+      "calculation_sha256": "20d763ca7ee304ffc6b41b0e6f0497a8a3798a45aa44632079e6479c6da42852"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 197,
+      "lat": 64.62608,
+      "lon": 30.16041,
+      "distance_km": 29.61,
+      "path_zones": [
+       [
+        29.610204746431187,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.115,
+      "calculation_sha256": "8655f6749941b68f81586365d18dcf539ed992ecfa733d60e0863cff322ca835"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 198,
+      "lat": 64.61539,
+      "lon": 30.13643,
+      "distance_km": 30.814,
+      "path_zones": [
+       [
+        30.81350846311284,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 25.407,
+      "calculation_sha256": "3f1f3e61809aa8f383eb1dc33a2204f2af771b38d9dc2593ca53e6995c7d8107"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "COORDINATION_REVIEW",
+    "margin_db": 14.84,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
    "priority": {
-    "score": 10,
+    "score": 13,
     "tier": "HIGH",
     "components": {
      "change_new_or_modified": 1,
@@ -613,11 +471,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -1189,8 +1048,183 @@
     }
    ],
    "max_field_strength": 26.531248382189183,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 173,
+    "max_field_strength_dbuv_m": 26.532,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 195,
+     "lat": 64.66236,
+     "lon": 30.1878,
+     "distance_km": 28.916,
+     "path_zones": [
+      [
+       28.916127745946394,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 26.532,
+     "calculation_sha256": "cd9c08430f63f3e16d5f8379ff6f31d3f1037afadc50013783f0f20c58df46ef"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 195,
+      "lat": 64.66236,
+      "lon": 30.1878,
+      "distance_km": 28.916,
+      "path_zones": [
+       [
+        28.916127745946394,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.532,
+      "calculation_sha256": "cd9c08430f63f3e16d5f8379ff6f31d3f1037afadc50013783f0f20c58df46ef"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 195,
+      "lat": 64.66236,
+      "lon": 30.1878,
+      "distance_km": 28.916,
+      "path_zones": [
+       [
+        28.916127745946394,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.532,
+      "calculation_sha256": "cd9c08430f63f3e16d5f8379ff6f31d3f1037afadc50013783f0f20c58df46ef"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 196,
+      "lat": 64.64277,
+      "lon": 30.18082,
+      "distance_km": 29.09,
+      "path_zones": [
+       [
+        29.089948403676583,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 26.423,
+      "calculation_sha256": "8c18862986d20da3ae409486e58f96daa59d62c26d2dcf937afb2fc91c121124"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 194,
+      "lat": 64.68169,
+      "lon": 30.17054,
+      "distance_km": 30.038,
+      "path_zones": [
+       [
+        30.038238663149052,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 25.842,
+      "calculation_sha256": "2bb0333f3d8f71acdd3b036afecf033d8931bc546b9fe51f6b6f2214b75b54f4"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 197,
+      "lat": 64.62608,
+      "lon": 30.16041,
+      "distance_km": 30.057,
+      "path_zones": [
+       [
+        30.057411567921395,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 25.831,
+      "calculation_sha256": "e45adab8260211c0545c10676202a89a87dcc1a7caacc2d64d71d2e32fa6216b"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 198,
+      "lat": 64.61539,
+      "lon": 30.13643,
+      "distance_km": 31.255,
+      "path_zones": [
+       [
+        31.25546368329158,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 25.143,
+      "calculation_sha256": "beeebe984563e6b054af423c9192b55e835362a70709fc4812a84b8fab64f8d2"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "COORDINATION_REVIEW",
+    "margin_db": 14.53,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
    "priority": {
-    "score": 10,
+    "score": 13,
     "tier": "HIGH",
     "components": {
      "change_new_or_modified": 1,
@@ -1199,11 +1233,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -1775,294 +1810,171 @@
     }
    ],
    "max_field_strength": 23.996322906727315,
-   "priority": {
-    "score": 10,
-    "tier": "HIGH",
-    "components": {
-     "change_new_or_modified": 1,
-     "special_interest_frequency_overlap": 3,
-     "finnish_land_mobile_allocation": 1,
-     "within_100_km_of_finland": 2,
-     "within_300_km_of_finland": 1,
-     "neighbouring_administration": 1,
-     "calculation_available": 1
-    }
-   },
-   "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
-   "rule_version": "ific-finland-relevance/1.0.0"
-  },
-  {
-   "domain": "TERRESTRIAL",
-   "notice_id": "93005610",
-   "record_key": "fxm_terra!93005610",
-   "assignment_id": 126004193,
-   "administration": "RUS",
-   "station_class": "FB",
-   "site_name": "KRL RUSKEALA",
-   "frequency_mhz": 793.5,
-   "bandwidth_khz": 5000.0,
-   "publications": [
-    "GE06L:B"
-   ],
-   "change": {
-    "change_type": "NEW",
-    "basis": "NOTICE_INTENT_ADD",
-    "field_changes": [],
-    "targets": []
-   },
-   "stage_a_frequency": {
-    "status": "MATCH",
-    "range_mhz": [
-     791.0,
-     796.0
-    ],
-    "m4": [
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3121",
-      "label": "Mobile radio",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 788.0,
-      "reference_end_mhz": 791.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 791.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3122",
-      "label": "Mobile radio",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 788.0,
-      "reference_end_mhz": 791.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 791.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3123",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3124",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3125",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.0,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     }
-    ],
-    "m4_count": 5,
-    "stations": [
-     {
-      "reference_kind": "SPECIAL_INTEREST_STATION",
-      "reference_key": "Frequencies of interest!844:RX",
-      "label": "Station 988251 RX",
-      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
-      "reference_start_mhz": 793.9,
-      "reference_end_mhz": 798.9,
-      "overlap_start_mhz": 793.9,
-      "overlap_end_mhz": 796.0,
-      "services_in_finland": null,
-      "station_classes_in_finland": null,
-      "is_synthetic_reference": true
-     }
-    ],
-    "station_count": 1
-   },
-   "stage_b_service": {
-    "status": "MATCH",
-    "notice_service": "LAND_MOBILE",
-    "finnish_mobile_allocation": true,
-    "same_station_class_in_finland": true,
-    "special_interest_stations_on_frequency": 1
-   },
-   "stage_c_geography": {
-    "status": "WITHIN_1000_KM",
-    "distance_to_finland_km": 13.57,
-    "nearest_finland_point": [
-     61.9918,
-     30.3399
-    ],
-    "site_country": "RUS",
-    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
-   },
-   "stage_d_readiness": {
+   "border_screening": {
     "status": "READY",
-    "method": "TERR_P1546",
-    "missing_inputs": []
-   },
-   "calculations": [
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": 22.356690323212987,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 793.5,
-      "time_percent": 10.0,
-      "distance_km": 13.570699879354928,
-      "erp_dbw": -2.2,
-      "tx_height_agl_m": 36.0,
-      "rx_height_agl_m": 10.0,
-      "rx_area": "Rural",
-      "effective_height_m": 36.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
-       [
-        13.570699879354928,
-        "Land"
-       ]
-      ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
-     },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 129,
+    "max_field_strength_dbuv_m": 20.883,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 332,
+     "lat": 62.01709,
+     "lon": 30.38678,
+     "distance_km": 42.552,
+     "path_zones": [
+      [
+       42.55234840737545,
+       "Land"
+      ]
      ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
-     },
-     "result_trace": {
-      "h1_m": 36.0,
-      "emax_dbuv_m": 84.24793913799867,
-      "e_after_mixed_path_dbuv_m": 54.556706264585785,
-      "rx_height_correction_db": 0.0,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -1.594137279749958e-05,
-      "basic_transmission_loss_db": 142.73424829860437,
-      "standard": "ITU-R P.1546-6"
-     },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "bb17f5e2ff4ff3d2978dcd78a9ecd2fa4f57d2be46fa108f048daa247e9d21c4",
-     "receiver": "Nearest point of Finland"
+     "field_strength_dbuv_m": 20.883,
+     "calculation_sha256": "41f5a704d2ba9f326bcddcbe4cf4fd8e1aec023d93cf47cf9d529d461a95274b"
     },
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": -39.366155665436494,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 793.5,
-      "time_percent": 10.0,
-      "distance_km": 293.5802560328692,
-      "erp_dbw": -2.2,
-      "tx_height_agl_m": 36.0,
-      "rx_height_agl_m": 13.0,
-      "rx_area": "Rural",
-      "effective_height_m": 36.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 42.552,
+      "path_zones": [
        [
-        293.5802560328692,
+        42.55234840737545,
         "Land"
        ]
       ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
+      "field_strength_dbuv_m": 20.883,
+      "calculation_sha256": "41f5a704d2ba9f326bcddcbe4cf4fd8e1aec023d93cf47cf9d529d461a95274b"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 42.552,
+      "path_zones": [
+       [
+        42.55234840737545,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.883,
+      "calculation_sha256": "41f5a704d2ba9f326bcddcbe4cf4fd8e1aec023d93cf47cf9d529d461a95274b"
      },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
-     ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 336,
+      "lat": 61.95639,
+      "lon": 30.29092,
+      "distance_km": 42.617,
+      "path_zones": [
+       [
+        42.617260285126434,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.859,
+      "calculation_sha256": "3ada5c79f96f86fd03ea2f9fc0423eec98ff39c5240b79e14124525a5a3130fe"
      },
-     "result_trace": {
-      "h1_m": 36.0,
-      "emax_dbuv_m": 57.54546307546004,
-      "e_after_mixed_path_dbuv_m": -9.579155770659769,
-      "rx_height_correction_db": 2.413000131878741,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -2.665546638658035e-08,
-      "basic_transmission_loss_db": 204.45709428725385,
-      "standard": "ITU-R P.1546-6"
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 333,
+      "lat": 61.99177,
+      "lon": 30.33994,
+      "distance_km": 42.661,
+      "path_zones": [
+       [
+        42.66118775230643,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.842,
+      "calculation_sha256": "1b118c33e437c9364f61ca44e64f5b3dd76c045133b97df38672747bea76a260"
      },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "46100e0b57dfc6841353c45b73cc5cb1c7aa842932a0a147c21fd91621ee3c71",
-     "receiver": "Station 988251 RX"
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 334,
+      "lat": 61.99167,
+      "lon": 30.33973,
+      "distance_km": 42.663,
+      "path_zones": [
+       [
+        42.66292569983678,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.842,
+      "calculation_sha256": "0d3b46ced851cd9849ae68fb375638b26b78d194862b0852646b52df00dcd18f"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 335,
+      "lat": 61.99167,
+      "lon": 30.33957,
+      "distance_km": 42.669,
+      "path_zones": [
+       [
+        42.6694108580507,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.839,
+      "calculation_sha256": "0d0de4f8bcb9d1db4bad7134f873338efea75391d4e819cb4c492f19ef4d84ae"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
     }
-   ],
-   "max_field_strength": 22.356690323212987,
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "VERIFIED_CRITERION_EXCEEDANCE",
+    "margin_db": 8.88,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
    "priority": {
-    "score": 10,
+    "score": 13,
     "tier": "HIGH",
     "components": {
      "change_new_or_modified": 1,
@@ -2071,342 +1983,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
-   "rule_version": "ific-finland-relevance/1.0.0"
-  },
-  {
-   "domain": "TERRESTRIAL",
-   "notice_id": "93005611",
-   "record_key": "fxm_terra!93005611",
-   "assignment_id": 126004194,
-   "administration": "RUS",
-   "station_class": "FB",
-   "site_name": "KRL RUSKEALA",
-   "frequency_mhz": 794.74,
-   "bandwidth_khz": 7200.0,
-   "publications": [
-    "GE06L:B"
-   ],
-   "change": {
-    "change_type": "NEW",
-    "basis": "NOTICE_INTENT_ADD",
-    "field_changes": [],
-    "targets": []
-   },
-   "stage_a_frequency": {
-    "status": "MATCH",
-    "range_mhz": [
-     791.14,
-     798.34
-    ],
-    "m4": [
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3123",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.14,
-      "overlap_end_mhz": 798.34,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3124",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.14,
-      "overlap_end_mhz": 798.34,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!3125",
-      "label": "Terrestrial systems capable of providing electronic communications services",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 791.0,
-      "reference_end_mhz": 821.0,
-      "overlap_start_mhz": 791.14,
-      "overlap_end_mhz": 798.34,
-      "services_in_finland": [
-       "MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     }
-    ],
-    "m4_count": 3,
-    "stations": [
-     {
-      "reference_kind": "SPECIAL_INTEREST_STATION",
-      "reference_key": "Frequencies of interest!844:RX",
-      "label": "Station 988251 RX",
-      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
-      "reference_start_mhz": 793.9,
-      "reference_end_mhz": 798.9,
-      "overlap_start_mhz": 793.9,
-      "overlap_end_mhz": 798.34,
-      "services_in_finland": null,
-      "station_classes_in_finland": null,
-      "is_synthetic_reference": true
-     },
-     {
-      "reference_kind": "SPECIAL_INTEREST_STATION",
-      "reference_key": "Frequencies of interest!853:RX",
-      "label": "Station 983905 RX",
-      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
-      "reference_start_mhz": 796.1,
-      "reference_end_mhz": 801.1,
-      "overlap_start_mhz": 796.1,
-      "overlap_end_mhz": 798.34,
-      "services_in_finland": null,
-      "station_classes_in_finland": null,
-      "is_synthetic_reference": true
-     }
-    ],
-    "station_count": 2
-   },
-   "stage_b_service": {
-    "status": "MATCH",
-    "notice_service": "LAND_MOBILE",
-    "finnish_mobile_allocation": true,
-    "same_station_class_in_finland": true,
-    "special_interest_stations_on_frequency": 2
-   },
-   "stage_c_geography": {
-    "status": "WITHIN_1000_KM",
-    "distance_to_finland_km": 13.57,
-    "nearest_finland_point": [
-     61.9918,
-     30.3399
-    ],
-    "site_country": "RUS",
-    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
-   },
-   "stage_d_readiness": {
-    "status": "READY",
-    "method": "TERR_P1546",
-    "missing_inputs": []
-   },
-   "calculations": [
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": 22.35425590191892,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 794.74,
-      "time_percent": 10.0,
-      "distance_km": 13.570699879354928,
-      "erp_dbw": -2.2,
-      "tx_height_agl_m": 36.0,
-      "rx_height_agl_m": 10.0,
-      "rx_area": "Rural",
-      "effective_height_m": 36.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
-       [
-        13.570699879354928,
-        "Land"
-       ]
-      ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
-     },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
-     ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
-     },
-     "result_trace": {
-      "h1_m": 36.0,
-      "emax_dbuv_m": 84.24793913799867,
-      "e_after_mixed_path_dbuv_m": 54.554271843291716,
-      "rx_height_correction_db": 0.0,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -1.594137279749958e-05,
-      "basic_transmission_loss_db": 142.75024553828808,
-      "standard": "ITU-R P.1546-6"
-     },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "3d6f7d3356cf2ddf5e6cfe930293b98292b0e73b8c8bdd7b770b9dc901b25f61",
-     "receiver": "Nearest point of Finland"
-    },
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": -39.36905778940172,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 794.74,
-      "time_percent": 10.0,
-      "distance_km": 293.5802560328692,
-      "erp_dbw": -2.2,
-      "tx_height_agl_m": 36.0,
-      "rx_height_agl_m": 13.0,
-      "rx_area": "Rural",
-      "effective_height_m": 36.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
-       [
-        293.5802560328692,
-        "Land"
-       ]
-      ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
-     },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
-     ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
-     },
-     "result_trace": {
-      "h1_m": 36.0,
-      "emax_dbuv_m": 57.54546307546004,
-      "e_after_mixed_path_dbuv_m": -9.582536966453148,
-      "rx_height_correction_db": 2.4134792037068955,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -2.665546638658035e-08,
-      "basic_transmission_loss_db": 204.47355922960872,
-      "standard": "ITU-R P.1546-6"
-     },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "487e0ac9cac3bc7074b6a8456615b18c2e17fee10da675b75e17526418993155",
-     "receiver": "Station 988251 RX"
-    },
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": -77.15563530743029,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 794.74,
-      "time_percent": 10.0,
-      "distance_km": 653.6917783703451,
-      "erp_dbw": -2.2,
-      "tx_height_agl_m": 36.0,
-      "rx_height_agl_m": 8.0,
-      "rx_area": "Rural",
-      "effective_height_m": 36.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
-       [
-        653.6917783703451,
-        "Land"
-       ]
-      ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
-     },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
-     ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
-     },
-     "result_trace": {
-      "h1_m": 36.0,
-      "emax_dbuv_m": 50.592539536429186,
-      "e_after_mixed_path_dbuv_m": -42.902945991216555,
-      "rx_height_correction_db": -2.052689308245629,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -7.968092246337168e-09,
-      "basic_transmission_loss_db": 242.2601367476373,
-      "standard": "ITU-R P.1546-6"
-     },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "c146509c51e558d0f5e701ad176b6911958fbe3259fbba24dcbfec11c3e2ad88",
-     "receiver": "Station 983905 RX"
-    }
-   ],
-   "max_field_strength": 22.35425590191892,
-   "priority": {
-    "score": 10,
-    "tier": "HIGH",
-    "components": {
-     "change_new_or_modified": 1,
-     "special_interest_frequency_overlap": 3,
-     "finnish_land_mobile_allocation": 1,
-     "within_100_km_of_finland": 2,
-     "within_300_km_of_finland": 1,
-     "neighbouring_administration": 1,
-     "calculation_available": 1
-    }
-   },
-   "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -2753,8 +2335,203 @@
     }
    ],
    "max_field_strength": 21.355337886647288,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 97,
+    "max_field_strength_dbuv_m": 20.11,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 386,
+     "lat": 60.8841,
+     "lon": 28.38418,
+     "distance_km": 29.996,
+     "path_zones": [
+      [
+       29.995734274377586,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 20.11,
+     "calculation_sha256": "2ade0ac869e491e1c32ed8397fca55f93b5f55aad4c9242b8249266ba560f90b"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 386,
+      "lat": 60.8841,
+      "lon": 28.38418,
+      "distance_km": 29.996,
+      "path_zones": [
+       [
+        29.995734274377586,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.11,
+      "calculation_sha256": "2ade0ac869e491e1c32ed8397fca55f93b5f55aad4c9242b8249266ba560f90b"
+     },
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 99.338,
+      "path_zones": [
+       [
+        10.136569821689578,
+        "Land"
+       ],
+       [
+        89.20181443086821,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 9.456,
+      "calculation_sha256": "dc29b6b2ca05458c929e944925bbc1f9b15e40e9bbb13442edae0ac8da484bd8"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 386,
+      "lat": 60.8841,
+      "lon": 28.38418,
+      "distance_km": 29.996,
+      "path_zones": [
+       [
+        29.995734274377586,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.11,
+      "calculation_sha256": "2ade0ac869e491e1c32ed8397fca55f93b5f55aad4c9242b8249266ba560f90b"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 385,
+      "lat": 60.90879,
+      "lon": 28.43252,
+      "distance_km": 30.15,
+      "path_zones": [
+       [
+        30.15036306064733,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.024,
+      "calculation_sha256": "56f961a9fc5166f47dc3ce1c6c9f744c484bb8fa29f26d1baf9106d9b9de57f6"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 387,
+      "lat": 60.85939,
+      "lon": 28.33592,
+      "distance_km": 30.318,
+      "path_zones": [
+       [
+        30.31812436254518,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.932,
+      "calculation_sha256": "95b6fe18c30f35d93d6651021e331a0c8d6691cadad5b69e945fb52bc6de303c"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 382,
+      "lat": 60.96194,
+      "lon": 28.61456,
+      "distance_km": 30.466,
+      "path_zones": [
+       [
+        30.46635250011297,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.851,
+      "calculation_sha256": "1667f872311447171f569ac8de6957ef8d3f564534dc9bc5b199fe6f6eb8b2ff"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 388,
+      "lat": 60.8255,
+      "lon": 28.28988,
+      "distance_km": 30.532,
+      "path_zones": [
+       [
+        30.5317932732579,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.816,
+      "calculation_sha256": "09cf1a36bdbb97549ee3b2a4867de932c77d4de301babb9b45bb85ed2414e719"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "COORDINATION_REVIEW",
+    "margin_db": 8.11,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
    "priority": {
-    "score": 10,
+    "score": 13,
     "tier": "HIGH",
     "components": {
      "change_new_or_modified": 1,
@@ -2763,11 +2540,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -3114,6 +2892,696 @@
     }
    ],
    "max_field_strength": 19.944985391809684,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 97,
+    "max_field_strength_dbuv_m": 20.11,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 386,
+     "lat": 60.8841,
+     "lon": 28.38418,
+     "distance_km": 29.996,
+     "path_zones": [
+      [
+       29.995734274377586,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 20.11,
+     "calculation_sha256": "3bad77c4d7a56cf20c245856c67c30654c140f8a04c22a04785745a5231d5abf"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 386,
+      "lat": 60.8841,
+      "lon": 28.38418,
+      "distance_km": 29.996,
+      "path_zones": [
+       [
+        29.995734274377586,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.11,
+      "calculation_sha256": "3bad77c4d7a56cf20c245856c67c30654c140f8a04c22a04785745a5231d5abf"
+     },
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 99.338,
+      "path_zones": [
+       [
+        10.136569821689578,
+        "Land"
+       ],
+       [
+        89.20181443086821,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 9.456,
+      "calculation_sha256": "2cb15dbcedaf203a0befc437177d5b524dbd319cd7f45670accbe86b5106874d"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 386,
+      "lat": 60.8841,
+      "lon": 28.38418,
+      "distance_km": 29.996,
+      "path_zones": [
+       [
+        29.995734274377586,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.11,
+      "calculation_sha256": "3bad77c4d7a56cf20c245856c67c30654c140f8a04c22a04785745a5231d5abf"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 385,
+      "lat": 60.90879,
+      "lon": 28.43252,
+      "distance_km": 30.15,
+      "path_zones": [
+       [
+        30.15036306064733,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.025,
+      "calculation_sha256": "d10777ac045d5fa7bc8b670a2bb5dc7c0fba061e6742050d30baba0217592803"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 387,
+      "lat": 60.85939,
+      "lon": 28.33592,
+      "distance_km": 30.318,
+      "path_zones": [
+       [
+        30.31812436254518,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.933,
+      "calculation_sha256": "5dfc573efd1e13e9f1f08d455cb068377d5400fbfa0e13b7b6d34711b8ba1ce2"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 382,
+      "lat": 60.96194,
+      "lon": 28.61456,
+      "distance_km": 30.466,
+      "path_zones": [
+       [
+        30.46635250011297,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.852,
+      "calculation_sha256": "7a516901c53c4d5aa11b738e4512cce477d9c723e41709d2e4bb76d189d8af29"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 388,
+      "lat": 60.8255,
+      "lon": 28.28988,
+      "distance_km": 30.532,
+      "path_zones": [
+       [
+        30.5317932732579,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.816,
+      "calculation_sha256": "682a5f532bae194815d84b0622524dc780847ce79308fc191aca073b3f61257a"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "COORDINATION_REVIEW",
+    "margin_db": 8.11,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
+   "priority": {
+    "score": 13,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 3,
+     "finnish_land_mobile_allocation": 1,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 1,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
+    }
+   },
+   "finding_status": "EXPERT_REVIEW_REQUIRED",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
+   "rule_version": "ific-finland-relevance/1.0.0"
+  },
+  {
+   "domain": "TERRESTRIAL",
+   "notice_id": "93082392",
+   "record_key": "fxm_terra!93082392",
+   "assignment_id": 126080975,
+   "administration": "RUS",
+   "station_class": "FB",
+   "site_name": "KRL RUSKEALA",
+   "frequency_mhz": 793.5,
+   "bandwidth_khz": 5000.0,
+   "publications": [
+    "NTFD_RR:1"
+   ],
+   "change": {
+    "change_type": "MODIFIED",
+    "basis": "NOTICE_INTENT_MODIFY",
+    "field_changes": [
+     {
+      "field": "radiated_power_dbw",
+      "before": 9.9,
+      "after": 4.8
+     },
+     {
+      "field": "antenna_height_agl_m",
+      "before": 40.0,
+      "after": 55.0
+     },
+     {
+      "field": "azimuth_max_radiation_deg",
+      "before": null,
+      "after": 355.0
+     },
+     {
+      "field": "beamwidth_deg",
+      "before": null,
+      "after": 65.0
+     }
+    ],
+    "targets": [
+     [
+      "92326149",
+      "MODIFY"
+     ],
+     [
+      "92861282",
+      "CONFORM"
+     ]
+    ],
+    "compared_with": "fxm_terra!92326149 (RECORDED, same extract)"
+   },
+   "stage_a_frequency": {
+    "status": "MATCH",
+    "range_mhz": [
+     791.0,
+     796.0
+    ],
+    "m4": [
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3121",
+      "label": "Mobile radio",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 788.0,
+      "reference_end_mhz": 791.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 791.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3122",
+      "label": "Mobile radio",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 788.0,
+      "reference_end_mhz": 791.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 791.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3123",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3124",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3125",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     }
+    ],
+    "m4_count": 5,
+    "stations": [
+     {
+      "reference_kind": "SPECIAL_INTEREST_STATION",
+      "reference_key": "Frequencies of interest!844:RX",
+      "label": "Station 988251 RX",
+      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
+      "reference_start_mhz": 793.9,
+      "reference_end_mhz": 798.9,
+      "overlap_start_mhz": 793.9,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": null,
+      "station_classes_in_finland": null,
+      "is_synthetic_reference": true
+     }
+    ],
+    "station_count": 1
+   },
+   "stage_b_service": {
+    "status": "MATCH",
+    "notice_service": "LAND_MOBILE",
+    "finnish_mobile_allocation": true,
+    "same_station_class_in_finland": true,
+    "special_interest_stations_on_frequency": 1
+   },
+   "stage_c_geography": {
+    "status": "WITHIN_1000_KM",
+    "distance_to_finland_km": 14.65,
+    "nearest_finland_point": [
+     61.9918,
+     30.3399
+    ],
+    "site_country": "RUS",
+    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
+   },
+   "stage_d_readiness": {
+    "status": "READY",
+    "method": "TERR_P1546",
+    "missing_inputs": []
+   },
+   "calculations": [
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": 31.754492558237796,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 793.5,
+      "time_percent": 10.0,
+      "distance_km": 14.651571270493546,
+      "erp_dbw": 4.8,
+      "tx_height_agl_m": 55.0,
+      "rx_height_agl_m": 10.0,
+      "rx_area": "Rural",
+      "effective_height_m": 55.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        14.651571270493548,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 55.0,
+      "emax_dbuv_m": 83.5822749926592,
+      "e_after_mixed_path_dbuv_m": 56.95453352568347,
+      "rx_height_correction_db": 0.0,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -4.096744567447228e-05,
+      "basic_transmission_loss_db": 140.33644606357956,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "773e9524b060da63feecffd4c33cf7026c0e27197ea26b9fd6ed441ed8346357",
+     "receiver": "Nearest point of Finland"
+    },
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": -31.94300997920562,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 793.5,
+      "time_percent": 10.0,
+      "distance_km": 296.12528951590804,
+      "erp_dbw": 4.8,
+      "tx_height_agl_m": 55.0,
+      "rx_height_agl_m": 13.0,
+      "rx_area": "Rural",
+      "effective_height_m": 55.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        296.12528951590804,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 55.0,
+      "emax_dbuv_m": 57.470489945991005,
+      "e_after_mixed_path_dbuv_m": -9.156010023720485,
+      "rx_height_correction_db": 2.413000131878741,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -8.73638760132622e-08,
+      "basic_transmission_loss_db": 204.03394860102298,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "76f8f7cb179fbae992b9450ea63c144194594c1e16cfa4ba2253c1cb536679f1",
+     "receiver": "Station 988251 RX"
+    }
+   ],
+   "max_field_strength": 31.754492558237796,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 119,
+    "max_field_strength_dbuv_m": 32.3,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 332,
+     "lat": 62.01709,
+     "lon": 30.38678,
+     "distance_km": 14.264,
+     "path_zones": [
+      [
+       14.26443092370451,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 32.3,
+     "calculation_sha256": "5fed6205f8737fd9fc7d6655741a9fe1a4bb1372e459dc2e87f28f51985790c2"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 14.264,
+      "path_zones": [
+       [
+        14.26443092370451,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 32.3,
+      "calculation_sha256": "5fed6205f8737fd9fc7d6655741a9fe1a4bb1372e459dc2e87f28f51985790c2"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 14.264,
+      "path_zones": [
+       [
+        14.26443092370451,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 32.3,
+      "calculation_sha256": "5fed6205f8737fd9fc7d6655741a9fe1a4bb1372e459dc2e87f28f51985790c2"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 333,
+      "lat": 61.99177,
+      "lon": 30.33994,
+      "distance_km": 14.649,
+      "path_zones": [
+       [
+        14.648510668894916,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 31.759,
+      "calculation_sha256": "ced686ef4549c407fd24124af38b9bfa7aa4a0cd5ff4ec80b96e9f6b2cbe4ea4"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 334,
+      "lat": 61.99167,
+      "lon": 30.33973,
+      "distance_km": 14.653,
+      "path_zones": [
+       [
+        14.652708583959678,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 31.753,
+      "calculation_sha256": "27e052693f4ff04b2c6ad8ff0f7329a40b94e000220231b18985d801679f18d2"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 335,
+      "lat": 61.99167,
+      "lon": 30.33957,
+      "distance_km": 14.66,
+      "path_zones": [
+       [
+        14.659877922494328,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 31.743,
+      "calculation_sha256": "baf9c6485da4604f0d2f7531dd0da541c6b5b2c8bf1c26729e6d64f602344089"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 331,
+      "lat": 62.0424,
+      "lon": 30.4337,
+      "distance_km": 14.838,
+      "path_zones": [
+       [
+        14.83842691595957,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 31.496,
+      "calculation_sha256": "dc11549ff99ab7c65e21adbb81426a50294f23f60bab24dbacca17c4ebfc1778"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "CHALLENGE_EXTENSION_ABOVE_470_MHZ",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 23.0103,
+    "threshold_dbuv_m": 43.0103,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": [
+     "BC = 10 log10(5000 kHz / 25 kHz) = 23.01 dB, assuming uniform spectral power distribution in the notified bandwidth."
+    ]
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -10.71,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
    "priority": {
     "score": 10,
     "tier": "HIGH",
@@ -3124,11 +3592,1506 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
+   "rule_version": "ific-finland-relevance/1.0.0"
+  },
+  {
+   "domain": "TERRESTRIAL",
+   "notice_id": "93005610",
+   "record_key": "fxm_terra!93005610",
+   "assignment_id": 126004193,
+   "administration": "RUS",
+   "station_class": "FB",
+   "site_name": "KRL RUSKEALA",
+   "frequency_mhz": 793.5,
+   "bandwidth_khz": 5000.0,
+   "publications": [
+    "GE06L:B"
+   ],
+   "change": {
+    "change_type": "NEW",
+    "basis": "NOTICE_INTENT_ADD",
+    "field_changes": [],
+    "targets": []
+   },
+   "stage_a_frequency": {
+    "status": "MATCH",
+    "range_mhz": [
+     791.0,
+     796.0
+    ],
+    "m4": [
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3121",
+      "label": "Mobile radio",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 788.0,
+      "reference_end_mhz": 791.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 791.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3122",
+      "label": "Mobile radio",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 788.0,
+      "reference_end_mhz": 791.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 791.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3123",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3124",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3125",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.0,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     }
+    ],
+    "m4_count": 5,
+    "stations": [
+     {
+      "reference_kind": "SPECIAL_INTEREST_STATION",
+      "reference_key": "Frequencies of interest!844:RX",
+      "label": "Station 988251 RX",
+      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
+      "reference_start_mhz": 793.9,
+      "reference_end_mhz": 798.9,
+      "overlap_start_mhz": 793.9,
+      "overlap_end_mhz": 796.0,
+      "services_in_finland": null,
+      "station_classes_in_finland": null,
+      "is_synthetic_reference": true
+     }
+    ],
+    "station_count": 1
+   },
+   "stage_b_service": {
+    "status": "MATCH",
+    "notice_service": "LAND_MOBILE",
+    "finnish_mobile_allocation": true,
+    "same_station_class_in_finland": true,
+    "special_interest_stations_on_frequency": 1
+   },
+   "stage_c_geography": {
+    "status": "WITHIN_1000_KM",
+    "distance_to_finland_km": 13.57,
+    "nearest_finland_point": [
+     61.9918,
+     30.3399
+    ],
+    "site_country": "RUS",
+    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
+   },
+   "stage_d_readiness": {
+    "status": "READY",
+    "method": "TERR_P1546",
+    "missing_inputs": []
+   },
+   "calculations": [
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": 22.356690323212987,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 793.5,
+      "time_percent": 10.0,
+      "distance_km": 13.570699879354928,
+      "erp_dbw": -2.2,
+      "tx_height_agl_m": 36.0,
+      "rx_height_agl_m": 10.0,
+      "rx_area": "Rural",
+      "effective_height_m": 36.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        13.570699879354928,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 36.0,
+      "emax_dbuv_m": 84.24793913799867,
+      "e_after_mixed_path_dbuv_m": 54.556706264585785,
+      "rx_height_correction_db": 0.0,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -1.594137279749958e-05,
+      "basic_transmission_loss_db": 142.73424829860437,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "bb17f5e2ff4ff3d2978dcd78a9ecd2fa4f57d2be46fa108f048daa247e9d21c4",
+     "receiver": "Nearest point of Finland"
+    },
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": -39.366155665436494,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 793.5,
+      "time_percent": 10.0,
+      "distance_km": 293.5802560328692,
+      "erp_dbw": -2.2,
+      "tx_height_agl_m": 36.0,
+      "rx_height_agl_m": 13.0,
+      "rx_area": "Rural",
+      "effective_height_m": 36.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        293.5802560328692,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 36.0,
+      "emax_dbuv_m": 57.54546307546004,
+      "e_after_mixed_path_dbuv_m": -9.579155770659769,
+      "rx_height_correction_db": 2.413000131878741,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -2.665546638658035e-08,
+      "basic_transmission_loss_db": 204.45709428725385,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "46100e0b57dfc6841353c45b73cc5cb1c7aa842932a0a147c21fd91621ee3c71",
+     "receiver": "Station 988251 RX"
+    }
+   ],
+   "max_field_strength": 22.356690323212987,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 118,
+    "max_field_strength_dbuv_m": 23.886,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 332,
+     "lat": 62.01709,
+     "lon": 30.38678,
+     "distance_km": 12.608,
+     "path_zones": [
+      [
+       12.607508499152935,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 23.886,
+     "calculation_sha256": "487c188742c4ae24f24ce0bebe812cb0ec60c1aa36eea58e1dd8139c8c7d5d6e"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 12.608,
+      "path_zones": [
+       [
+        12.607508499152935,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 23.886,
+      "calculation_sha256": "487c188742c4ae24f24ce0bebe812cb0ec60c1aa36eea58e1dd8139c8c7d5d6e"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 12.608,
+      "path_zones": [
+       [
+        12.607508499152935,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 23.886,
+      "calculation_sha256": "487c188742c4ae24f24ce0bebe812cb0ec60c1aa36eea58e1dd8139c8c7d5d6e"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 331,
+      "lat": 62.0424,
+      "lon": 30.4337,
+      "distance_km": 12.713,
+      "path_zones": [
+       [
+        12.712923732276513,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 23.713,
+      "calculation_sha256": "c53577eeffa92fb2f51c65a7b40d1ff69225fcbeb2329ead500a569b04962791"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 333,
+      "lat": 61.99177,
+      "lon": 30.33994,
+      "distance_km": 13.568,
+      "path_zones": [
+       [
+        13.567974091488477,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 22.361,
+      "calculation_sha256": "d097580938e57fff1b07f9a5aaca0be4d2ef0140d99e050ef4069ab0313c3329"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 334,
+      "lat": 61.99167,
+      "lon": 30.33973,
+      "distance_km": 13.575,
+      "path_zones": [
+       [
+        13.574624506225902,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 22.351,
+      "calculation_sha256": "63b8727425ee8361c9a1f39c0b52ce83677f807d2ecb60a839570f2465f85b32"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 335,
+      "lat": 61.99167,
+      "lon": 30.33957,
+      "distance_km": 13.582,
+      "path_zones": [
+       [
+        13.582313804724416,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 22.339,
+      "calculation_sha256": "cf9e5d182bbea247bbdc0800fed84b10f8f2fb77ec6bc313fac9a31d26c68fd3"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "CHALLENGE_EXTENSION_ABOVE_470_MHZ",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 23.0103,
+    "threshold_dbuv_m": 43.0103,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": [
+     "BC = 10 log10(5000 kHz / 25 kHz) = 23.01 dB, assuming uniform spectral power distribution in the notified bandwidth."
+    ]
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD REQUIRED",
+      "4.2.2.2"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD REQUIRED",
+      "4.2.2.2"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -19.12,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
+   "priority": {
+    "score": 10,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 3,
+     "finnish_land_mobile_allocation": 1,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 1,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
+    }
+   },
+   "finding_status": "EXPERT_REVIEW_REQUIRED",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
+   "rule_version": "ific-finland-relevance/1.0.0"
+  },
+  {
+   "domain": "TERRESTRIAL",
+   "notice_id": "93005611",
+   "record_key": "fxm_terra!93005611",
+   "assignment_id": 126004194,
+   "administration": "RUS",
+   "station_class": "FB",
+   "site_name": "KRL RUSKEALA",
+   "frequency_mhz": 794.74,
+   "bandwidth_khz": 7200.0,
+   "publications": [
+    "GE06L:B"
+   ],
+   "change": {
+    "change_type": "NEW",
+    "basis": "NOTICE_INTENT_ADD",
+    "field_changes": [],
+    "targets": []
+   },
+   "stage_a_frequency": {
+    "status": "MATCH",
+    "range_mhz": [
+     791.14,
+     798.34
+    ],
+    "m4": [
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3123",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.14,
+      "overlap_end_mhz": 798.34,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3124",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.14,
+      "overlap_end_mhz": 798.34,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!3125",
+      "label": "Terrestrial systems capable of providing electronic communications services",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 791.0,
+      "reference_end_mhz": 821.0,
+      "overlap_start_mhz": 791.14,
+      "overlap_end_mhz": 798.34,
+      "services_in_finland": [
+       "MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     }
+    ],
+    "m4_count": 3,
+    "stations": [
+     {
+      "reference_kind": "SPECIAL_INTEREST_STATION",
+      "reference_key": "Frequencies of interest!844:RX",
+      "label": "Station 988251 RX",
+      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
+      "reference_start_mhz": 793.9,
+      "reference_end_mhz": 798.9,
+      "overlap_start_mhz": 793.9,
+      "overlap_end_mhz": 798.34,
+      "services_in_finland": null,
+      "station_classes_in_finland": null,
+      "is_synthetic_reference": true
+     },
+     {
+      "reference_kind": "SPECIAL_INTEREST_STATION",
+      "reference_key": "Frequencies of interest!853:RX",
+      "label": "Station 983905 RX",
+      "interval_basis": "CENTRE_PLUS_MINUS_HALF_CHANNEL_BANDWIDTH",
+      "reference_start_mhz": 796.1,
+      "reference_end_mhz": 801.1,
+      "overlap_start_mhz": 796.1,
+      "overlap_end_mhz": 798.34,
+      "services_in_finland": null,
+      "station_classes_in_finland": null,
+      "is_synthetic_reference": true
+     }
+    ],
+    "station_count": 2
+   },
+   "stage_b_service": {
+    "status": "MATCH",
+    "notice_service": "LAND_MOBILE",
+    "finnish_mobile_allocation": true,
+    "same_station_class_in_finland": true,
+    "special_interest_stations_on_frequency": 2
+   },
+   "stage_c_geography": {
+    "status": "WITHIN_1000_KM",
+    "distance_to_finland_km": 13.57,
+    "nearest_finland_point": [
+     61.9918,
+     30.3399
+    ],
+    "site_country": "RUS",
+    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
+   },
+   "stage_d_readiness": {
+    "status": "READY",
+    "method": "TERR_P1546",
+    "missing_inputs": []
+   },
+   "calculations": [
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": 22.35425590191892,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 794.74,
+      "time_percent": 10.0,
+      "distance_km": 13.570699879354928,
+      "erp_dbw": -2.2,
+      "tx_height_agl_m": 36.0,
+      "rx_height_agl_m": 10.0,
+      "rx_area": "Rural",
+      "effective_height_m": 36.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        13.570699879354928,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 36.0,
+      "emax_dbuv_m": 84.24793913799867,
+      "e_after_mixed_path_dbuv_m": 54.554271843291716,
+      "rx_height_correction_db": 0.0,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -1.594137279749958e-05,
+      "basic_transmission_loss_db": 142.75024553828808,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "3d6f7d3356cf2ddf5e6cfe930293b98292b0e73b8c8bdd7b770b9dc901b25f61",
+     "receiver": "Nearest point of Finland"
+    },
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": -39.36905778940172,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 794.74,
+      "time_percent": 10.0,
+      "distance_km": 293.5802560328692,
+      "erp_dbw": -2.2,
+      "tx_height_agl_m": 36.0,
+      "rx_height_agl_m": 13.0,
+      "rx_area": "Rural",
+      "effective_height_m": 36.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        293.5802560328692,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 36.0,
+      "emax_dbuv_m": 57.54546307546004,
+      "e_after_mixed_path_dbuv_m": -9.582536966453148,
+      "rx_height_correction_db": 2.4134792037068955,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -2.665546638658035e-08,
+      "basic_transmission_loss_db": 204.47355922960872,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "487e0ac9cac3bc7074b6a8456615b18c2e17fee10da675b75e17526418993155",
+     "receiver": "Station 988251 RX"
+    },
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": -77.15563530743029,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 794.74,
+      "time_percent": 10.0,
+      "distance_km": 653.6917783703451,
+      "erp_dbw": -2.2,
+      "tx_height_agl_m": 36.0,
+      "rx_height_agl_m": 8.0,
+      "rx_area": "Rural",
+      "effective_height_m": 36.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        653.6917783703451,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 36.0,
+      "emax_dbuv_m": 50.592539536429186,
+      "e_after_mixed_path_dbuv_m": -42.902945991216555,
+      "rx_height_correction_db": -2.052689308245629,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -7.968092246337168e-09,
+      "basic_transmission_loss_db": 242.2601367476373,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "c146509c51e558d0f5e701ad176b6911958fbe3259fbba24dcbfec11c3e2ad88",
+     "receiver": "Station 983905 RX"
+    }
+   ],
+   "max_field_strength": 22.35425590191892,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 118,
+    "max_field_strength_dbuv_m": 23.883,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 332,
+     "lat": 62.01709,
+     "lon": 30.38678,
+     "distance_km": 12.608,
+     "path_zones": [
+      [
+       12.607508499152935,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 23.883,
+     "calculation_sha256": "209fb334956642f5aa05aaed5965f591baadafbe04222106515f4af9af586394"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 12.608,
+      "path_zones": [
+       [
+        12.607508499152935,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 23.883,
+      "calculation_sha256": "209fb334956642f5aa05aaed5965f591baadafbe04222106515f4af9af586394"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 332,
+      "lat": 62.01709,
+      "lon": 30.38678,
+      "distance_km": 12.608,
+      "path_zones": [
+       [
+        12.607508499152935,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 23.883,
+      "calculation_sha256": "209fb334956642f5aa05aaed5965f591baadafbe04222106515f4af9af586394"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 331,
+      "lat": 62.0424,
+      "lon": 30.4337,
+      "distance_km": 12.713,
+      "path_zones": [
+       [
+        12.712923732276513,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 23.711,
+      "calculation_sha256": "27c82b0ed5471884d461102968d36a8f09453efe608ee244c1b7fa3cee9e9b01"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 333,
+      "lat": 61.99177,
+      "lon": 30.33994,
+      "distance_km": 13.568,
+      "path_zones": [
+       [
+        13.567974091488477,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 22.358,
+      "calculation_sha256": "0193d5b82d5d929ab27175872760b4faea6d3df94a883f8b6ecae359cf1aed66"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 334,
+      "lat": 61.99167,
+      "lon": 30.33973,
+      "distance_km": 13.575,
+      "path_zones": [
+       [
+        13.574624506225902,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 22.348,
+      "calculation_sha256": "c350d5be70227ff25cb3b21814b45759c76d14b58c81b146ff5bb15c9fc3b741"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 335,
+      "lat": 61.99167,
+      "lon": 30.33957,
+      "distance_km": 13.582,
+      "path_zones": [
+       [
+        13.582313804724416,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 22.336,
+      "calculation_sha256": "bf69cb7ab2910c67e77ca33ceef76780bf6edf8f2bb316de5961283dd5ef7b1a"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "CHALLENGE_EXTENSION_ABOVE_470_MHZ",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 24.5939,
+    "threshold_dbuv_m": 44.5939,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": [
+     "BC = 10 log10(7200 kHz / 25 kHz) = 24.59 dB, assuming uniform spectral power distribution in the notified bandwidth."
+    ]
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD REQUIRED",
+      "4.2.2.2"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD REQUIRED",
+      "4.2.2.2"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -20.71,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
+   "priority": {
+    "score": 10,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 3,
+     "finnish_land_mobile_allocation": 1,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 1,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
+    }
+   },
+   "finding_status": "EXPERT_REVIEW_REQUIRED",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
+   "rule_version": "ific-finland-relevance/1.0.0"
+  },
+  {
+   "domain": "TERRESTRIAL",
+   "notice_id": "93082323",
+   "record_key": "fxm_terra!93082323",
+   "assignment_id": 126080906,
+   "administration": "RUS",
+   "station_class": "FB",
+   "site_name": "LEN VYBORG GRUZOVOI",
+   "frequency_mhz": 153.3,
+   "bandwidth_khz": 16.8,
+   "publications": [
+    "NTFD_RR:1"
+   ],
+   "change": {
+    "change_type": "NEW",
+    "basis": "NOTICE_INTENT_ADD",
+    "field_changes": [],
+    "targets": []
+   },
+   "stage_a_frequency": {
+    "status": "M4_ONLY",
+    "range_mhz": [
+     153.2916,
+     153.3084
+    ],
+    "m4": [
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2155",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2156",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Mobile (ML)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2157",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2158",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Mobile (ML)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2159",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2160",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Mobile (ML)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2161",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2162",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Mobile (ML)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2163",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Base station (FB)",
+      "is_synthetic_reference": false
+     },
+     {
+      "reference_kind": "M4_ALLOCATION",
+      "reference_key": "Taajuusjakotaulukko!2164",
+      "label": "Digital radiotelephony for business activities",
+      "interval_basis": "M4_SUB_BAND_LIMITS",
+      "reference_start_mhz": 152.88125,
+      "reference_end_mhz": 153.99375,
+      "overlap_start_mhz": 153.2916,
+      "overlap_end_mhz": 153.3084,
+      "services_in_finland": [
+       "LAND MOBILE"
+      ],
+      "station_classes_in_finland": "Mobile (ML)",
+      "is_synthetic_reference": false
+     }
+    ],
+    "m4_count": 10,
+    "stations": [],
+    "station_count": 0
+   },
+   "stage_b_service": {
+    "status": "MATCH",
+    "notice_service": "LAND_MOBILE",
+    "finnish_mobile_allocation": true,
+    "same_station_class_in_finland": true,
+    "special_interest_stations_on_frequency": 0
+   },
+   "stage_c_geography": {
+    "status": "WITHIN_1000_KM",
+    "distance_to_finland_km": 30.32,
+    "nearest_finland_point": [
+     60.8594,
+     28.3359
+    ],
+    "site_country": "RUS",
+    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
+   },
+   "stage_d_readiness": {
+    "status": "READY",
+    "method": "TERR_P1546",
+    "missing_inputs": []
+   },
+   "calculations": [
+    {
+     "method_id": "TERR_P1546",
+     "method_version": "1.0.0",
+     "metric_kind": "FIELD_STRENGTH",
+     "numeric_value": 19.92768141243101,
+     "unit": "dB(uV/m)",
+     "reference_bandwidth_hz": null,
+     "time_percentage": 10.0,
+     "location_percentage": 50.0,
+     "inputs": {
+      "frequency_mhz": 153.3,
+      "time_percent": 10.0,
+      "distance_km": 30.320018542094513,
+      "erp_dbw": 12.8,
+      "tx_height_agl_m": 20.0,
+      "rx_height_agl_m": 10.0,
+      "rx_area": "Rural",
+      "effective_height_m": 20.0,
+      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
+      "location_percent": 50.0,
+      "rx_clutter_height_m": 10.0,
+      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
+      "zones": [
+       [
+        30.320018542094513,
+        "Land"
+       ]
+      ],
+      "zones_basis": "GIVEN",
+      "power_basis": "e.r.p. as notified (RR 1.162)"
+     },
+     "assumptions": [
+      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
+      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
+      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
+      "Effective height heff assumed equal to antenna height ha.",
+      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
+      "Power basis: e.r.p. as notified (RR 1.162)."
+     ],
+     "diagnostics": {
+      "role": "ENGINEERING",
+      "validation": {
+       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+       "cases": 54,
+       "max_abs_deviation_db": 5.1e-05
+      }
+     },
+     "result_trace": {
+      "h1_m": 20.0,
+      "emax_dbuv_m": 77.26541027655774,
+      "e_after_mixed_path_dbuv_m": 37.12768188484784,
+      "rx_height_correction_db": 0.0,
+      "rx_representative_clutter_m": 10.0,
+      "slope_path_correction_db": -4.724168322924366e-07,
+      "basic_transmission_loss_db": 145.8831616846565,
+      "standard": "ITU-R P.1546-6"
+     },
+     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+     "calculation_sha256": "4dcd99d0cdca29bc056aa9ba3f3e59f784826a0bd96624ab5a002c782b9eef77",
+     "receiver": "Nearest point of Finland"
+    }
+   ],
+   "max_field_strength": 19.92768141243101,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 97,
+    "max_field_strength_dbuv_m": 20.106,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 386,
+     "lat": 60.8841,
+     "lon": 28.38418,
+     "distance_km": 29.996,
+     "path_zones": [
+      [
+       29.995734274377586,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 20.106,
+     "calculation_sha256": "91eb0f4f8738b6a228ec89946ac65fffdaa85f1cfc22baa30891093821f15b3e"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 386,
+      "lat": 60.8841,
+      "lon": 28.38418,
+      "distance_km": 29.996,
+      "path_zones": [
+       [
+        29.995734274377586,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.106,
+      "calculation_sha256": "91eb0f4f8738b6a228ec89946ac65fffdaa85f1cfc22baa30891093821f15b3e"
+     },
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 99.338,
+      "path_zones": [
+       [
+        10.136569821689578,
+        "Land"
+       ],
+       [
+        89.20181443086821,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 9.459,
+      "calculation_sha256": "433f7026ea50d3086a70c5cd87b15d60d78a5b062deb5f1df49bec86917dcca3"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 386,
+      "lat": 60.8841,
+      "lon": 28.38418,
+      "distance_km": 29.996,
+      "path_zones": [
+       [
+        29.995734274377586,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.106,
+      "calculation_sha256": "91eb0f4f8738b6a228ec89946ac65fffdaa85f1cfc22baa30891093821f15b3e"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 385,
+      "lat": 60.90879,
+      "lon": 28.43252,
+      "distance_km": 30.15,
+      "path_zones": [
+       [
+        30.15036306064733,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 20.021,
+      "calculation_sha256": "3dd12531c13f7a11eb251e47fc1e0f500d9df854bcbfcb9db8702f4313fc9152"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 387,
+      "lat": 60.85939,
+      "lon": 28.33592,
+      "distance_km": 30.318,
+      "path_zones": [
+       [
+        30.31812436254518,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.929,
+      "calculation_sha256": "e218ca0afc7a81ff7f39777d9885c70fdf5170240265bee84eab8bd46271f42d"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 382,
+      "lat": 60.96194,
+      "lon": 28.61456,
+      "distance_km": 30.466,
+      "path_zones": [
+       [
+        30.46635250011297,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.848,
+      "calculation_sha256": "58e70bdcb146dac8621b166d4b65b6e421444d59f7cce217bd3b6f0ddd567897"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 388,
+      "lat": 60.8255,
+      "lon": 28.28988,
+      "distance_km": 30.532,
+      "path_zones": [
+       [
+        30.5317932732579,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 19.812,
+      "calculation_sha256": "fd051c89d42e32ee197e7b2f534f03c22bf405db11ae40b4c1a1e960a95e6a2d"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "COORDINATION_REVIEW",
+    "margin_db": 8.11,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
+   "priority": {
+    "score": 10,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 0,
+     "finnish_land_mobile_allocation": 1,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 1,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
+    }
+   },
+   "finding_status": "EXPERT_REVIEW_REQUIRED",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -3405,6 +5368,177 @@
     }
    ],
    "max_field_strength": -13.808210279297853,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 203,
+    "max_field_strength_dbuv_m": -13.808,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Norway land border",
+     "sample_index": 874,
+     "lat": 69.46439,
+     "lon": 29.34454,
+     "distance_km": 94.703,
+     "path_zones": [
+      [
+       94.70300403389282,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": -13.808,
+     "calculation_sha256": "f39153e1a34903f1f722cd69be70bcc2132dbd33374b6bb41331dec637c0f1d3"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 874,
+      "lat": 69.46439,
+      "lon": 29.34454,
+      "distance_km": 94.703,
+      "path_zones": [
+       [
+        94.70300403389282,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -13.808,
+      "calculation_sha256": "f39153e1a34903f1f722cd69be70bcc2132dbd33374b6bb41331dec637c0f1d3"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 874,
+      "lat": 69.46439,
+      "lon": 29.34454,
+      "distance_km": 94.703,
+      "path_zones": [
+       [
+        94.70300403389282,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -13.808,
+      "calculation_sha256": "f39153e1a34903f1f722cd69be70bcc2132dbd33374b6bb41331dec637c0f1d3"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 875,
+      "lat": 69.43522,
+      "lon": 29.30601,
+      "distance_km": 96.405,
+      "path_zones": [
+       [
+        96.4047561467269,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.137,
+      "calculation_sha256": "a54253625d4aeeeedf8b542534f063fc0c88b4cb4e05bfe3ddb3ac67ccc633e9"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 873,
+      "lat": 69.50494,
+      "lon": 29.29759,
+      "distance_km": 96.435,
+      "path_zones": [
+       [
+        96.4352370530751,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.143,
+      "calculation_sha256": "0f08e5045252607f2cb6451bf93f64bb4cf2761ade121e07b67cdb18f8cd1420"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 876,
+      "lat": 69.40604,
+      "lon": 29.26758,
+      "distance_km": 98.207,
+      "path_zones": [
+       [
+        98.20723818546806,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.48,
+      "calculation_sha256": "f43a03190c18a378c2b45a756381554ec99bb1b654a8a8f644324b8003dfa4a3"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 872,
+      "lat": 69.54547,
+      "lon": 29.25047,
+      "distance_km": 98.378,
+      "path_zones": [
+       [
+        98.37780301716374,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.512,
+      "calculation_sha256": "f6807078df73435c22fcdb0212f7373bb73111051ad8acf6bb5ce1b35b1281ad"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "CHALLENGE_EXTENSION_ABOVE_470_MHZ",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 23.0103,
+    "threshold_dbuv_m": 43.0103,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": [
+     "BC = 10 log10(5000 kHz / 25 kHz) = 23.01 dB, assuming uniform spectral power distribution in the notified bandwidth."
+    ]
+   },
+   "coordination": {
+    "rows": [
+     [
+      "NOR",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -56.82,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
    "priority": {
     "score": 10,
     "tier": "HIGH",
@@ -3415,11 +5549,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -3741,6 +5876,177 @@
     }
    ],
    "max_field_strength": -13.814447979630739,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 203,
+    "max_field_strength_dbuv_m": -13.814,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Norway land border",
+     "sample_index": 874,
+     "lat": 69.46439,
+     "lon": 29.34454,
+     "distance_km": 94.703,
+     "path_zones": [
+      [
+       94.70300403389282,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": -13.814,
+     "calculation_sha256": "2c90295446293a74d8d251debcff623996f609ebbe93fd3325cdbdaae2539540"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 874,
+      "lat": 69.46439,
+      "lon": 29.34454,
+      "distance_km": 94.703,
+      "path_zones": [
+       [
+        94.70300403389282,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -13.814,
+      "calculation_sha256": "2c90295446293a74d8d251debcff623996f609ebbe93fd3325cdbdaae2539540"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 874,
+      "lat": 69.46439,
+      "lon": 29.34454,
+      "distance_km": 94.703,
+      "path_zones": [
+       [
+        94.70300403389282,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -13.814,
+      "calculation_sha256": "2c90295446293a74d8d251debcff623996f609ebbe93fd3325cdbdaae2539540"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 875,
+      "lat": 69.43522,
+      "lon": 29.30601,
+      "distance_km": 96.405,
+      "path_zones": [
+       [
+        96.4047561467269,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.144,
+      "calculation_sha256": "e0680910d4b4847732867b4ab3706f6c30cdcc0fc462e9b26dd9b60083aa6099"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 873,
+      "lat": 69.50494,
+      "lon": 29.29759,
+      "distance_km": 96.435,
+      "path_zones": [
+       [
+        96.4352370530751,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.149,
+      "calculation_sha256": "77d8c6bd17d3bc7ee6eccca12af18188517f8e78a9508086e8c1837bb633125d"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 876,
+      "lat": 69.40604,
+      "lon": 29.26758,
+      "distance_km": 98.207,
+      "path_zones": [
+       [
+        98.20723818546806,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.486,
+      "calculation_sha256": "6dc6dd565248e63f72f7285c1fa159d0cba664d8c4fcd4761d715bada45f227f"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Norway land border",
+      "sample_index": 872,
+      "lat": 69.54547,
+      "lon": 29.25047,
+      "distance_km": 98.378,
+      "path_zones": [
+       [
+        98.37780301716374,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -14.518,
+      "calculation_sha256": "dd8922fc30f2b04273eef214393b23066dedba05bb58b7422bd890b2101506dc"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "CHALLENGE_EXTENSION_ABOVE_470_MHZ",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 24.5939,
+    "threshold_dbuv_m": 44.5939,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": [
+     "BC = 10 log10(7200 kHz / 25 kHz) = 24.59 dB, assuming uniform spectral power distribution in the notified bandwidth."
+    ]
+   },
+   "coordination": {
+    "rows": [
+     [
+      "NOR",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -58.41,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
    "priority": {
     "score": 10,
     "tier": "HIGH",
@@ -3751,11 +6057,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -4018,6 +6325,41 @@
    },
    "calculations": [],
    "max_field_strength": null,
+   "border_screening": {
+    "status": "NOT_READY",
+    "missing_inputs": [
+     "antenna height"
+    ]
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "FREQUENCY_OVERLAP_ONLY",
+    "margin_db": null,
+    "expert_review": true
+   },
    "priority": {
     "score": 9,
     "tier": "HIGH",
@@ -4028,11 +6370,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 0
+     "calculation_available": 0,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "INSUFFICIENT_DATA",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "NOT_EVALUATED: no applicable criterion or no border field strength",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -4295,6 +6638,53 @@
    },
    "calculations": [],
    "max_field_strength": null,
+   "border_screening": {
+    "status": "NOT_READY",
+    "missing_inputs": [
+     "antenna height"
+    ]
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "RR6.7"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "FREQUENCY_OVERLAP_ONLY",
+    "margin_db": null,
+    "expert_review": true
+   },
    "priority": {
     "score": 9,
     "tier": "HIGH",
@@ -4305,11 +6695,12 @@
      "within_100_km_of_finland": 2,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 0
+     "calculation_available": 0,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "INSUFFICIENT_DATA",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "NOT_EVALUATED: no applicable criterion or no border field strength",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -4715,6 +7106,217 @@
     }
    ],
    "max_field_strength": 17.052780570189867,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 108,
+    "max_field_strength_dbuv_m": 10.821,
+    "max_point": {
+     "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+     "label": "Territorial sea limit FI 0000015311 00522",
+     "sample_index": 929,
+     "lat": 60.2002,
+     "lon": 27.29304,
+     "distance_km": 110.049,
+     "path_zones": [
+      [
+       46.02063793760502,
+       "Land"
+      ],
+      [
+       64.02871365232002,
+       "Sea"
+      ]
+     ],
+     "field_strength_dbuv_m": 10.821,
+     "calculation_sha256": "3e20e21160dc1f05f87c5f1bf55220d5732690dae77af8d221c0d91a8419d05a"
+    },
+    "max_by_boundary_kind": {
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 110.049,
+      "path_zones": [
+       [
+        46.02063793760502,
+        "Land"
+       ],
+       [
+        64.02871365232002,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 10.821,
+      "calculation_sha256": "3e20e21160dc1f05f87c5f1bf55220d5732690dae77af8d221c0d91a8419d05a"
+     },
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 399,
+      "lat": 60.55305,
+      "lon": 27.80787,
+      "distance_km": 129.985,
+      "path_zones": [
+       [
+        30.465258383376373,
+        "Land"
+       ],
+       [
+        99.51984405236293,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 10.78,
+      "calculation_sha256": "f06fb19f043ad19ae1a1e40498b6800091c38f6488da72681e61aef3d439f69e"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 110.049,
+      "path_zones": [
+       [
+        46.02063793760502,
+        "Land"
+       ],
+       [
+        64.02871365232002,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 10.821,
+      "calculation_sha256": "3e20e21160dc1f05f87c5f1bf55220d5732690dae77af8d221c0d91a8419d05a"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000000152 00602",
+      "sample_index": 1251,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 110.049,
+      "path_zones": [
+       [
+        46.02063793760502,
+        "Land"
+       ],
+       [
+        64.02871365232002,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 10.821,
+      "calculation_sha256": "3e20e21160dc1f05f87c5f1bf55220d5732690dae77af8d221c0d91a8419d05a"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000000152 00602",
+      "sample_index": 1252,
+      "lat": 60.20018,
+      "lon": 27.29295,
+      "distance_km": 110.051,
+      "path_zones": [
+       [
+        46.021252675748634,
+        "Land"
+       ],
+       [
+        64.02956894017203,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 10.821,
+      "calculation_sha256": "30d39c914c3a9005f31cc53a2cc2d3805d1f1f1b8933ad9c781f4d2b10e0ac2d"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 928,
+      "lat": 60.2002,
+      "lon": 27.22304,
+      "distance_km": 112.634,
+      "path_zones": [
+       [
+        44.248954572015414,
+        "Land"
+       ],
+       [
+        68.38474797493289,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 10.78,
+      "calculation_sha256": "3798f075f2074799bb74632261e81e6ee28e3d182aa4af8ed47702dd23fc988f"
+     },
+     {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 399,
+      "lat": 60.55305,
+      "lon": 27.80787,
+      "distance_km": 129.985,
+      "path_zones": [
+       [
+        30.465258383376373,
+        "Land"
+       ],
+       [
+        99.51984405236293,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 10.78,
+      "calculation_sha256": "f06fb19f043ad19ae1a1e40498b6800091c38f6488da72681e61aef3d439f69e"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 20.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -9.18,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
    "priority": {
     "score": 8,
     "tier": "HIGH",
@@ -4725,11 +7327,12 @@
      "within_100_km_of_finland": 0,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -5161,6 +7764,217 @@
     }
    ],
    "max_field_strength": 9.94722011440913,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 112,
+    "max_field_strength_dbuv_m": 6.785,
+    "max_point": {
+     "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+     "label": "Territorial sea limit FI 0000015311 00522",
+     "sample_index": 928,
+     "lat": 60.2002,
+     "lon": 27.22304,
+     "distance_km": 130.031,
+     "path_zones": [
+      [
+       62.014647717280546,
+       "Land"
+      ],
+      [
+       68.01606523830769,
+       "Sea"
+      ]
+     ],
+     "field_strength_dbuv_m": 6.785,
+     "calculation_sha256": "ce572e15d72656c432eaf20e6be6e7c2c0bfa6a45f4511f6cce21d452a4ec1d7"
+    },
+    "max_by_boundary_kind": {
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 928,
+      "lat": 60.2002,
+      "lon": 27.22304,
+      "distance_km": 130.031,
+      "path_zones": [
+       [
+        62.014647717280546,
+        "Land"
+       ],
+       [
+        68.01606523830769,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.785,
+      "calculation_sha256": "ce572e15d72656c432eaf20e6be6e7c2c0bfa6a45f4511f6cce21d452a4ec1d7"
+     },
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 399,
+      "lat": 60.55305,
+      "lon": 27.80787,
+      "distance_km": 145.766,
+      "path_zones": [
+       [
+        54.66226412391619,
+        "Land"
+       ],
+       [
+        91.1037735398604,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 5.793,
+      "calculation_sha256": "7c18031901c5c4833115692c3a928036dc3ec04ea61ae481cc487fa55c988c8a"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 928,
+      "lat": 60.2002,
+      "lon": 27.22304,
+      "distance_km": 130.031,
+      "path_zones": [
+       [
+        62.014647717280546,
+        "Land"
+       ],
+       [
+        68.01606523830769,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.785,
+      "calculation_sha256": "ce572e15d72656c432eaf20e6be6e7c2c0bfa6a45f4511f6cce21d452a4ec1d7"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 127.414,
+      "path_zones": [
+       [
+        64.71830207951434,
+        "Land"
+       ],
+       [
+        62.69585513952953,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.779,
+      "calculation_sha256": "3790813c63c3a8b1d51e92a21c0ea70a7f52460f3d910bda5ea65394081f12a8"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000000152 00602",
+      "sample_index": 1251,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 127.414,
+      "path_zones": [
+       [
+        64.71830207951434,
+        "Land"
+       ],
+       [
+        62.69585513952953,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.779,
+      "calculation_sha256": "3790813c63c3a8b1d51e92a21c0ea70a7f52460f3d910bda5ea65394081f12a8"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000000152 00602",
+      "sample_index": 1252,
+      "lat": 60.20018,
+      "lon": 27.29295,
+      "distance_km": 127.416,
+      "path_zones": [
+       [
+        64.71908806163204,
+        "Land"
+       ],
+       [
+        62.69661655970603,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.778,
+      "calculation_sha256": "18f9e546620939d2049e6c971907a3cc83fa0eb6ba83997d96b002e2b6444c10"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 927,
+      "lat": 60.20031,
+      "lon": 27.14666,
+      "distance_km": 132.968,
+      "path_zones": [
+       [
+        62.45455838645169,
+        "Land"
+       ],
+       [
+        70.5132110814777,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.404,
+      "calculation_sha256": "6b64f2185350866892850525a291f3f7b14e776de510e622939cc9dd6f2282dd"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 20.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -13.21,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
    "priority": {
     "score": 8,
     "tier": "HIGH",
@@ -5171,11 +7985,12 @@
      "within_100_km_of_finland": 0,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -5599,6 +8414,217 @@
     }
    ],
    "max_field_strength": 6.864699293916686,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 112,
+    "max_field_strength_dbuv_m": 6.788,
+    "max_point": {
+     "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+     "label": "Territorial sea limit FI 0000015311 00522",
+     "sample_index": 928,
+     "lat": 60.2002,
+     "lon": 27.22304,
+     "distance_km": 130.031,
+     "path_zones": [
+      [
+       62.014647717280546,
+       "Land"
+      ],
+      [
+       68.01606523830769,
+       "Sea"
+      ]
+     ],
+     "field_strength_dbuv_m": 6.788,
+     "calculation_sha256": "3416cdddae5e3586054c17d4a4bd3080691d0ccfc1eff16b485175ffd6b27575"
+    },
+    "max_by_boundary_kind": {
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 928,
+      "lat": 60.2002,
+      "lon": 27.22304,
+      "distance_km": 130.031,
+      "path_zones": [
+       [
+        62.014647717280546,
+        "Land"
+       ],
+       [
+        68.01606523830769,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.788,
+      "calculation_sha256": "3416cdddae5e3586054c17d4a4bd3080691d0ccfc1eff16b485175ffd6b27575"
+     },
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 399,
+      "lat": 60.55305,
+      "lon": 27.80787,
+      "distance_km": 145.766,
+      "path_zones": [
+       [
+        54.66226412391619,
+        "Land"
+       ],
+       [
+        91.1037735398604,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 5.795,
+      "calculation_sha256": "da2babebfe1ed1fdf3199389bae4fbd642d701ca3aed55f3f775f43db3fb733a"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 928,
+      "lat": 60.2002,
+      "lon": 27.22304,
+      "distance_km": 130.031,
+      "path_zones": [
+       [
+        62.014647717280546,
+        "Land"
+       ],
+       [
+        68.01606523830769,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.788,
+      "calculation_sha256": "3416cdddae5e3586054c17d4a4bd3080691d0ccfc1eff16b485175ffd6b27575"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 127.414,
+      "path_zones": [
+       [
+        64.71830207951434,
+        "Land"
+       ],
+       [
+        62.69585513952953,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.782,
+      "calculation_sha256": "0b8460d2d4b5ccd177296928c7a93b08e72dd69f94966765843d5c6411e7289c"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000000152 00602",
+      "sample_index": 1251,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 127.414,
+      "path_zones": [
+       [
+        64.71830207951434,
+        "Land"
+       ],
+       [
+        62.69585513952953,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.782,
+      "calculation_sha256": "0b8460d2d4b5ccd177296928c7a93b08e72dd69f94966765843d5c6411e7289c"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000000152 00602",
+      "sample_index": 1252,
+      "lat": 60.20018,
+      "lon": 27.29295,
+      "distance_km": 127.416,
+      "path_zones": [
+       [
+        64.71908806163204,
+        "Land"
+       ],
+       [
+        62.69661655970603,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.782,
+      "calculation_sha256": "24e1d3d096e49755c50792ed9bf44a6c597ea680bb2ee48cade669bf3402b25f"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 927,
+      "lat": 60.20031,
+      "lon": 27.14666,
+      "distance_km": 132.968,
+      "path_zones": [
+       [
+        62.45455838645169,
+        "Land"
+       ],
+       [
+        70.5132110814777,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.407,
+      "calculation_sha256": "264d8361b0795848bde90ee36d1f76aea76de4cfe841070f28d825b30ebb9306"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 20.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -13.21,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
    "priority": {
     "score": 8,
     "tier": "HIGH",
@@ -5609,11 +8635,12 @@
      "within_100_km_of_finland": 0,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -5958,6 +8985,251 @@
     }
    ],
    "max_field_strength": -10.92690579971108,
+   "border_screening": {
+    "status": "READY",
+    "screening_version": "border-screening/1.0.0",
+    "spacing_km": 5.0,
+    "window_km": 150.0,
+    "points_evaluated": 108,
+    "max_field_strength_dbuv_m": -11.089,
+    "max_point": {
+     "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+     "label": "Territorial sea limit FI 0000015311 00522",
+     "sample_index": 920,
+     "lat": 60.17551,
+     "lon": 26.67624,
+     "distance_km": 137.154,
+     "path_zones": [
+      [
+       36.30543359501982,
+       "Land"
+      ],
+      [
+       100.84842665283281,
+       "Sea"
+      ]
+     ],
+     "field_strength_dbuv_m": -11.089,
+     "calculation_sha256": "64a5ae1d88abac9014010ee69113b54ae2131dd492e971240964efb6485a77d8"
+    },
+    "max_by_boundary_kind": {
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 920,
+      "lat": 60.17551,
+      "lon": 26.67624,
+      "distance_km": 137.154,
+      "path_zones": [
+       [
+        36.30543359501982,
+        "Land"
+       ],
+       [
+        100.84842665283281,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": -11.089,
+      "calculation_sha256": "64a5ae1d88abac9014010ee69113b54ae2131dd492e971240964efb6485a77d8"
+     },
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 399,
+      "lat": 60.55305,
+      "lon": 27.80787,
+      "distance_km": 136.803,
+      "path_zones": [
+       [
+        38.22448930112745,
+        "Land"
+       ],
+       [
+        98.57894609238136,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": -11.453,
+      "calculation_sha256": "f9e4037713a29789e6e876c3f3e6ece7bb4024c7a9a1cdb3899f06252df22a2f"
+     }
+    },
+    "top_points": [
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 920,
+      "lat": 60.17551,
+      "lon": 26.67624,
+      "distance_km": 137.154,
+      "path_zones": [
+       [
+        36.30543359501982,
+        "Land"
+       ],
+       [
+        100.84842665283281,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": -11.089,
+      "calculation_sha256": "64a5ae1d88abac9014010ee69113b54ae2131dd492e971240964efb6485a77d8"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 927,
+      "lat": 60.20031,
+      "lon": 27.14666,
+      "distance_km": 120.318,
+      "path_zones": [
+       [
+        44.11658777544741,
+        "Land"
+       ],
+       [
+        76.2013788848637,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": -11.094,
+      "calculation_sha256": "3ad500186a94acfe41091cc473276cdc878f366d1b9352cd10a0e1795e038322"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 918,
+      "lat": 60.15765,
+      "lon": 26.55148,
+      "distance_km": 141.361,
+      "path_zones": [
+       [
+        34.330408561041665,
+        "Land"
+       ],
+       [
+        107.03009727854153,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": -11.1,
+      "calculation_sha256": "e16766e50a993f8fd31b4ef4eff30e62f3198a4ddf85ff8e400fb359a363792a"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 924,
+      "lat": 60.20038,
+      "lon": 26.91749,
+      "distance_km": 129.05,
+      "path_zones": [
+       [
+        40.32805719571886,
+        "Land"
+       ],
+       [
+        88.72172583058149,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": -11.128,
+      "calculation_sha256": "57053d88b7ffc9e10327d48f8b2d52827b24aa6542e00a13eeec92d7c9931360"
+     },
+     {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 925,
+      "lat": 60.2004,
+      "lon": 26.99388,
+      "distance_km": 126.065,
+      "path_zones": [
+       [
+        42.02168627482649,
+        "Land"
+       ],
+       [
+        84.04337254965304,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": -11.198,
+      "calculation_sha256": "e1515ec7d868921165dae3adfd4b810459b93b9e7ed34e53a4a712f7f3eac29c"
+     }
+    ],
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    }
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "CHALLENGE_EXTENSION_ABOVE_470_MHZ",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 24.5939,
+    "threshold_dbuv_m": 44.5939,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": [
+     "BC = 10 log10(7200 kHz / 25 kHz) = 24.59 dB, assuming uniform spectral power distribution in the notified bandwidth."
+    ]
+   },
+   "coordination": {
+    "rows": [
+     [
+      "EST",
+      "COORD REQUIRED",
+      "4.2.2.2"
+     ],
+     [
+      "FIN",
+      "COORD REQUIRED",
+      "4.2.2.2"
+     ],
+     [
+      "EST",
+      "COORD COMPLETED",
+      "COORD"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "COORD REQUIRED",
+      "4.2.2.2"
+     ],
+     [
+      "FIN",
+      "COORD COMPLETED",
+      "COORD"
+     ]
+    ]
+   },
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -55.68,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
    "priority": {
     "score": 8,
     "tier": "HIGH",
@@ -5968,296 +9240,12 @@
      "within_100_km_of_finland": 0,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 1
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
-   "rule_version": "ific-finland-relevance/1.0.0"
-  },
-  {
-   "domain": "TERRESTRIAL",
-   "notice_id": "93082323",
-   "record_key": "fxm_terra!93082323",
-   "assignment_id": 126080906,
-   "administration": "RUS",
-   "station_class": "FB",
-   "site_name": "LEN VYBORG GRUZOVOI",
-   "frequency_mhz": 153.3,
-   "bandwidth_khz": 16.8,
-   "publications": [
-    "NTFD_RR:1"
-   ],
-   "change": {
-    "change_type": "NEW",
-    "basis": "NOTICE_INTENT_ADD",
-    "field_changes": [],
-    "targets": []
-   },
-   "stage_a_frequency": {
-    "status": "M4_ONLY",
-    "range_mhz": [
-     153.2916,
-     153.3084
-    ],
-    "m4": [
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2155",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2156",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Mobile (ML)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2157",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2158",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Mobile (ML)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2159",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2160",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Mobile (ML)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2161",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2162",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Mobile (ML)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2163",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Base station (FB)",
-      "is_synthetic_reference": false
-     },
-     {
-      "reference_kind": "M4_ALLOCATION",
-      "reference_key": "Taajuusjakotaulukko!2164",
-      "label": "Digital radiotelephony for business activities",
-      "interval_basis": "M4_SUB_BAND_LIMITS",
-      "reference_start_mhz": 152.88125,
-      "reference_end_mhz": 153.99375,
-      "overlap_start_mhz": 153.2916,
-      "overlap_end_mhz": 153.3084,
-      "services_in_finland": [
-       "LAND MOBILE"
-      ],
-      "station_classes_in_finland": "Mobile (ML)",
-      "is_synthetic_reference": false
-     }
-    ],
-    "m4_count": 10,
-    "stations": [],
-    "station_count": 0
-   },
-   "stage_b_service": {
-    "status": "MATCH",
-    "notice_service": "LAND_MOBILE",
-    "finnish_mobile_allocation": true,
-    "same_station_class_in_finland": true,
-    "special_interest_stations_on_frequency": 0
-   },
-   "stage_c_geography": {
-    "status": "WITHIN_1000_KM",
-    "distance_to_finland_km": 30.32,
-    "nearest_finland_point": [
-     60.8594,
-     28.3359
-    ],
-    "site_country": "RUS",
-    "basis": "Great-circle distance to the nearest vertex of the Natural Earth 1:10m Finland boundary; mobile areas reduced by their notified radius."
-   },
-   "stage_d_readiness": {
-    "status": "READY",
-    "method": "TERR_P1546",
-    "missing_inputs": []
-   },
-   "calculations": [
-    {
-     "method_id": "TERR_P1546",
-     "method_version": "1.0.0",
-     "metric_kind": "FIELD_STRENGTH",
-     "numeric_value": 19.92768141243101,
-     "unit": "dB(uV/m)",
-     "reference_bandwidth_hz": null,
-     "time_percentage": 10.0,
-     "location_percentage": 50.0,
-     "inputs": {
-      "frequency_mhz": 153.3,
-      "time_percent": 10.0,
-      "distance_km": 30.320018542094513,
-      "erp_dbw": 12.8,
-      "tx_height_agl_m": 20.0,
-      "rx_height_agl_m": 10.0,
-      "rx_area": "Rural",
-      "effective_height_m": 20.0,
-      "effective_height_basis": "ASSUMED_EQUAL_TO_HA",
-      "location_percent": 50.0,
-      "rx_clutter_height_m": 10.0,
-      "rx_clutter_height_basis": "REFERENCE_TYPICAL_VALUE",
-      "zones": [
-       [
-        30.320018542094513,
-        "Land"
-       ]
-      ],
-      "zones_basis": "GIVEN",
-      "power_basis": "e.r.p. as notified (RR 1.162)"
-     },
-     "assumptions": [
-      "No terrain database: terrain clearance angle, tropospheric scatter and terminal terrain heights are not applied (P.1546-6 Annex 5 steps 12, 13 skipped).",
-      "Field strength exceeded for the stated percentage of time and locations; not a worst case.",
-      "e.r.p. is taken as the value toward the receiver; no antenna pattern is applied unless the scenario's e.r.p. already includes it.",
-      "Effective height heff assumed equal to antenna height ha.",
-      "Receiver clutter height 10.0 m: the reference implementation's typical value for Rural.",
-      "Power basis: e.r.p. as notified (RR 1.162)."
-     ],
-     "diagnostics": {
-      "role": "ENGINEERING",
-      "validation": {
-       "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
-       "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
-       "cases": 54,
-       "max_abs_deviation_db": 5.1e-05
-      }
-     },
-     "result_trace": {
-      "h1_m": 20.0,
-      "emax_dbuv_m": 77.26541027655774,
-      "e_after_mixed_path_dbuv_m": 37.12768188484784,
-      "rx_height_correction_db": 0.0,
-      "rx_representative_clutter_m": 10.0,
-      "slope_path_correction_db": -4.724168322924366e-07,
-      "basic_transmission_loss_db": 145.8831616846565,
-      "standard": "ITU-R P.1546-6"
-     },
-     "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
-     "calculation_sha256": "4dcd99d0cdca29bc056aa9ba3f3e59f784826a0bd96624ab5a002c782b9eef77",
-     "receiver": "Nearest point of Finland"
-    }
-   ],
-   "max_field_strength": 19.92768141243101,
-   "priority": {
-    "score": 7,
-    "tier": "HIGH",
-    "components": {
-     "change_new_or_modified": 1,
-     "special_interest_frequency_overlap": 0,
-     "finnish_land_mobile_allocation": 1,
-     "within_100_km_of_finland": 2,
-     "within_300_km_of_finland": 1,
-     "neighbouring_administration": 1,
-     "calculation_available": 1
-    }
-   },
-   "finding_status": "EXPERT_REVIEW_REQUIRED",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -6523,6 +9511,41 @@
    },
    "calculations": [],
    "max_field_strength": null,
+   "border_screening": {
+    "status": "NOT_READY",
+    "missing_inputs": [
+     "antenna height"
+    ]
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 20.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "FREQUENCY_OVERLAP_ONLY",
+    "margin_db": null,
+    "expert_review": true
+   },
    "priority": {
     "score": 7,
     "tier": "HIGH",
@@ -6533,11 +9556,12 @@
      "within_100_km_of_finland": 0,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 0
+     "calculation_available": 0,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "INSUFFICIENT_DATA",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "NOT_EVALUATED: no applicable criterion or no border field strength",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -6813,6 +9837,41 @@
    },
    "calculations": [],
    "max_field_strength": null,
+   "border_screening": {
+    "status": "NOT_READY",
+    "missing_inputs": [
+     "antenna height"
+    ]
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 20.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "FREQUENCY_OVERLAP_ONLY",
+    "margin_db": null,
+    "expert_review": true
+   },
    "priority": {
     "score": 7,
     "tier": "HIGH",
@@ -6823,11 +9882,12 @@
      "within_100_km_of_finland": 0,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 0
+     "calculation_available": 0,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "INSUFFICIENT_DATA",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "NOT_EVALUATED: no applicable criterion or no border field strength",
    "rule_version": "ific-finland-relevance/1.0.0"
   },
   {
@@ -7103,6 +10163,41 @@
    },
    "calculations": [],
    "max_field_strength": null,
+   "border_screening": {
+    "status": "NOT_READY",
+    "missing_inputs": [
+     "antenna height"
+    ]
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 20.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "concern": {
+    "classification": "FREQUENCY_OVERLAP_ONLY",
+    "margin_db": null,
+    "expert_review": true
+   },
    "priority": {
     "score": 7,
     "tier": "HIGH",
@@ -7113,11 +10208,12 @@
      "within_100_km_of_finland": 0,
      "within_300_km_of_finland": 1,
      "neighbouring_administration": 1,
-     "calculation_available": 0
+     "calculation_available": 0,
+     "coordination_threshold_exceeded": 0
     }
    },
    "finding_status": "INSUFFICIENT_DATA",
-   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+   "regulatory_finding": "NOT_EVALUATED: no applicable criterion or no border field strength",
    "rule_version": "ific-finland-relevance/1.0.0"
   }
  ],

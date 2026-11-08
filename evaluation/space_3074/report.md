@@ -1,8 +1,8 @@
 # AstraSync evaluation: Space IFIC 3074
 
-Publication date (from the database): 2026-06-23. Generated 2026-11-08T01:19:39+00:00 by rule set `ific-finland-relevance/1.0.0`.
+Publication date (from the database): 2026-06-23. Generated 2026-11-08T04:34:05+00:00 by rule set `ific-finland-relevance/1.0.0`.
 
-**What this is.** A deterministic screening of every notice in the issue against Finnish frequency use (M4 table and the challenge's special-interest stations), with explainable priorities and, where the notice holds the inputs, technical calculations. **What it is not.** No approved regulatory criterion is configured, so nothing here is a limit exceedance or a statement of harmful interference. Every high-priority item needs expert review.
+**What this is.** A deterministic screening of every notice in the issue against Finnish frequency use (M4 table and the challenge's special-interest stations), with explainable priorities and, where the notice holds the inputs, technical calculations. **What it is not.** No approved space PFD criterion is configured, so nothing here is a limit exceedance or a statement of harmful interference. Every high-priority item needs expert review.
 
 ## Inputs
 
@@ -94,7 +94,9 @@ Values that cannot be right as published (for example a maximum power density ab
 
 ## Limitations
 
-- No approved criterion: no margin, no exceedance. Candidate criteria (for example ECC T/R 25-08 trigger field strengths, RR Article 21 PFD limits) must be entered with citations and approved before AstraSync compares against them.
+- Terrestrial criterion: ECC T/R 25-08 A1.2.3 coordination thresholds (normative 29.7-470 MHz; above 470 MHz a challenge extension). Bandwidth correction assumes a uniform spectral power distribution. The 1 % time variant for digital systems (footnote 2) is not applied. No 10 m to 3 m receiving-height correction (organizers: not required).
+- Boundaries: Natural Earth 1:10m land borders and the Traficom territorial-sea limit (WFS); screening geometry, not legal boundaries. The territorial-sea layer ends near 65.5 N in the Bay of Bothnia.
+- Space: no approved PFD criterion; RR Article 21 Table 21-4 values must be entered from the authoritative edition before comparison.
 - Special-interest stations are synthetic challenge data.
 - Terrestrial: no terrain database (heff = ha, no clearance-angle correction); antenna patterns are not applied, so values are for the direction of maximum radiation.
 - Space: PFD values are upper bounds, not predictions; antenna patterns, pointing, power control and EPFD aggregation are not modelled.

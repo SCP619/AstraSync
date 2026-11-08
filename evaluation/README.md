@@ -8,11 +8,18 @@ platform runs (`astrasync_data.ific_evaluate`). Method and rules:
 | Folder | Issue | Compared with | Files |
 | --- | --- | --- | --- |
 | [`space_3074/`](space_3074/report.md) | Space IFIC 3074 (published 23.06.2026) | 3073 | `report.md`, `findings.csv`, `findings_high.json`, `findings.json.gz`, `comparison.json`, `manifest.json` |
-| [`terrestrial_3076/`](terrestrial_3076/report.md) | Terrestrial BR IFIC 3076 (21.07.2026) | 3075 | same, plus neighbouring-administration trends in `comparison.json` |
+| [`terrestrial_3076/`](terrestrial_3076/report.md) | Terrestrial BR IFIC 3076 (21.07.2026) | 3075 | same, plus `border_points.csv`, `terrestrial_ific_3076_cases.json` and neighbouring-administration trends in `comparison.json` |
 
 - `report.md`: what was done, reconciliation, changes, ranked items with their reasons,
   anomalies, limitations.
-- `findings.csv`: one row per notice, ranked.
+- `findings.csv`: one row per notice, ranked (the results table). Terrestrial rows also carry
+  the highest land-border / territorial-sea field strength, its location, the ECC T/R 25-08
+  A1.2.3 threshold (with bandwidth correction and basis), the margin, the concern class and the
+  coordination rows.
+- `border_points.csv` (terrestrial): the five strongest boundary points per notice, each with its
+  calculation hash, so geographically distinct exposures stay visible.
+- `terrestrial_ific_3076_cases.json`: the notices classed `VERIFIED_CRITERION_EXCEEDANCE`,
+  `COORDINATION_REVIEW` or `POTENTIAL_CONCERN`, with the cited criterion.
 - `findings.json.gz`: every finding with all stage results, calculations, inputs, assumptions
   and traces. `findings_high.json`: the HIGH tier, uncompressed.
 - `manifest.json`: input files with SHA-256 and official URLs, parser, rule and method versions
@@ -31,6 +38,9 @@ python -m astrasync_data.ific_evaluate terrestrial --issue brific3076.zip --prev
 The M4 table changes over time (its ETag is the version); the manifest records the SHA-256 of
 the snapshot used.
 
-**Read with care.** No regulatory criterion has been approved, so these are screening results
-ranked for expert review, not findings of interference or limit exceedance. Space PFD values are
-upper bounds. Special-interest stations are synthetic challenge data.
+**Read with care.** Data status: real IFIC data, screening results for expert review.
+Terrestrial notices are compared with the indicative coordination thresholds of ECC T/R 25-08
+A1.2.3 (above 470 MHz as the organizer-approved challenge extension): an exceedance indicates
+coordination with Finland, not harmful interference or non-compliance. No space PFD criterion is
+configured; space PFD values are upper bounds. Special-interest stations are synthetic challenge
+data. Decisions: [`docs/TRAFICOM_CHALLENGE_CLARIFICATIONS.md`](../docs/TRAFICOM_CHALLENGE_CLARIFICATIONS.md).

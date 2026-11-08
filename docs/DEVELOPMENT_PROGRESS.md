@@ -1,6 +1,6 @@
 # AstraSync development progress
 
-Last updated: 2026-11-07. Read this first in a new session, then check `git log` and open PRs.
+Last updated: 2026-11-08. On a new PC start with [`NEW_PC_HANDOFF.md`](NEW_PC_HANDOFF.md). Read this first in a new session, then check `git log` and open PRs.
 Update it in the PR that changes the state. Requirement-level status:
 [`REQUIREMENTS_MATRIX.md`](REQUIREMENTS_MATRIX.md). Decisions:
 [`ARCHITECTURE_DECISIONS.md`](ARCHITECTURE_DECISIONS.md).
@@ -140,8 +140,8 @@ Worker and API settings:
 | #22 | merged | TR-NFR-006 case-list benchmark (50,000 cases, p95 ≤ 657 ms), records |
 | #23 | `19b5660` | Source upload and processing status |
 | #24 | `3f3136e` | Records and frontend coverage |
-| #25 | open | Dev sign-in fix, configurable dev ports, user administration (G26) |
-| branch `scp619/ific-pipeline` | see PR | ITU IFIC acquisition and parsing, issue analysis (G27), P.1546-6, drafting agents (G28), `/ific` screen, evaluation outputs for 3074 and 3076 |
+| #25 | `87c1cf8` | Dev sign-in fix, configurable dev ports, user administration (G26) |
+| #26 | `934c864` | ITU IFIC acquisition and parsing, issue analysis (G27), P.1546-6, drafting agents (G28), `/ific` screen, evaluation outputs for 3074 and 3076 |
 
 Seven commits up to `65997b2` carry a Claude co-author trailer; they are left unchanged (no
 history rewrite). New commits carry no attribution.

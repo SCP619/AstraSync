@@ -92,6 +92,7 @@ There is no self-registration. A valid sign-in with no provisioned account gets 
 | `ASTRASYNC_LLM_API_KEY` | For a provider | `X-AstraSync-Secret` value for `n8n`; API key for `anthropic`. Server-side only |
 | `ASTRASYNC_LLM_MODEL` | No | Default `qwen3:8b` for `n8n` |
 | `ASTRASYNC_LLM_TIMEOUT_SECONDS` | No | n8n call timeout, default 120 (see `docs/operations/N8N_LOCAL_AI.md`) |
+| `ASTRASYNC_LLM_MAX_ATTEMPTS` | No | Attempts per draft or answer when the model's reply is refused, default 2, maximum 3 |
 | `ASTRASYNC_AI_CLASSIFICATIONS` | No | Default `PUBLIC,INTERNAL` |
 | `ASTRASYNC_BUILD_SHA` | No | Stored on each analysis run for replay |
 | `ASTRASYNC_PUSH_TOKEN_KEY` | For device registration | Fernet key that encrypts push tokens at rest |

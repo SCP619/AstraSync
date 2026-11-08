@@ -45,6 +45,15 @@ UI ──OIDC──▶ AstraSync API ──X-AstraSync-Secret──▶ n8n webho
 Root cause of the earlier failures: the workflow was inactive, so only the test URL existed, and
 it stops listening after one call (later calls gave 404). The node graph itself was correct.
 
+## Grounded questions
+
+`POST /api/v1/cases/{case_id}/questions` (`CaseQuestionRequest` → `CaseAnswer`; capability
+`DRAFT_CREATE`, same case, classification and finished-run gates as drafting) answers a question
+from the case evidence only. The question is sent as data, citations and numbers are checked,
+and the answer is not stored. The UI shows it in the case's **Ask** tab. A refused reply is
+retried once with the refusal reason (`ASTRASYNC_LLM_MAX_ATTEMPTS`, default 2, maximum 3).
+Live run 2026-11-08: draft plus question passed 3 of 3 with the retry.
+
 ## Backend configuration (git-ignored)
 
 In `traficom-integration/backend/dev_stack.local.env`:

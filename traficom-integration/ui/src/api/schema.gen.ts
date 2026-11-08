@@ -378,6 +378,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/cases/{case_id}/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ask Case Question */
+        post: operations["ask_case_question_api_v1_cases__case_id__questions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/cases/{case_id}/reviews": {
         parameters: {
             query?: never;
@@ -1568,6 +1585,36 @@ export interface components {
          */
         Capability: "AUTHENTICATED" | "CASE_READ" | "ISSUE_READ" | "ANALYSIS_READ" | "ANALYSIS_RUN" | "DRAFT_CREATE" | "DRAFT_READ" | "REVIEW_DECIDE" | "CASE_EXPORT" | "UPLOAD_MANAGE" | "INGEST_TRIGGER" | "JOB_READ" | "REFERENCE_READ" | "SOURCE_HEALTH_READ" | "SOURCE_READ" | "SOURCE_DOWNLOAD" | "ALERT_READ" | "ALERT_ACKNOWLEDGE" | "ALERT_PREFERENCES" | "DEVICE_MANAGE" | "ADMIN_ALERT_RULES" | "ADMIN_SOURCE_CHECK" | "ADMIN_USERS";
         /**
+         * CaseAnswer
+         * @description A grounded model answer. Not stored, not a finding; citations are checked server-side.
+         */
+        CaseAnswer: {
+            /** Ai Model Id */
+            ai_model_id: string | null;
+            /** Analysis Run Id */
+            analysis_run_id: string;
+            /** Answer Markdown */
+            answer_markdown: string;
+            /** Case Id */
+            case_id: string;
+            /** Cited Evidence Ids */
+            cited_evidence_ids: string[];
+            /**
+             * Generated At Utc
+             * Format: date-time
+             */
+            generated_at_utc: string;
+            /** Requires Human Review */
+            requires_human_review: boolean;
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "1.0.0-draft.5";
+            /** Uncertainties */
+            uncertainties: string[];
+        };
+        /**
          * CaseCandidate
          * @description Passed to ``cases.upsert_candidate`` by the relevance pipeline, one per notice version.
          */
@@ -1697,6 +1744,16 @@ export interface components {
             schema_version: "1.0.0-draft.5";
             /** Total If Known */
             total_if_known: number | null;
+        };
+        /**
+         * CaseQuestionRequest
+         * @description A question about one case, answered only from that case's stored evidence.
+         */
+        CaseQuestionRequest: {
+            /** Analysis Run Id */
+            analysis_run_id: string;
+            /** Question */
+            question: string;
         };
         /**
          * CaseSort
@@ -6233,6 +6290,113 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EvidencePack"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    ask_case_question_api_v1_cases__case_id__questions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                case_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CaseQuestionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseAnswer"];
                 };
             };
             /** @description Unauthorized */

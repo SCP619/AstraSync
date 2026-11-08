@@ -54,9 +54,11 @@ from .contract.models import (
     AnalyseRequest,
     AnalysisAccepted,
     AnalysisRun,
+    CaseAnswer,
     CaseCandidate,
     CaseDetail,
     CaseList,
+    CaseQuestionRequest,
     CaseSummary,
     ComparisonGroup,
     CriterionCheck,
@@ -815,6 +817,63 @@ def create_draft(
     session.add(row)
     session.commit()
     return DraftCreated(**_envelope(), **_draft_fields(row))
+
+
+def answer_question(
+    runtime: LibraryRuntime,
+    request: Request,
+    session: Session,
+    principal: Principal,
+    case_id: str,
+    body: CaseQuestionRequest,
+    *,
+    agent: Any,
+    ai_classifications: frozenset[UsageClassification],
+) -> CaseAnswer:
+    """Same gates as drafting: case access, finished run, AI classification, a grounded agent."""
+    case = readable_case(runtime, request, session, principal, case_id)
+    run = session.get(AnalysisRunRow, body.analysis_run_id)
+    if run is None or run.case_id != case_id:
+        raise not_found()
+    if run.analysis_status not in _FINISHED:
+        raise ApiError(409, ErrorCode.CONFLICT, "This analysis has not finished.")
+    if UsageClassification(case.usage_classification) not in ai_classifications:
+        raise ApiError(
+            403,
+            ErrorCode.SOURCE_RESTRICTED,
+            "AI answers are not approved for this data classification.",
+        )
+    answer = getattr(agent, "answer_question", None)
+    if answer is None:
+        raise ApiError(
+            503,
+            ErrorCode.AI_UNAVAILABLE,
+            "AI answers are not available. Analysis, evidence and review still work.",
+        )
+    evidence = build_case_evidence(session, case, run)
+    known = {item["evidence_id"] for item in evidence["evidence"]}
+    try:
+        result = answer(evidence, body.question)
+        cited = [str(c) for c in result["cited_evidence_ids"]]
+        text = str(result["answer_markdown"])
+    except Exception as exc:
+        raise ApiError(
+            503, ErrorCode.AI_UNAVAILABLE, "The assistant did not return a usable answer."
+        ) from exc
+    if not cited or not set(cited) <= known or _UNSUPPORTED_CLAIMS.search(text):
+        raise ApiError(
+            503, ErrorCode.AI_UNAVAILABLE, "The assistant did not return a usable answer."
+        )
+    return CaseAnswer(
+        **_envelope(),
+        case_id=case_id,
+        analysis_run_id=run.analysis_run_id,
+        answer_markdown=text,
+        uncertainties=[str(u) for u in result.get("uncertainties", [])][:20],
+        cited_evidence_ids=cited,
+        ai_model_id=getattr(agent, "model_id", None),
+        requires_human_review=True,
+    )
 
 
 def list_drafts(

@@ -16,7 +16,7 @@ from support.demo_plugins import DEMO_UNIT, DemoDraftAgent, DemoEchoMethod, Demo
 
 from astrasync_api import admin, analysis, cases
 from astrasync_api.analysis import AnalysisPlugins
-from astrasync_api.case_tables import AnalysisRunRow, DraftRow, MethodRunRow
+from astrasync_api.case_tables import AnalysisRunRow, DraftRow, EvidenceLinkRow, MethodRunRow
 from astrasync_api.contract.enums import (
     IssueDomain,
     SourceType,
@@ -1166,3 +1166,133 @@ def test_worker_loads_only_valid_plugins() -> None:
     assert good.build_sha == "abc"
     with pytest.raises(SettingsError, match="RFMethod"):
         load_analysis_plugins(Settings(rf_methods=("support.demo_plugins:DemoDraftAgent",)))
+
+
+# --- Case questions (grounded assistant) ------------------------------------------------------
+
+
+def _with_answerer(app: FastAPI, response: Any) -> list[str]:
+    asked: list[str] = []
+
+    class Agent:
+        model_id = "test-model"
+
+        def answer_question(self, evidence: Any, question: str) -> Any:
+            asked.append(question)
+            if isinstance(response, Exception):
+                raise response
+            return response(evidence) if callable(response) else response
+
+    app.state.draft_agent = Agent()
+    return asked
+
+
+def _ask(client: TestClient, headers: dict[str, str], case_id: str, run_id: str) -> Any:
+    return client.post(
+        f"/api/v1/cases/{case_id}/questions",
+        json={"analysis_run_id": run_id, "question": "What was calculated?"},
+        headers=headers,
+    )
+
+
+def _evidence_case(sessions: sessionmaker[Session]) -> str:
+    case_id = candidate(sessions)
+    with sessions.begin() as session:
+        session.add(
+            EvidenceLinkRow(
+                evidence_id=f"{case_id}-record",
+                case_id=case_id,
+                label="Original source record (synthetic)",
+                entity_type="source_record",
+                entity_id="SYNTHETIC-RECORD-001",
+                source_issue_id="DEMO-IFIC-001",
+                source_locator="SYNTHETIC!1",
+                sha256="0" * 64,
+            )
+        )
+    return case_id
+
+
+def test_a_question_is_answered_with_checked_citations(
+    secure_app: FastAPI,
+    secure_client: TestClient,
+    bearer: Bearer,
+    sessions: sessionmaker[Session],
+    runtime: WorkerRuntime,
+) -> None:
+    case_id = _evidence_case(sessions)
+    run = analyse(secure_client, runtime, bearer(), case_id)
+    asked = _with_answerer(
+        secure_app,
+        lambda evidence: {
+            "answer_markdown": "The notice is under review "
+            f"[E:{evidence['evidence'][0]['evidence_id']}].",
+            "uncertainties": ["Screening only."],
+            "cited_evidence_ids": [evidence["evidence"][0]["evidence_id"]],
+        },
+    )
+    response = _ask(secure_client, bearer(), case_id, run.analysis_run_id)
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["cited_evidence_ids"] == [f"{case_id}-record"]
+    assert body["requires_human_review"] is True
+    assert body["ai_model_id"] == "test-model"
+    assert asked == ["What was calculated?"]
+
+
+@pytest.mark.parametrize(
+    "answer",
+    [
+        pytest.param(
+            {"answer_markdown": "x [E:FAKE]", "cited_evidence_ids": ["FAKE"]}, id="invented"
+        ),
+        pytest.param({"answer_markdown": "x", "cited_evidence_ids": []}, id="uncited"),
+        pytest.param(ValueError("refused"), id="agent-refused"),
+    ],
+)
+def test_unusable_answers_are_refused(
+    secure_app: FastAPI,
+    secure_client: TestClient,
+    bearer: Bearer,
+    sessions: sessionmaker[Session],
+    runtime: WorkerRuntime,
+    answer: Any,
+) -> None:
+    case_id = _evidence_case(sessions)
+    run = analyse(secure_client, runtime, bearer(), case_id)
+    _with_answerer(secure_app, answer)
+    response = _ask(secure_client, bearer(), case_id, run.analysis_run_id)
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "AI_UNAVAILABLE"
+
+
+def test_questions_keep_authorization_and_tenant_isolation(
+    secure_app: FastAPI,
+    secure_client: TestClient,
+    bearer: Bearer,
+    sessions: sessionmaker[Session],
+    runtime: WorkerRuntime,
+) -> None:
+    case_id = _evidence_case(sessions)
+    run = analyse(secure_client, runtime, bearer(), case_id)
+    asked = _with_answerer(secure_app, {"answer_markdown": "x", "cited_evidence_ids": []})
+    assert _ask(secure_client, {}, case_id, run.analysis_run_id).status_code == 401
+    assert (
+        _ask(secure_client, bearer("no-roles-a"), case_id, run.analysis_run_id).status_code == 403
+    )
+    assert _ask(secure_client, bearer("analyst-b"), case_id, run.analysis_run_id).status_code == 404
+    assert asked == []
+
+
+def test_without_an_answering_agent_questions_are_unavailable(
+    secure_app: FastAPI,
+    secure_client: TestClient,
+    bearer: Bearer,
+    sessions: sessionmaker[Session],
+    runtime: WorkerRuntime,
+) -> None:
+    case_id = _evidence_case(sessions)
+    run = analyse(secure_client, runtime, bearer(), case_id)
+    secure_app.state.draft_agent = DemoDraftAgent()
+    response = _ask(secure_client, bearer(), case_id, run.analysis_run_id)
+    assert response.status_code == 503

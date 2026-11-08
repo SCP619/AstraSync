@@ -340,8 +340,11 @@ class GroundedLlmDraftAgent:
 
     def create_draft(self, case_evidence: Mapping[str, Any], draft_type: str) -> dict[str, Any]:
         evidence_json = json.dumps(case_evidence, sort_keys=True, ensure_ascii=False, default=str)
+        allowed = [item["evidence_id"] for item in case_evidence.get("evidence", [])]
+        citations = ", ".join(f"[E:{evidence_id}]" for evidence_id in allowed) or "none"
         user = (
             f"Draft type: {draft_type} ({DRAFT_TITLES.get(draft_type, '')}).\n"
+            f"Allowed citations (cite only these, exactly as written): {citations}.\n"
             f"<EVIDENCE>\n{evidence_json}\n</EVIDENCE>"
         )
         reply = self._transport(SYSTEM_PROMPT, user, self.model_id)

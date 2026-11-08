@@ -31,8 +31,16 @@ UI ──OIDC──▶ AstraSync API ──X-AstraSync-Secret──▶ n8n webho
 - Published: active version `6f6b9f94-3fd6-411c-934d-e68326ff2e6f`.
 - Production webhook without the header, and with a wrong header: HTTP 403 "Authorization data
   is wrong!" in about 15 ms; no execution was created, so the model was not invoked.
-- A request with the correct secret was **not** sent by Claude Code: the secret is a credential
-  value and was not read. Run the check below.
+- End-to-end with the real secret (2026-11-08, secret read only from the git-ignored local env,
+  never printed): the transport reached the production webhook and Ollama answered in 3 s; the
+  opt-in test `tests/test_live_n8n.py` (`ASTRASYNC_LIVE_N8N=1`) ran an authenticated draft on a
+  synthetic case with one synthetic evidence link. Unauthenticated requests got 401 with no model
+  call. Over 8 runs after listing the allowed citations in the prompt, 6 drafts were accepted
+  (cited the evidence, numbers grounded, `requires_human_review`) and 2 model replies were refused
+  for wrong citations, returned as 503 with nothing stored. That refusal is the intended
+  behaviour; `qwen3:8b` does not always follow the citation format. Each draft takes 2–3 minutes.
+- A case without evidence links can never get an LLM draft (nothing citable); use the
+  deterministic agent for such cases.
 
 Root cause of the earlier failures: the workflow was inactive, so only the test URL existed, and
 it stops listening after one call (later calls gave 404). The node graph itself was correct.

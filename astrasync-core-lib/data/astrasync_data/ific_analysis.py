@@ -29,7 +29,7 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
-from . import border_screening, geo
+from . import border_screening, geo, space_criteria
 
 RULE_VERSION = "ific-finland-relevance/1.0.0"
 LAND_MOBILE_SERVICES = ("MOBILE", "LAND MOBILE")
@@ -833,6 +833,7 @@ def _space_finding(
     service_area_fin = False
     terrestrial_sharing = False
     calculations = []
+    criterion_checks: list[dict[str, Any]] = []
     for group in groups:
         start, end = group["frequency_start_mhz"], group["frequency_end_mhz"]
         freq = _frequency_stage(refs, start, end)
@@ -855,6 +856,27 @@ def _space_finding(
             "special_interest_overlaps": [m["label"] for m in freq["stations"][:5]],
             "finnish_terrestrial_service_in_band": shares,
         }
+        criterion = space_criteria.assess_group(
+            start_mhz=start,
+            end_mhz=end,
+            direction=norm(group, "direction"),
+            classes_services=norm(group, "station_classes_services"),
+            notice_type=norm(group, "notice_type"),
+            nominal_longitude_deg=norm(group, "nominal_longitude_deg"),
+            inclination_range=norm(group, "orbit_inclination_deg_range"),
+            apogee_range=norm(group, "orbit_apogee_km_range"),
+            perigee_range=norm(group, "orbit_perigee_km_range"),
+            density_dbw_hz=norm(group, "max_power_density_dbw_hz"),
+            gain_dbi=norm(group, "beam_max_gain_dbi"),
+            group_bandwidth_khz=norm(group, "bandwidth_khz"),
+        )
+        result["table21_4"] = {
+            k: criterion.get(k)
+            for k in ("classification", "margin_db", "reason", "orbit_category", "services")
+        }
+        if criterion.get("checks"):
+            result["table21_4"]["worst_check"] = criterion["worst_check"]
+            criterion_checks.append({"group_id": result["group_id"], **criterion})
         scenario = _pfd_scenario(group, geometry) if downlink else None
         if scenario and method is not None:
             assessment = method.assess_applicability(scenario)
@@ -873,6 +895,23 @@ def _space_finding(
         )
     )
     max_pfd = max((c["numeric_value"] for c in calculations), default=None)
+    classes = [g["table21_4"]["classification"] for g in group_results if g.get("table21_4")]
+    concern_class = min(classes, key=space_criteria.ORDER.index, default="NO_APPLICABLE_CRITERION")
+    compared = sorted(criterion_checks, key=lambda c: -c["margin_db"])
+    concern = {
+        "classification": concern_class,
+        "margin_db": compared[0]["margin_db"] if compared else None,
+        "groups_compared": len(compared),
+        "groups_by_classification": {c: classes.count(c) for c in sorted(set(classes))},
+        "meaning": (
+            "Worst-case PFD upper bound (peak beam gain toward Finland, free space) exceeds the "
+            "RR Table 21-4 limit at some angle of arrival in Finland. Not a finding of "
+            "non-compliance: the real antenna pattern and pointing are needed, and 21.17 allows "
+            "agreed exceedance."
+            if concern_class == "WORST_CASE_EXCEEDANCE"
+            else None
+        ),
+    }
     visible = geometry["status"] in ("VISIBLE", "REACHES_FINLAND_LATITUDES")
     is_api_cr = any(s.startswith(("API/A", "CR/C")) for s in sections)
     is_ap30 = any("AP30" in s for s in sections)
@@ -885,6 +924,11 @@ def _space_finding(
         "api_a_or_cr_c_special_section": 1 if is_api_cr else 0,
         "ap30_30a_30b": 1 if is_ap30 else 0,
         "pfd_upper_bound_available": 1 if calculations else 0,
+        "table21_4_worst_case_exceedance": 3
+        if concern_class == "WORST_CASE_EXCEEDANCE"
+        else 1
+        if concern_class == "POTENTIAL_CONCERN"
+        else 0,
     }
     score = sum(components.values())
     if not visible and geometry["status"] in ("NOT_VISIBLE", "DOES_NOT_REACH"):
@@ -931,8 +975,19 @@ def _space_finding(
         "calculations": sorted(calculations, key=lambda c: -c["numeric_value"])[:3],
         "max_pfd": max_pfd,
         "max_pfd_unit": "dB(W/m^2) in 1 Hz (upper bound)" if max_pfd is not None else None,
+        "criterion": {
+            "citation": space_criteria.citation(),
+            "version": space_criteria.registry()["version"],
+        },
+        "criterion_checks": compared[:5],
+        "concern": concern,
         "priority": {"score": score, "tier": _tier(score, "SPACE"), "components": components},
         "finding_status": status,
-        "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+        "regulatory_finding": (
+            "SCREENING_ONLY: worst-case PFD upper bound compared with ITU RR Article 21 Table 21-4 "
+            "(Edition of 2024); not a finding of harmful interference or non-compliance"
+            if compared
+            else "NOT_EVALUATED: no applicable Table 21-4 entry established or inputs missing"
+        ),
         "rule_version": RULE_VERSION,
     }

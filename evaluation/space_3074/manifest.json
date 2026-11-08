@@ -1,6 +1,6 @@
 {
  "artifact": "AstraSync evaluation of SPACE_IFIC 3074",
- "generated_at_utc": "2026-11-08T07:10:02+00:00",
+ "generated_at_utc": "2026-11-08T07:58:31+00:00",
  "issue": 3074,
  "publication_date": "2026-06-23",
  "kind": "SPACE_IFIC",
@@ -95,7 +95,67 @@
   "space_pfd_reference_bandwidth_hz": 1.0,
   "note": "AstraSync screening defaults, not the conditions of an approved criterion."
  },
- "criteria": "None approved for space. No PFD limit comparison is made.",
+ "criteria": {
+  "space": {
+   "document": "ITU Radio Regulations, Volume 1 (Articles), Edition of 2024",
+   "article": "Article 21, Section V, No. 21.16 and Table 21-4 (Rev.WRC-23), printed pages 286-294",
+   "source_url": "https://search.itu.int/history/HistoryDigitalCollectionDocLibrary/1.49.48.en.101.pdf",
+   "source_sha256": "040907a35846479b1f34ba628e35964dd4ce6d2b3fc05c2ff9b45e8ff215f5de",
+   "retrieved": "2026-11-08"
+  },
+  "criterion_set_id": "ITU-RR-ART21-TABLE21-4",
+  "version": "1.0.0",
+  "entries": 31,
+  "excluded_entries": [
+   {
+    "entry": "1 518-1 525 MHz",
+    "reason": "Territory of the United States in Region 2 only"
+   },
+   {
+    "entry": "1 670-1 690 MHz (second entry, footnote 12)",
+    "reason": "21.16.5: only where shared with equal rights with the meteorological aids service; not established for Finland"
+   },
+   {
+    "entry": "1 690-1 700 MHz (Nos. 5.381, 5.382)",
+    "reason": "Country footnotes; Finland's inclusion not established"
+   },
+   {
+    "entry": "2 500-2 516.5 MHz (No. 5.404), 2 520-2 535 MHz (No. 5.403)",
+    "reason": "Country footnotes; Finland's inclusion not established"
+   },
+   {
+    "entry": "5 670-5 725 MHz (Nos. 5.453, 5.455)",
+    "reason": "Country footnotes; Finland's inclusion not established"
+   },
+   {
+    "entry": "9 900-10 400 MHz EESS (active)",
+    "reason": "21.16.8: mean pfd of a SAR from pulse parameters, not the notified power density"
+   },
+   {
+    "entry": "12.5-12.75 GHz (Region 1 countries in Nos. 5.494, 5.496); 12.2-12.75 GHz (Region 3)",
+    "reason": "Country or Region condition not established for Finland"
+   },
+   {
+    "entry": "17.7-19.7 GHz highly-inclined orbits (21.16.6B, 21.16.6C)",
+    "reason": "Depends on Resolution 147 status and Bureau receipt dates not in the screening data"
+   },
+   {
+    "entry": "27.5-30.0 GHz inter-satellite NGSO (21.16.19)",
+    "reason": "Resolution 679 Annex 2 methodology required"
+   },
+   {
+    "entry": "31.0-31.3 GHz, 34.7-35.2 GHz space research (Nos. 5.549, 5.550)",
+    "reason": "Country footnotes"
+   },
+   {
+    "entry": "37.5-40 GHz, 40.5-42.5 GHz NGSO (21.16.4)",
+    "reason": "Valid only for systems with 99 or fewer satellites; the count is not in the screening data"
+   }
+  ],
+  "assessment_version": "rr-table21-4-screening/1.0.0",
+  "concern_margin_db": 6.0,
+  "meaning": "Worst-case free-space PFD upper bound (peak beam gain toward Finland) against RR Table 21-4: a negative margin shows the notified maxima stay below the limit everywhere in Finland; a positive margin is a worst-case exceedance needing the real antenna pattern, not a finding of non-compliance."
+ },
  "environment": {
   "python": "3.11.0",
   "platform": "Windows-10-10.0.26300-SP0"

@@ -83,6 +83,23 @@ function Space({ s }: { s: Scenario }) {
     <dl className="facts">
       <dt>PFD upper bound</dt>
       <dd>{fmt(s.max_pfd_db_w_m2_hz_upper_bound as number | null, 2, "dB(W/m²·Hz)")}</dd>
+      <dt>RR Table 21-4</dt>
+      <dd>
+        <strong>{(s.concern as { classification?: string } | undefined)?.classification ?? "–"}</strong>
+        {(() => {
+          const check = s.criterion_check as
+            | { entry_id: string; bands: string[]; pfd_db_w_m2: number; limit_db_w_m2: number; angle_of_arrival_deg: number; margin_db: number; reference_bandwidth_hz: number }
+            | null
+            | undefined;
+          return check ? (
+            <>
+              {" "}· entry {check.entry_id} ({check.bands.join(", ")}): {fmt(check.pfd_db_w_m2, 2)} vs limit{" "}
+              {fmt(check.limit_db_w_m2, 2, "dB(W/m²)")} in {check.reference_bandwidth_hz / 1000} kHz at δ{" "}
+              {fmt(check.angle_of_arrival_deg, 1, "°")}, margin {fmt(check.margin_db, 2, "dB")}
+            </>
+          ) : null;
+        })()}
+      </dd>
       <dt>Geometry</dt>
       <dd>
         {geometry.status}

@@ -44,6 +44,8 @@ the snapshot used.
 **Read with care.** Data status: real IFIC data, screening results for expert review.
 Terrestrial notices are compared with the indicative coordination thresholds of ECC T/R 25-08
 A1.2.3 (above 470 MHz as the organizer-approved challenge extension): an exceedance indicates
-coordination with Finland, not harmful interference or non-compliance. No space PFD criterion is
-configured; space PFD values are upper bounds. Special-interest stations are synthetic challenge
+coordination with Finland, not harmful interference or non-compliance. Space downlinks are compared with ITU RR Article 21
+Table 21-4 (Edition of 2024) using the worst-case PFD upper bound: a positive margin is a
+worst-case exceedance needing the real antenna pattern, not non-compliance
+(`space_ific_3074_cases.json`). Special-interest stations are synthetic challenge
 data. Decisions: [`docs/TRAFICOM_CHALLENGE_CLARIFICATIONS.md`](../docs/TRAFICOM_CHALLENGE_CLARIFICATIONS.md).

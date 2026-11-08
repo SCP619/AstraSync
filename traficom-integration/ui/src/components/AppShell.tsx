@@ -4,28 +4,40 @@
  * app's router, capabilities and live alert counts. Only one navigation is rendered at a time,
  * so links are never announced twice.
  */
-import { Bell, Briefcase, FileSearch, FlaskConical, Gauge, Library, LogOut, MapPin, Radio, Upload, Users } from "lucide-react";
+import { Bell, Briefcase, FileSearch, FlaskConical, Gauge, Library, LogOut, MapPin, Radio, Sparkles, Upload, Users } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "./cn";
 
-/** Identity and roles are shown on the overview page, so the shell only needs these. */
+/** The shell shows the environment and the user's role names; never identifiers. */
 export type ShellUser = {
   environment: string;
   capabilities: string[];
+  roles?: string[];
 };
 
-type Item = { to: string; label: string; icon: typeof Gauge; capability?: string };
+const GROUPS = ["Analyse", "Investigate", "Data", "Settings"];
+
+const ROLE_TEXT: Record<string, string> = {
+  ADMINISTRATOR: "Administrator",
+  ANALYST: "Analyst",
+  REVIEWER: "Reviewer",
+  DEMO_VIEWER: "Demo viewer",
+  AUDITOR: "Auditor",
+};
+
+type Item = { to: string; label: string; icon: typeof Gauge; capability?: string; group: string };
 
 const ITEMS: Item[] = [
-  { to: "/dashboard", label: "Overview", icon: Gauge },
-  { to: "/cases", label: "Cases", icon: Briefcase, capability: "CASE_READ" },
-  { to: "/alerts", label: "Alerts", icon: Bell, capability: "ALERT_READ" },
-  { to: "/sources", label: "Source library", icon: Library, capability: "SOURCE_HEALTH_READ" },
-  { to: "/uploads", label: "Upload", icon: Upload, capability: "UPLOAD_MANAGE" },
-  { to: "/ific", label: "IFIC issues", icon: FileSearch, capability: "SOURCE_READ" },
-  { to: "/finland", label: "Finland relevance", icon: MapPin, capability: "SOURCE_READ" },
-  { to: "/admin/users", label: "Users and access", icon: Users, capability: "ADMIN_USERS" },
+  { to: "/dashboard", label: "Dashboard", icon: Gauge, group: "Analyse" },
+  { to: "/cases", label: "Cases", icon: Briefcase, capability: "CASE_READ", group: "Investigate" },
+  { to: "/assistant", label: "AI agent", icon: Sparkles, capability: "CASE_READ", group: "Analyse" },
+  { to: "/alerts", label: "Alerts", icon: Bell, capability: "ALERT_READ", group: "Investigate" },
+  { to: "/sources", label: "Source library", icon: Library, capability: "SOURCE_HEALTH_READ", group: "Data" },
+  { to: "/uploads", label: "Upload", icon: Upload, capability: "UPLOAD_MANAGE", group: "Data" },
+  { to: "/ific", label: "IFIC issues", icon: FileSearch, capability: "SOURCE_READ", group: "Investigate" },
+  { to: "/finland", label: "Finland relevance", icon: MapPin, capability: "SOURCE_READ", group: "Investigate" },
+  { to: "/admin/users", label: "Users and access", icon: Users, capability: "ADMIN_USERS", group: "Settings" },
 ];
 
 const NARROW = "(max-width: 767px)";
@@ -83,10 +95,7 @@ export function AppShell({
               "flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-2xs text-muted-foreground",
               isActive && "text-accent",
             )
-          : cn(
-              "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-muted-foreground no-underline hover:bg-raised hover:text-foreground",
-              isActive && "bg-raised font-medium text-foreground shadow-[inset_2px_0_0_var(--accent)]",
-            )
+          : cn(isActive && "active")
       }
     >
       <item.icon className={mobile ? "size-5" : "size-4"} aria-hidden />
@@ -112,20 +121,23 @@ export function AppShell({
           DEMO environment: synthetic and made-up data only
         </div>
       )}
-      <div className="flex flex-1">
+      <div className={narrow ? "flex flex-1" : "app-shell flex-1"}>
         {!narrow && (
-          <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-border bg-surface">
-            <div className="flex items-center gap-2 border-b border-border px-4 py-3.5">
-              <Radio className="size-5 text-accent" aria-hidden />
-              <span className="brand font-semibold tracking-tight">AstraSync</span>
-            </div>
-            <nav aria-label="Main" className="flex-1 space-y-0.5 overflow-y-auto p-2">
-              {items.map((item) => link(item, false))}
-            </nav>
-          </aside>
+          <nav aria-label="Main" className="sidebar">
+            <span className="brand">
+              <Radio aria-hidden />
+              AstraSync
+            </span>
+            {GROUPS.filter((group) => items.some((item) => item.group === group)).map((group) => (
+              <div className="nav-group" key={group}>
+                <span className="nav-group-title">{group}</span>
+                {items.filter((item) => item.group === group).map((item) => link(item, false))}
+              </div>
+            ))}
+          </nav>
         )}
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/95 px-4 py-2 backdrop-blur">
+          <header className="topbar">
             {narrow && (
               <span className="flex items-center gap-2">
                 <Radio className="size-5 text-accent" aria-hidden />
@@ -133,8 +145,13 @@ export function AppShell({
               </span>
             )}
             <span className="ml-auto" />
+            <span className="role-label small muted whitespace-nowrap">
+              {user.roles && user.roles.length > 0
+                ? user.roles.map((role) => ROLE_TEXT[role] ?? role).join(", ")
+                : "No role assigned"}
+            </span>
             <span
-              className="environment num hidden whitespace-nowrap rounded-md border border-border px-2 py-1 text-2xs sm:inline"
+              className="environment hidden sm:inline-flex"
               data-environment={user.environment}
             >
               {user.environment} environment

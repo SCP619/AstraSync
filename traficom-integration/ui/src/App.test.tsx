@@ -78,8 +78,9 @@ describe("signed in", () => {
       backend({ [ME]: { status: 200, body: analyst }, [CASES]: { status: 501, body: error("NOT_IMPLEMENTED") } }),
     );
     expect(await screen.findByText("Analyst")).toBeTruthy();
-    expect(screen.getByText("DEMO-TENANT-001")).toBeTruthy();
     expect(screen.getByText("DEMO environment")).toBeTruthy();
+    // The dashboard shows data, not identifiers.
+    expect(screen.queryByText("DEMO-TENANT-001")).toBeNull();
   });
 
   it("states honestly that case data does not exist yet", async () => {
@@ -87,7 +88,7 @@ describe("signed in", () => {
       fakeAuth("token"),
       backend({ [ME]: { status: 200, body: analyst }, [CASES]: { status: 501, body: error("NOT_IMPLEMENTED") } }),
     );
-    expect(await screen.findByText(/not implemented/)).toBeTruthy();
+    expect((await screen.findByRole("alert")).textContent).toMatch(/not[ _]implemented/i);
     expect(screen.getByRole("link", { name: "Cases" })).toBeTruthy();
   });
 
@@ -97,7 +98,8 @@ describe("signed in", () => {
     });
     show(fakeAuth("token"), fetchImpl);
     expect(await screen.findByText("Administrator")).toBeTruthy();
-    expect(screen.queryByRole("heading", { name: "Cases" })).toBeNull();
+    expect(await screen.findByRole("heading", { name: "Dashboard" })).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Needs review" })).toBeNull();
     const paths = vi.mocked(fetchImpl).mock.calls.map(([url]) => new URL(String(url)).pathname);
     expect(paths).not.toContain(CASES);
   });

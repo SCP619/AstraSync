@@ -7,10 +7,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ApiError, createApiClient, type CaseList, type Me } from "./api/client";
+import { Link, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { ApiError, createApiClient, type Me } from "./api/client";
 import { SignInStepError, type AuthAdapter } from "./auth/adapter";
 import { JudgeDemoPage } from "./demo/JudgeDemoPage";
+import { DashboardPage } from "./dashboard/DashboardPage";
+import { AssistantPage } from "./assistant/AssistantPage";
 import {
   describeError,
   MeContext,
@@ -28,7 +30,6 @@ import { AlertDetailPage, AlertsPage } from "./alerts/AlertsPage";
 import { CaseInspectorPage } from "./cases/CaseInspectorPage";
 import { CaseListPage } from "./cases/CaseListPage";
 import { AppShell as ShellLayout } from "./components/AppShell";
-import { OperationsPanel } from "./components/OperationsPanel";
 import { FinlandRelevancePage } from "./relevance/FinlandRelevancePage";
 import { IficIssuesPage } from "./relevance/IficIssuesPage";
 import { webPlatform, type PlatformAdapter, type PushPermission } from "./platform/types";
@@ -323,12 +324,6 @@ function DeepLinks({ platform }: { platform: PlatformAdapter }) {
   return null;
 }
 
-const ROLE_TEXT: Record<Me["roles"][number], string> = {
-  ANALYST: "Analyst",
-  REVIEWER: "Reviewer",
-  ADMINISTRATOR: "Administrator",
-  DEMO_VIEWER: "Demo viewer",
-};
 
 /** Confirms identity with the server before anything inside it renders. */
 function AppShell({
@@ -386,83 +381,6 @@ function AppShell({
       </ShellLayout>
       </AlertActivityContext.Provider>
     </MeContext.Provider>
-  );
-}
-
-function CasesPanel() {
-  const { api } = useSession();
-  const load = useCallback((signal: AbortSignal) => api.listCases({}, undefined, signal), [api]);
-  const { result, retry } = useLoad<CaseList>(load);
-
-  let content: React.ReactNode;
-  if (result === null) {
-    content = <p role="status">Loading cases…</p>;
-  } else if (result.error instanceof ApiError && result.error.code === "NOT_IMPLEMENTED") {
-    content = (
-      <p className="muted">
-        Your access to cases is confirmed, but case data is not available yet. The server reports
-        that this feature is not implemented.
-      </p>
-    );
-  } else if (result.error !== undefined) {
-    content = (
-      <>
-        <p role="alert">{describeError(result.error)}</p>
-        <RequestId error={result.error} />
-        <button type="button" onClick={retry}>Try again</button>
-      </>
-    );
-  } else if (result.data?.items.length === 0) {
-    content = <p className="muted">No cases yet.</p>;
-  } else {
-    content = (
-      <p>
-        {result.data?.next_cursor === null ? "" : "At least "}
-        {result.data?.items.length} loaded. <Link to="/cases">Open cases</Link>
-      </p>
-    );
-  }
-
-  return (
-    <section className="panel" aria-labelledby="cases-title">
-      <h2 id="cases-title">Cases</h2>
-      {content}
-    </section>
-  );
-}
-
-function DashboardPage() {
-  const me = useMe();
-  return (
-    <main className="content">
-      <h1>Overview</h1>
-      <section className="panel" aria-labelledby="access-title">
-        <h2 id="access-title">Your access</h2>
-        <p className="muted small">Confirmed by the server for this session.</p>
-        <dl>
-          <dt>Role</dt>
-          <dd>
-            {me.roles.length > 0
-              ? me.roles.map((role) => ROLE_TEXT[role]).join(", ")
-              : "No role assigned. Contact your AstraSync administrator."}
-          </dd>
-          <dt>Organisation</dt>
-          <dd><code>{me.tenant_id}</code></dd>
-          <dt>User ID</dt>
-          <dd><code>{me.user_id}</code></dd>
-        </dl>
-      </section>
-      {me.capabilities.includes("CASE_READ") && <CasesPanel />}
-      {me.capabilities.includes("JOB_READ") && <OperationsPanel />}
-      <section className="panel" aria-labelledby="permissions-title">
-        <h2 id="permissions-title">Permissions</h2>
-        <ul className="chips">
-          {me.capabilities.map((capability) => (
-            <li key={capability}><code>{capability}</code></li>
-          ))}
-        </ul>
-      </section>
-    </main>
   );
 }
 
@@ -534,6 +452,10 @@ export function App({
         <Route
           path="/dashboard"
           element={shell(<DashboardPage />)}
+        />
+        <Route
+          path="/assistant"
+          element={shell(<RequireCapability capability="CASE_READ"><AssistantPage /></RequireCapability>)}
         />
         <Route
           path="/sources"

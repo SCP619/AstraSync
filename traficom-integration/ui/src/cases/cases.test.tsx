@@ -340,3 +340,48 @@ describe("drafts and review", () => {
     expect(screen.queryByText("Decision recorded.")).toBeNull();
   });
 });
+
+describe("ask about this case", () => {
+  const answer = {
+    ...envelope,
+    case_id: "DEMO-SPACE-001",
+    analysis_run_id: runFixture.analysis_run_id,
+    answer_markdown: "The notice was screened for review [E:DEMO-EVIDENCE-1].",
+    uncertainties: ["Screening only."],
+    cited_evidence_ids: ["DEMO-EVIDENCE-1"],
+    ai_model_id: "qwen3:8b",
+    requires_human_review: true,
+  };
+
+  it("sends only the question and run, and shows the cited answer", async () => {
+    const fetchImpl = backend(ANALYST, { [`POST ${CASE}/questions`]: { body: answer } });
+    show(fetchImpl);
+    await openTab("Ask");
+    await userEvent.type(await screen.findByLabelText("Question"), "What was screened?");
+    await userEvent.click(screen.getByRole("button", { name: "Ask" }));
+    expect(await screen.findByText(/screened for review/)).toBeTruthy();
+    expect(screen.getAllByText(/DEMO-EVIDENCE-1/).length).toBeGreaterThan(0);
+    const post = calls(fetchImpl).find((c) => c.method === "POST");
+    expect(post?.body).toEqual({ analysis_run_id: runFixture.analysis_run_id, question: "What was screened?" });
+  });
+
+  it("explains a refused answer", async () => {
+    show(
+      backend(ANALYST, {
+        [`POST ${CASE}/questions`]: { status: 503, body: error("AI_UNAVAILABLE", "The assistant did not return a usable answer.") },
+      }),
+    );
+    await openTab("Ask");
+    await userEvent.type(await screen.findByLabelText("Question"), "Anything?");
+    await userEvent.click(screen.getByRole("button", { name: "Ask" }));
+    expect(await screen.findByText("The assistant did not return a usable answer.")).toBeTruthy();
+    expect(screen.getByText(/refused or the local model is unavailable/)).toBeTruthy();
+  });
+
+  it("is not offered without the drafting permission", async () => {
+    show(backend(REVIEWER));
+    await openTab("Ask");
+    expect(await screen.findByText(/needs the drafting permission/)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Ask" })).toBeNull();
+  });
+});

@@ -1,0 +1,747 @@
+{
+ "dataset": "judge-demo/1.0.0",
+ "data_status": "SYNTHETIC DEMONSTRATION DATA: invented notices computed by AstraSync's real screening code. Not live analysis and not IFIC data.",
+ "criterion": {
+  "document": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz",
+  "edition": "Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025)",
+  "edition_date": "2025-06-06",
+  "section": "Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems",
+  "source_url": "https://docdb.cept.org/document/909",
+  "download_url": "https://docdb.cept.org/download/4789",
+  "retrieved": "2026-11-08"
+ },
+ "boundaries": [
+  {
+   "part": "LAND_BORDER",
+   "dataset": "Natural Earth 1:10m Admin 0 Countries",
+   "publisher": "Natural Earth",
+   "source": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson",
+   "licence": "Public domain (Natural Earth terms of use)",
+   "source_sha256": "239eec57ac17f100a11e2536cffc56752c318b50ae765b0918ff7aab4ce8f255",
+   "method": "Finland ring vertices shared with RUS, NOR or SWE, split per neighbour",
+   "retrieved": "2026-11-08"
+  },
+  {
+   "part": "TERRITORIAL_SEA_OUTER_LIMIT",
+   "dataset": "Aluevesien rajat (territorial waters boundaries), layer avoin:TerritorialSeaArea_L",
+   "publisher": "Liikenne- ja viestintävirasto Traficom",
+   "source": "https://julkinen.traficom.fi/inspirepalvelu/avoin/wfs (WFS 2.0.0, srsName EPSG:4326); catalogue https://avoindata.suomi.fi/data/dataset/aluevesien-rajat",
+   "licence": "Creative Commons Attribution 4.0",
+   "source_sha256": "c9536f502f6ac2bfe0423e172150b8209d403cf921f94fa5bcba1822b2821e2d",
+   "retrieved": "2026-11-08"
+  }
+ ],
+ "scenarios": [
+  {
+   "id": "DEMO-T-1",
+   "domain": "TERRESTRIAL",
+   "title": "Land-border exceedance",
+   "story": "A base station about 20 km from the Finnish land border. P.1546-6 is evaluated at every border sample in reach; the highest value exceeds the T/R 25-08 threshold, so coordination is indicated.",
+   "site": "DEMO BORDER BASE",
+   "frequency_mhz": 152.0,
+   "bandwidth_khz": 12.5,
+   "concern": {
+    "classification": "VERIFIED_CRITERION_EXCEEDANCE",
+    "margin_db": 41.08,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "border": {
+    "status": "READY",
+    "points_evaluated": 88,
+    "max_field_strength_dbuv_m": 53.075,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 370,
+     "lat": 61.1681,
+     "lon": 28.98085,
+     "distance_km": 8.434,
+     "path_zones": [
+      [
+       8.43355721312378,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 53.075,
+     "calculation_sha256": "a348e80ec54f66a7d848a3e02d8a679eaf99847d459afc12b2603afc6750385a"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 370,
+      "lat": 61.1681,
+      "lon": 28.98085,
+      "distance_km": 8.434,
+      "path_zones": [
+       [
+        8.43355721312378,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 53.075,
+      "calculation_sha256": "a348e80ec54f66a7d848a3e02d8a679eaf99847d459afc12b2603afc6750385a"
+     },
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 138.482,
+      "path_zones": [
+       [
+        84.29353571364246,
+        "Land"
+       ],
+       [
+        54.18870153019877,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.255,
+      "calculation_sha256": "e4b7e0d8f1c0cb02484aaf8d0e6b08cc492ed61a54ccce55459484f9f46d94bf"
+     }
+    },
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    },
+    "spacing_km": 5.0,
+    "window_km": 150.0
+   },
+   "priority": {
+    "score": 8,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 0,
+     "finnish_land_mobile_allocation": 0,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 0,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
+    }
+   },
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance"
+  },
+  {
+   "id": "DEMO-T-2",
+   "domain": "TERRESTRIAL",
+   "title": "Territorial-sea exceedance",
+   "story": "A station south of the Gulf of Finland: the highest field strength is at the outer limit of Finland's territorial sea, not at the coast.",
+   "site": "DEMO GULF BASE",
+   "frequency_mhz": 450.0,
+   "bandwidth_khz": 12.5,
+   "concern": {
+    "classification": "VERIFIED_CRITERION_EXCEEDANCE",
+    "margin_db": 26.13,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 20.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 20.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "border": {
+    "status": "READY",
+    "points_evaluated": 82,
+    "max_field_strength_dbuv_m": 46.126,
+    "max_point": {
+     "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+     "label": "Territorial sea limit FI 0000015311 00522",
+     "sample_index": 1231,
+     "lat": 59.93612,
+     "lon": 25.08952,
+     "distance_km": 35.691,
+     "path_zones": [
+      [
+       35.69059949782902,
+       "Sea"
+      ]
+     ],
+     "field_strength_dbuv_m": 46.126,
+     "calculation_sha256": "b7f4317b592e6ec6ebf2f58e886735f85a69b198dd14740a983631bf99315632"
+    },
+    "max_by_boundary_kind": {
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 1231,
+      "lat": 59.93612,
+      "lon": 25.08952,
+      "distance_km": 35.691,
+      "path_zones": [
+       [
+        35.69059949782902,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 46.126,
+      "calculation_sha256": "b7f4317b592e6ec6ebf2f58e886735f85a69b198dd14740a983631bf99315632"
+     },
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 399,
+      "lat": 60.55305,
+      "lon": 27.80787,
+      "distance_km": 177.959,
+      "path_zones": [
+       [
+        167.84722668467361,
+        "Sea"
+       ],
+       [
+        6.066767229566512,
+        "Land"
+       ],
+       [
+        4.044511486377675,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 9.802,
+      "calculation_sha256": "dff80845284f590455980ebc5a393ca5cae69cf5f5a30330ba2df9490613c8c8"
+     }
+    },
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    },
+    "spacing_km": 5.0,
+    "window_km": 150.0
+   },
+   "priority": {
+    "score": 8,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 0,
+     "finnish_land_mobile_allocation": 0,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 0,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
+    }
+   },
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance"
+  },
+  {
+   "id": "DEMO-T-3",
+   "domain": "TERRESTRIAL",
+   "title": "Coordinated notice needing review",
+   "story": "Same geometry, but the notice records coordination with Finland. The exceedance stays visible and is routed to an expert to check the coordination history.",
+   "site": "DEMO COORDINATED BASE",
+   "frequency_mhz": 152.5,
+   "bandwidth_khz": 12.5,
+   "concern": {
+    "classification": "COORDINATION_REVIEW",
+    "margin_db": 41.07,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": "Screening exceedance of the indicative coordination threshold at the Finnish border or territorial-sea limit: coordination with Finland is indicated. Not harmful interference, not non-compliance."
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [
+     [
+      "FIN",
+      "C",
+      "9.21"
+     ]
+    ],
+    "finland_mentioned": true,
+    "finland_rows": [
+     [
+      "FIN",
+      "C",
+      "9.21"
+     ]
+    ]
+   },
+   "border": {
+    "status": "READY",
+    "points_evaluated": 88,
+    "max_field_strength_dbuv_m": 53.073,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 370,
+     "lat": 61.1681,
+     "lon": 28.98085,
+     "distance_km": 8.434,
+     "path_zones": [
+      [
+       8.43355721312378,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 53.073,
+     "calculation_sha256": "0fbc4d5427902096363c4e64b11ad2a93ca7e85fea0c0e3d0cb6cab45511f1ce"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 370,
+      "lat": 61.1681,
+      "lon": 28.98085,
+      "distance_km": 8.434,
+      "path_zones": [
+       [
+        8.43355721312378,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 53.073,
+      "calculation_sha256": "0fbc4d5427902096363c4e64b11ad2a93ca7e85fea0c0e3d0cb6cab45511f1ce"
+     },
+     "TERRITORIAL_SEA_OUTER_LIMIT": {
+      "kind": "TERRITORIAL_SEA_OUTER_LIMIT",
+      "label": "Territorial sea limit FI 0000015311 00522",
+      "sample_index": 929,
+      "lat": 60.2002,
+      "lon": 27.29304,
+      "distance_km": 138.482,
+      "path_zones": [
+       [
+        84.29353571364246,
+        "Land"
+       ],
+       [
+        54.18870153019877,
+        "Sea"
+       ]
+      ],
+      "field_strength_dbuv_m": 6.244,
+      "calculation_sha256": "d0ca10ecd52cf87e40faf80f070ee472ebdcd6d76f96f8c281ecec65fff93e43"
+     }
+    },
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    },
+    "spacing_km": 5.0,
+    "window_km": 150.0
+   },
+   "priority": {
+    "score": 8,
+    "tier": "HIGH",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 0,
+     "finnish_land_mobile_allocation": 0,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 0,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 3
+    }
+   },
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance"
+  },
+  {
+   "id": "DEMO-T-4",
+   "domain": "TERRESTRIAL",
+   "title": "Near-threshold case",
+   "story": "Within the configurable 6 dB concern window below the threshold: flagged as a potential concern for review.",
+   "site": "DEMO NEAR-THRESHOLD BASE",
+   "frequency_mhz": 160.0,
+   "bandwidth_khz": 12.5,
+   "concern": {
+    "classification": "POTENTIAL_CONCERN",
+    "margin_db": -2.85,
+    "concern_margin_db": 6.0,
+    "expert_review": true,
+    "meaning": null
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "border": {
+    "status": "READY",
+    "points_evaluated": 104,
+    "max_field_strength_dbuv_m": 9.155,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 351,
+     "lat": 61.53846,
+     "lon": 29.68304,
+     "distance_km": 17.247,
+     "path_zones": [
+      [
+       17.24652279282103,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": 9.155,
+     "calculation_sha256": "8e8c9b7640cefa51b205397e6bfdf6036bfd21ab411b4e93b8939f640dff9ade"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 351,
+      "lat": 61.53846,
+      "lon": 29.68304,
+      "distance_km": 17.247,
+      "path_zones": [
+       [
+        17.24652279282103,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": 9.155,
+      "calculation_sha256": "8e8c9b7640cefa51b205397e6bfdf6036bfd21ab411b4e93b8939f640dff9ade"
+     }
+    },
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    },
+    "spacing_km": 5.0,
+    "window_km": 150.0
+   },
+   "priority": {
+    "score": 6,
+    "tier": "MEDIUM",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 0,
+     "finnish_land_mobile_allocation": 0,
+     "within_100_km_of_finland": 2,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 0,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 1
+    }
+   },
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance"
+  },
+  {
+   "id": "DEMO-T-5",
+   "domain": "TERRESTRIAL",
+   "title": "Below the screening threshold",
+   "story": "A distant station: computed, below the threshold by more than the concern window.",
+   "site": "DEMO DISTANT BASE",
+   "frequency_mhz": 160.0,
+   "bandwidth_khz": 12.5,
+   "concern": {
+    "classification": "BELOW_SCREENING_THRESHOLD",
+    "margin_db": -15.93,
+    "concern_margin_db": 6.0,
+    "expert_review": false,
+    "meaning": null
+   },
+   "criterion": {
+    "criterion_set_id": "ECC-TR2508-A1.2.3",
+    "criterion_version": "1.0.0",
+    "basis": "NORMATIVE_T/R_25-08_A1.2.3",
+    "base_threshold_dbuv_m": 12.0,
+    "bandwidth_correction_db": 0.0,
+    "threshold_dbuv_m": 12.0,
+    "reference_bandwidth_khz": 25.0,
+    "conditions": {
+     "interference_scenario": "co-channel",
+     "location_percentage": 50.0,
+     "time_percentage": 10.0,
+     "rx_height_agl_m": 10.0,
+     "reference_bandwidth_khz": 25.0,
+     "evaluation_location": "at the border-line"
+    },
+    "citation": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz, Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025), Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems (https://docdb.cept.org/document/909)",
+    "assumptions": []
+   },
+   "coordination": {
+    "rows": [],
+    "finland_mentioned": false,
+    "finland_rows": []
+   },
+   "border": {
+    "status": "READY",
+    "points_evaluated": 170,
+    "max_field_strength_dbuv_m": -3.926,
+    "max_point": {
+     "kind": "LAND_BORDER",
+     "label": "Finland-Russia land border",
+     "sample_index": 292,
+     "lat": 62.90593,
+     "lon": 31.56952,
+     "distance_km": 148.529,
+     "path_zones": [
+      [
+       148.5286661572769,
+       "Land"
+      ]
+     ],
+     "field_strength_dbuv_m": -3.926,
+     "calculation_sha256": "eb0923a220fcbfa7cc457b73d80c7471190a9d1a7bee4bc03d0377041a4c5105"
+    },
+    "max_by_boundary_kind": {
+     "LAND_BORDER": {
+      "kind": "LAND_BORDER",
+      "label": "Finland-Russia land border",
+      "sample_index": 292,
+      "lat": 62.90593,
+      "lon": 31.56952,
+      "distance_km": 148.529,
+      "path_zones": [
+       [
+        148.5286661572769,
+        "Land"
+       ]
+      ],
+      "field_strength_dbuv_m": -3.926,
+      "calculation_sha256": "eb0923a220fcbfa7cc457b73d80c7471190a9d1a7bee4bc03d0377041a4c5105"
+     }
+    },
+    "parameters": {
+     "time_percent": 10.0,
+     "location_percent": 50.0,
+     "rx_height_agl_m": 10.0,
+     "rx_area": "Rural",
+     "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+     "standard": "ITU-R P.1546-6"
+    },
+    "spacing_km": 5.0,
+    "window_km": 150.0
+   },
+   "priority": {
+    "score": 3,
+    "tier": "LOW",
+    "components": {
+     "change_new_or_modified": 1,
+     "special_interest_frequency_overlap": 0,
+     "finnish_land_mobile_allocation": 0,
+     "within_100_km_of_finland": 0,
+     "within_300_km_of_finland": 1,
+     "neighbouring_administration": 0,
+     "calculation_available": 1,
+     "coordination_threshold_exceeded": 0
+    }
+   },
+   "regulatory_finding": "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 A1.2.3; not a finding of harmful interference or non-compliance"
+  },
+  {
+   "id": "DEMO-W-1",
+   "domain": "WORKBOOK",
+   "title": "Bandwidth mismatch",
+   "story": "Channel 2500 kHz but transmission 118600k: both raw values are kept, the mismatch is flagged and screening uses the smaller value (organizer guidance). An unknown licence class screens as MUUT.",
+   "raw": {
+    "channel_bandwidth": "2500 kHz",
+    "transmission_bandwidth": "118600k",
+    "licence_class": "XYZ"
+   },
+   "normalized": {
+    "channel_bandwidth_hz": 2500000.0,
+    "emission_bandwidth_hz": 118600000.0,
+    "effective_bandwidth_hz": 2500000.0,
+    "effective_bandwidth_rule": "MISMATCH_SMALLER_VALID_VALUE",
+    "licence_class_normalized": "MUUT"
+   },
+   "quality_findings": [
+    {
+     "field_key": "transmission_bandwidth",
+     "raw_value": "118600k",
+     "normalized_value": "2500000.0",
+     "rule_id": "BANDWIDTH_MISMATCH",
+     "severity": "WARNING"
+    }
+   ]
+  },
+  {
+   "id": "DEMO-S-1",
+   "domain": "SPACE",
+   "title": "Space PFD upper bound",
+   "story": "Worst case: the maximum beam gain is assumed to point at the nearest node of the Finland grid. The value is an upper bound, not EPFD; no RR Table 21-4 limit is configured, so no comparison is made.",
+   "max_pfd_db_w_m2_hz_upper_bound": -190.89615701856675,
+   "geometry": {
+    "status": "VISIBLE",
+    "nominal_longitude_deg": 20.0,
+    "elevations_deg": {
+     "Hanko": 22.08,
+     "Helsinki": 21.63,
+     "Joensuu": 18.74,
+     "Utsjoki": 11.42
+    },
+    "min_slant_range_km": 39373.4,
+    "best_point": "Hanko",
+    "evaluation_grid": {
+     "nodes": 500,
+     "visible_nodes": 500,
+     "step_lat_deg": 0.25,
+     "step_lon_deg": 0.5,
+     "crs": "WGS-84 lat/lon degrees; nodes inside the Natural Earth 1:10m Finland outline",
+     "elevation_range_deg": [
+      11.3,
+      21.88
+     ],
+     "max_pfd_location": {
+      "lat": 60.0,
+      "lon": 23.5,
+      "elevation_deg": 21.88,
+      "slant_range_km": 39373.4
+     },
+     "spatial_uncertainty": "Grid spacing about 28 km; values between nodes differ by well under 0.1 dB for GSO slant ranges."
+    },
+    "basis": "Spherical Earth, GSO radius 42164 km, at the nominal longitude; station-keeping tolerance ignored. Slant range is the minimum over the Finland grid."
+   },
+   "readiness": {
+    "status": "READY",
+    "method": "SPACE_PFD_FREE_SPACE",
+    "groups_with_pfd": 1
+   },
+   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured"
+  },
+  {
+   "id": "DEMO-S-2",
+   "domain": "SPACE",
+   "title": "Missing satellite beam data",
+   "story": "The notice gives no beam gain, so no PFD can be computed. AstraSync reports insufficient evidence instead of guessing a gain.",
+   "max_pfd_db_w_m2_hz_upper_bound": null,
+   "geometry": {
+    "status": "VISIBLE",
+    "nominal_longitude_deg": 20.0,
+    "elevations_deg": {
+     "Hanko": 22.08,
+     "Helsinki": 21.63,
+     "Joensuu": 18.74,
+     "Utsjoki": 11.42
+    },
+    "min_slant_range_km": 39373.4,
+    "best_point": "Hanko",
+    "evaluation_grid": {
+     "nodes": 500,
+     "visible_nodes": 500,
+     "step_lat_deg": 0.25,
+     "step_lon_deg": 0.5,
+     "crs": "WGS-84 lat/lon degrees; nodes inside the Natural Earth 1:10m Finland outline",
+     "elevation_range_deg": [
+      11.3,
+      21.88
+     ],
+     "max_pfd_location": {
+      "lat": 60.0,
+      "lon": 23.5,
+      "elevation_deg": 21.88,
+      "slant_range_km": 39373.4
+     },
+     "spatial_uncertainty": "Grid spacing about 28 km; values between nodes differ by well under 0.1 dB for GSO slant ranges."
+    },
+    "basis": "Spherical Earth, GSO radius 42164 km, at the nominal longitude; station-keeping tolerance ignored. Slant range is the minimum over the Finland grid."
+   },
+   "readiness": {
+    "status": "NOT_READY",
+    "method": "SPACE_PFD_FREE_SPACE",
+    "groups_with_pfd": 0
+   },
+   "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured"
+  }
+ ]
+}

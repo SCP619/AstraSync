@@ -1,6 +1,6 @@
 # AstraSync evaluation: Terrestrial IFIC 3076
 
-Publication date (from the database): 2026-07-21. Generated 2026-11-08T04:30:58+00:00 by rule set `ific-finland-relevance/1.0.0`.
+Publication date (from the database): 2026-07-21. Generated 2026-11-08T07:04:37+00:00 by rule set `ific-finland-relevance/1.0.0`.
 
 **What this is.** A deterministic screening of every notice in the issue against Finnish frequency use (M4 table and the challenge's special-interest stations), with explainable priorities and, where the notice holds the inputs, technical calculations. **Criterion.** Land-mobile notices are screened along Finland's land borders and territorial-sea outer limit with ITU-R P.1546-6 (10 % time, 50 % locations, 10 m) against the indicative coordination thresholds of ECC T/R 25-08 A1.2.3 (edition 6 June 2025), applied above 470 MHz as a challenge extension approved by the organizers. An exceedance indicates coordination with Finland; it is not harmful interference or non-compliance. Every flagged item needs expert review.
 

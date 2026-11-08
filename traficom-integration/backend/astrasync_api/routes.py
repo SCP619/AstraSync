@@ -50,8 +50,10 @@ from .contract.models import (
     AnalysisAccepted,
     AnalysisRun,
     ArtifactIntegrityReport,
+    CaseAnswer,
     CaseDetail,
     CaseList,
+    CaseQuestionRequest,
     Device,
     DeviceRegistrationRequest,
     DownloadLink,
@@ -333,6 +335,30 @@ def create_draft(
     session: DbSession,
 ) -> Any:
     return cases.create_draft(
+        _library(request),
+        request,
+        session,
+        principal,
+        case_id,
+        body,
+        agent=request.app.state.draft_agent,
+        ai_classifications=request.app.state.ai_classifications,
+    )
+
+
+@router.post(
+    "/cases/{case_id}/questions",
+    response_model=CaseAnswer,
+    **_policy(Capability.DRAFT_CREATE, _IMPLEMENTED),
+)
+def ask_case_question(
+    request: Request,
+    case_id: ResourceId,
+    body: CaseQuestionRequest,
+    principal: CurrentPrincipal,
+    session: DbSession,
+) -> Any:
+    return cases.answer_question(
         _library(request),
         request,
         session,

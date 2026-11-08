@@ -12,6 +12,9 @@ platform runs (`astrasync_data.ific_evaluate`). Method and rules:
 
 - `report.md`: what was done, reconciliation, changes, ranked items with their reasons,
   anomalies, limitations.
+- `space_ific_3074_results.xlsx` / `terrestrial_ific_3076_results.xlsx`: About (data status,
+  criterion, parameters), Results, Border points (terrestrial) and Inputs sheets, built from the
+  CSV files of the same run.
 - `findings.csv`: one row per notice, ranked (the results table). Terrestrial rows also carry
   the highest land-border / territorial-sea field strength, its location, the ECC T/R 25-08
   A1.2.3 threshold (with bandwidth correction and basis), the margin, the concern class and the

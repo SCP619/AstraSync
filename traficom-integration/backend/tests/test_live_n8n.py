@@ -77,6 +77,13 @@ def test_an_authenticated_draft_is_worded_by_local_ollama_and_grounded(
                 errors.append(f"{type(exc).__name__}: {exc}; known={known}; cited={cited}")
                 raise
 
+        def answer_question(self, evidence: dict, question: str) -> dict:
+            try:
+                return agent.answer_question(evidence, question)
+            except Exception as exc:
+                errors.append(f"{type(exc).__name__}: {exc}")
+                raise
+
     secure_app.state.draft_agent = Recording()
     case_id = candidate(sessions, scenario={"demo_value": -1.0})
     # A synthetic evidence link, as an ingested source record would create (cases.py).
@@ -112,3 +119,13 @@ def test_an_authenticated_draft_is_worded_by_local_ollama_and_grounded(
     assert draft["ai_model_id"] == "qwen3:8b"
     assert f"{case_id}-record" in str(draft["citations"])
     assert "[E:" in draft["content_markdown"]
+
+    asked = secure_client.post(
+        f"/api/v1/cases/{case_id}/questions",
+        json={"analysis_run_id": run.analysis_run_id, "question": "What is this case about?"},
+        headers=bearer(),
+    )
+    assert asked.status_code == 200, (errors, [r[:1500] for r in replies[-2:]])
+    answer = asked.json()
+    assert answer["cited_evidence_ids"] == [f"{case_id}-record"]
+    assert answer["requires_human_review"] is True

@@ -57,6 +57,7 @@ export interface ApiClient {
     analysisRunId: string,
   ): Promise<Schemas["DraftCreated"]>;
   updateDraft(caseId: string, draftId: string, content: string): Promise<Schemas["Draft"]>;
+  askCase(caseId: string, analysisRunId: string, question: string): Promise<Schemas["CaseAnswer"]>;
   listReviews(caseId: string, signal?: AbortSignal): Promise<Schemas["ReviewEventList"]>;
   createReview(caseId: string, body: Schemas["ReviewCreateRequest"]): Promise<Schemas["ReviewEvent"]>;
   exportCase(caseId: string): Promise<Schemas["EvidencePack"]>;
@@ -227,6 +228,11 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
       write("POST", `${casePath(caseId)}/drafts`, {
         draft_type: draftType,
         analysis_run_id: analysisRunId,
+      }),
+    askCase: (caseId, analysisRunId, question) =>
+      write("POST", `${casePath(caseId)}/questions`, {
+        analysis_run_id: analysisRunId,
+        question,
       }),
     updateDraft: (caseId, draftId, content) =>
       write("PUT", `${casePath(caseId)}/drafts/${encodeURIComponent(draftId)}`, {

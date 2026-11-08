@@ -1988,6 +1988,82 @@
         "title": "Capability",
         "type": "string"
       },
+      "CaseAnswer": {
+        "additionalProperties": false,
+        "description": "A grounded model answer. Not stored, not a finding; citations are checked server-side.",
+        "properties": {
+          "ai_model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Model Id"
+          },
+          "analysis_run_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Analysis Run Id",
+            "type": "string"
+          },
+          "answer_markdown": {
+            "title": "Answer Markdown",
+            "type": "string"
+          },
+          "case_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Case Id",
+            "type": "string"
+          },
+          "cited_evidence_ids": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "title": "Cited Evidence Ids",
+            "type": "array"
+          },
+          "generated_at_utc": {
+            "format": "date-time",
+            "title": "Generated At Utc",
+            "type": "string"
+          },
+          "requires_human_review": {
+            "title": "Requires Human Review",
+            "type": "boolean"
+          },
+          "schema_version": {
+            "const": "1.0.0-draft.5",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "uncertainties": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Uncertainties",
+            "type": "array"
+          }
+        },
+        "required": [
+          "schema_version",
+          "generated_at_utc",
+          "case_id",
+          "analysis_run_id",
+          "answer_markdown",
+          "uncertainties",
+          "cited_evidence_ids",
+          "ai_model_id",
+          "requires_human_review"
+        ],
+        "title": "CaseAnswer",
+        "type": "object"
+      },
       "CaseCandidate": {
         "additionalProperties": false,
         "description": "Passed to ``cases.upsert_candidate`` by the relevance pipeline, one per notice version.",
@@ -2385,6 +2461,30 @@
           "total_if_known"
         ],
         "title": "CaseList",
+        "type": "object"
+      },
+      "CaseQuestionRequest": {
+        "additionalProperties": false,
+        "description": "A question about one case, answered only from that case's stored evidence.",
+        "properties": {
+          "analysis_run_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Analysis Run Id",
+            "type": "string"
+          },
+          "question": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Question",
+            "type": "string"
+          }
+        },
+        "required": [
+          "analysis_run_id",
+          "question"
+        ],
+        "title": "CaseQuestionRequest",
         "type": "object"
       },
       "CaseSort": {
@@ -11890,6 +11990,140 @@
         "summary": "Export Case",
         "x-implementation-status": "IMPLEMENTED",
         "x-required-capability": "CASE_EXPORT"
+      }
+    },
+    "/api/v1/cases/{case_id}/questions": {
+      "post": {
+        "operationId": "ask_case_question_api_v1_cases__case_id__questions_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "title": "Case Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseQuestionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseAnswer"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Ask Case Question",
+        "x-implementation-status": "IMPLEMENTED",
+        "x-required-capability": "DRAFT_CREATE"
       }
     },
     "/api/v1/cases/{case_id}/reviews": {

@@ -24,7 +24,7 @@ type MethodRun = Schemas["MethodRun"];
 type Check = Schemas["CriterionCheck"];
 type Draft = Schemas["Draft"];
 
-const TABS = ["Overview", "Methods", "Criteria", "Evidence", "Draft and review"] as const;
+const TABS = ["Overview", "Methods", "Criteria", "Evidence", "Draft and review", "Ask"] as const;
 type Tab = (typeof TABS)[number];
 const FINISHED: Schemas["AnalysisStatus"][] = [
   "READY",
@@ -523,6 +523,86 @@ function DraftAndReview({ item, run }: { item: Case; run: Run | null }) {
   );
 }
 
+/** Grounded questions: answered only from this case's evidence; the server checks citations. */
+export function AskCase({ item, run }: { item: Case; run: Run | null }) {
+  const { api } = useSession();
+  const { capabilities } = useMe();
+  const [answers, setAnswers] = useState<{ question: string; answer: Schemas["CaseAnswer"] }[]>([]);
+  const [error, setError] = useState<unknown>(null);
+  const [asking, setAsking] = useState(false);
+
+  if (!capabilities.includes("DRAFT_CREATE")) {
+    return <p className="muted">Asking the assistant needs the drafting permission.</p>;
+  }
+  if (run === null) {
+    return <p className="muted">Run an analysis first; the assistant answers from its evidence.</p>;
+  }
+  const runId = run.analysis_run_id;
+
+  async function ask(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const question = String(new FormData(form).get("question") ?? "").trim();
+    if (question.length < 3) {
+      return;
+    }
+    setAsking(true);
+    setError(null);
+    try {
+      const answer = await api.askCase(item.case_id, runId, question);
+      setAnswers((previous) => [...previous, { question, answer }]);
+      form.reset();
+    } catch (failure) {
+      setError(failure);
+    } finally {
+      setAsking(false);
+    }
+  }
+
+  return (
+    <>
+      <h3>Ask about this case</h3>
+      <p className="muted small">
+        Answers come from the local model and use only this case's stored evidence. Every answer
+        cites its evidence; it is not a finding and needs expert judgement.
+      </p>
+      <ol className="plain" aria-live="polite">
+        {answers.map(({ question, answer }, index) => (
+          <li key={index}>
+            <p><strong>Q:</strong> {question}</p>
+            <p className="pre-wrap"><strong>A:</strong> {answer.answer_markdown}</p>
+            <p className="muted small">
+              Evidence: {answer.cited_evidence_ids.map((id) => <code key={id}>{id} </code>)}
+              {answer.ai_model_id && <> · model {answer.ai_model_id}</>}
+            </p>
+            {answer.uncertainties.length > 0 && (
+              <ul className="small">{answer.uncertainties.map((u) => <li key={u}>{u}</li>)}</ul>
+            )}
+          </li>
+        ))}
+      </ol>
+      <form className="inline-form" onSubmit={(event) => void ask(event)}>
+        <label className="stacked">
+          Question
+          <textarea name="question" rows={3} maxLength={2000} required minLength={3} />
+        </label>
+        <button type="submit" disabled={asking}>{asking ? "Asking (this can take minutes)…" : "Ask"}</button>
+      </form>
+      {error !== null && (
+        <>
+          <p role="alert">{describeError(error)}</p>
+          {error instanceof ApiError && error.code === "AI_UNAVAILABLE" && (
+            <p className="muted small">
+              The answer was refused or the local model is unavailable. Analysis, evidence and
+              review keep working.
+            </p>
+          )}
+        </>
+      )}
+    </>
+  );
+}
+
 export function CaseInspectorPage() {
   const { caseId = "" } = useParams();
   const { api } = useSession();
@@ -664,6 +744,7 @@ export function CaseInspectorPage() {
         {tab === "Criteria" && <Criteria run={run} />}
         {tab === "Evidence" && <Evidence item={item} />}
         {tab === "Draft and review" && <DraftAndReview item={item} run={run} />}
+        {tab === "Ask" && <AskCase item={item} run={run} />}
       </section>
     </main>
   );

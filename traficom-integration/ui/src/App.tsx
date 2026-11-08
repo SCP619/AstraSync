@@ -10,6 +10,7 @@ import {
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ApiError, createApiClient, type CaseList, type Me } from "./api/client";
 import { SignInStepError, type AuthAdapter } from "./auth/adapter";
+import { JudgeDemoPage } from "./demo/JudgeDemoPage";
 import {
   describeError,
   MeContext,
@@ -153,6 +154,10 @@ function LoginPage() {
         <button type="button" className="primary" onClick={() => void start()} disabled={starting}>
           {starting ? "Opening sign-in…" : "Continue to sign-in"}
         </button>
+        <p className="muted small">
+          {failed !== null ? "Offline or no access? " : "Evaluating AstraSync? "}
+          <Link to="/demo">View the judge demonstration (synthetic data, no sign-in)</Link>
+        </p>
       </section>
     </main>
   );
@@ -492,6 +497,16 @@ function SourcesRoute() {
   return <SourceLibraryPage />;
 }
 
+/** `?demo=judge` on any address opens the synthetic demonstration; it grants nothing. */
+function DemoQuery() {
+  const location = useLocation();
+  const wanted = new URLSearchParams(location.search).get("demo") === "judge";
+  if (wanted && location.pathname !== "/demo") {
+    return <Navigate to="/demo" replace />;
+  }
+  return null;
+}
+
 export function App({
   auth,
   apiBaseUrl,
@@ -511,7 +526,9 @@ export function App({
   return (
     <SessionProvider auth={auth} apiBaseUrl={apiBaseUrl} {...(fetchImpl ? { fetchImpl } : {})}>
       <DeepLinks platform={platform} />
+      <DemoQuery />
       <Routes>
+        <Route path="/demo" element={<JudgeDemoPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/auth/callback" element={<CallbackPage auth={auth} />} />
         <Route

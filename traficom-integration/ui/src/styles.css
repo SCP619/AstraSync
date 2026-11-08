@@ -505,3 +505,9 @@ tr[aria-selected="true"] td { background: var(--raised); }
 
 /* IFIC findings */
 pre.json { max-height: 24rem; overflow: auto; font-size: 0.8rem; background: var(--raised); padding: 0.5rem; }
+
+/* Judge demonstration and case questions */
+.two-pane { display: grid; grid-template-columns: minmax(14rem, 18rem) 1fr; gap: 1rem; align-items: start; }
+.two-pane nav button[aria-current="true"] { font-weight: 700; }
+.pre-wrap { white-space: pre-wrap; }
+@media (max-width: 767px) { .two-pane { grid-template-columns: 1fr; } }

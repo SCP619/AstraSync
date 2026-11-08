@@ -480,6 +480,25 @@ class DraftCreateRequest(ContractModel):
     analysis_run_id: StableId
 
 
+class CaseQuestionRequest(ContractModel):
+    """A question about one case, answered only from that case's stored evidence."""
+
+    analysis_run_id: StableId
+    question: Annotated[str, Field(min_length=3, max_length=2000)]
+
+
+class CaseAnswer(Envelope):
+    """A grounded model answer. Not stored, not a finding; citations are checked server-side."""
+
+    case_id: StableId
+    analysis_run_id: StableId
+    answer_markdown: str
+    uncertainties: list[str]
+    cited_evidence_ids: list[StableId]
+    ai_model_id: str | None
+    requires_human_review: bool
+
+
 class Draft(Envelope):
     draft_id: StableId
     case_id: StableId

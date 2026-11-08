@@ -1,0 +1,216 @@
+{
+ "issue": 3076,
+ "previous_issue": 3075,
+ "change_types": {
+  "NEW": 1856,
+  "MODIFIED": 11
+ },
+ "also_published_in_previous_issue": 0,
+ "rules": "NEW, MODIFIED and WITHDRAWN come from the notice itself (terrestrial intent ADD/MODIFY/SUPPRESS; space ntf_occurs, tgt_ntc_id, f_int_ext). An item absent from an issue is never treated as withdrawn: each IFIC carries that issue's notices only.",
+ "trends": {
+  "definition": "ADD and MODIFY notices of neighbouring administrations, by band, station class and bandwidth, against the previous issue when given. Counts only; a change in counts is an observation for an expert, not a finding.",
+  "neighbours": [
+   "RUS",
+   "EST",
+   "S",
+   "NOR",
+   "LTU",
+   "LVA",
+   "BLR",
+   "POL",
+   "D",
+   "DNK"
+  ],
+  "observations": [
+   {
+    "administration": "D",
+    "dimension": "band",
+    "value": "<30 MHz",
+    "notices_this_issue": 23,
+    "notices_previous_issue": 11
+   },
+   {
+    "administration": "D",
+    "dimension": "bandwidth_khz",
+    "value": "3.0",
+    "notices_this_issue": 13,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "D",
+    "dimension": "bandwidth_khz",
+    "value": "24.0",
+    "notices_this_issue": 10,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "D",
+    "dimension": "class",
+    "value": "FX",
+    "notices_this_issue": 23,
+    "notices_previous_issue": 11
+   },
+   {
+    "administration": "D",
+    "dimension": "total",
+    "value": "notices",
+    "notices_this_issue": 23,
+    "notices_previous_issue": 11
+   },
+   {
+    "administration": "POL",
+    "dimension": "band",
+    "value": "790-960 MHz",
+    "notices_this_issue": 9,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "POL",
+    "dimension": "bandwidth_khz",
+    "value": "5000.0",
+    "notices_this_issue": 9,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "POL",
+    "dimension": "class",
+    "value": "FB",
+    "notices_this_issue": 9,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "POL",
+    "dimension": "total",
+    "value": "notices",
+    "notices_this_issue": 9,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "RUS",
+    "dimension": "band",
+    "value": ">=3000 MHz",
+    "notices_this_issue": 176,
+    "notices_previous_issue": 375
+   },
+   {
+    "administration": "RUS",
+    "dimension": "band",
+    "value": "88-174 MHz",
+    "notices_this_issue": 81,
+    "notices_previous_issue": 64
+   },
+   {
+    "administration": "RUS",
+    "dimension": "band",
+    "value": "790-960 MHz",
+    "notices_this_issue": 22,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "RUS",
+    "dimension": "band",
+    "value": "174-470 MHz",
+    "notices_this_issue": 11,
+    "notices_previous_issue": 17
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "56000.0",
+    "notices_this_issue": 165,
+    "notices_previous_issue": 300
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "11.0",
+    "notices_this_issue": 53,
+    "notices_previous_issue": 8
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "16.8",
+    "notices_this_issue": 28,
+    "notices_previous_issue": 13
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "5000.0",
+    "notices_this_issue": 12,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "7200.0",
+    "notices_this_issue": 10,
+    "notices_previous_issue": 0
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "18.0",
+    "notices_this_issue": 7,
+    "notices_previous_issue": 9
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "28000.0",
+    "notices_this_issue": 7,
+    "notices_previous_issue": 27
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "16.0",
+    "notices_this_issue": 4,
+    "notices_previous_issue": 23
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "20000.0",
+    "notices_this_issue": 2,
+    "notices_previous_issue": 10
+   },
+   {
+    "administration": "RUS",
+    "dimension": "bandwidth_khz",
+    "value": "112000.0",
+    "notices_this_issue": 2,
+    "notices_previous_issue": 9
+   },
+   {
+    "administration": "RUS",
+    "dimension": "class",
+    "value": "FX",
+    "notices_this_issue": 176,
+    "notices_previous_issue": 365
+   },
+   {
+    "administration": "RUS",
+    "dimension": "class",
+    "value": "ML",
+    "notices_this_issue": 62,
+    "notices_previous_issue": 46
+   },
+   {
+    "administration": "RUS",
+    "dimension": "class",
+    "value": "FB",
+    "notices_this_issue": 52,
+    "notices_previous_issue": 44
+   },
+   {
+    "administration": "RUS",
+    "dimension": "total",
+    "value": "notices",
+    "notices_this_issue": 290,
+    "notices_previous_issue": 478
+   }
+  ]
+ }
+}

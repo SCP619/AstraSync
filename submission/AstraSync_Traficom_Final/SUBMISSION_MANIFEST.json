@@ -1,0 +1,408 @@
+{
+ "submission": "AstraSync - Since AI 2026 Traficom challenge: Saving Earth from Space Interferers Using Radio Frequencies",
+ "repository": "https://github.com/SCP619/AstraSync (private; read access to be granted)",
+ "branch": "main",
+ "source_commit": "8e0f10535850d604911c430a8dc640ea960c925a",
+ "created": "2026-11-08",
+ "build_provenance": "Evaluation outputs produced by astrasync_data.ific_evaluate at the source commit (manifests generated 2026-11-08T07:10:02Z space, 07:04:37Z terrestrial); package assembled from the repository without code changes",
+ "source_publications": [
+  {
+   "name": "ITU Space IFIC 3074 (SNS v10 database)",
+   "published": "2026-06-23",
+   "url": "https://www.itu.int/sns/ific10/ific3074.zip",
+   "sha256": "c8adf75044bca9d6a2be4213d051805f1b0a88d716fb184bcb1cd812216da721"
+  },
+  {
+   "name": "ITU Space IFIC 3073 (comparison)",
+   "url": "https://www.itu.int/sns/ific10/ific3073.zip",
+   "sha256": "e1bd33e94e4342e6723a898630adac718c8b6406df594cef19a92b4a8b983513"
+  },
+  {
+   "name": "ITU BR IFIC (Terrestrial) 3076 MDB extract",
+   "published": "2026-07-21",
+   "url": "https://www.itu.int/en/ITU-R/terrestrial/brific/BRIFIC/MDB/brific3076.zip",
+   "sha256": "ba9d0605a4a5494162e17650c290401d84deaef29030cbdbb61e4b00c834c4c2"
+  },
+  {
+   "name": "ITU BR IFIC (Terrestrial) 3075 MDB extract (comparison)",
+   "url": "https://www.itu.int/en/ITU-R/terrestrial/brific/BRIFIC/MDB/brific3075.zip",
+   "sha256": "6f63a3dee548422cc722fd95adf7ce99f13abd8c786459d535c73e3320ed92f7"
+  },
+  {
+   "name": "Traficom M4 frequency table (open data API v13, CC BY 4.0), snapshot 2026-11-08",
+   "url": "https://opendata.traficom.fi/api/v13/Taajuusjakotaulukko",
+   "sha256": "41ffdd0ed84a40c19fd4bb3771699a63c879b1ad4f2201dcb1cd3c37524871fb"
+  },
+  {
+   "name": "Challenge workbook Traficom_SinceAI_Frequencies_of_interest_v05112026.xlsx (synthetic stations; not included)",
+   "url": null,
+   "sha256": "bb7f481f085fb6c457efc04b9b6bb8250c42ea81bab4b4a0e518c93834e03c8a"
+  },
+  {
+   "name": "ECC Recommendation T/R 25-08, Edition 6 June 2025, Annex 1 A1.2.3",
+   "url": "https://docdb.cept.org/download/4789",
+   "sha256": null
+  }
+ ],
+ "deliverables": {
+  "1_demo": {
+   "status": "PARTIAL",
+   "note": "Guide, script and access instructions; video recording pending; judge demo not publicly hosted"
+  },
+  "2_ific_processing": {
+   "status": "COMPLETE",
+   "note": "CLI and platform pipeline; reproduction verified"
+  },
+  "3_processed_3074_3076": {
+   "status": "COMPLETE_WITH_LIMITATIONS",
+   "note": "Both issues fully screened on real data; space has no approved PFD limit, so no margins"
+  },
+  "4_input_output": {
+   "status": "COMPLETE"
+  },
+  "5_code_repository": {
+   "status": "COMPLETE_PENDING_ACCESS",
+   "note": "Private repository; evaluators need read access"
+  },
+  "6_documentation": {
+   "status": "COMPLETE"
+  }
+ },
+ "missing_or_incomplete": [
+  "Demonstration video (pending recording)",
+  "Publicly hosted judge demo URL",
+  "Space regulatory comparison (RR Article 21 Table 21-4 not applied)",
+  "PDF versions of the reports (CSV, XLSX, JSON and Markdown provided)"
+ ],
+ "excluded": "Raw IFIC databases, M4 snapshot and challenge workbook (re-downloadable or organizer-owned), databases, credentials, local configuration, build caches",
+ "artifacts": [
+  {
+   "path": "00_SUBMISSION_INDEX.md",
+   "bytes": 6496,
+   "sha256": "9d93f3f08ddf3f758b404e81eb71685be8b2f64262f29b1abc647d04d93dafa4",
+   "description": "Evaluator entry point",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "01_Demo/DEMO_ACCESS.md",
+   "bytes": 2380,
+   "sha256": "c8008b76b3c89fe6a4a57ebc5fe1030af89e9de61efcca7b33a258efe71d7393",
+   "description": "How to run the judge demo and the full application locally",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "01_Demo/DEMO_GUIDE.md",
+   "bytes": 2751,
+   "sha256": "0719ffa6f50132a8b0f458816eaef3d4e83f0610ff66b65dc34430ca165923a3",
+   "description": "What the demo shows and how each step was verified",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "01_Demo/DEMO_SCRIPT.md",
+   "bytes": 2723,
+   "sha256": "45397fa37d6dae8bfb0b5a50ce48a1d8d973e80888c7c448768adc646a61cd19",
+   "description": "3-5 minute walkthrough script (recording pending)",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "02_Space_IFIC_3074/comparison.json",
+   "bytes": 434,
+   "sha256": "10a8b8319b71dc9bf2908ce4b337cf90960024a124093a846bf9bd16a068dfd2",
+   "description": "Space IFIC 3074: Change types against the previous issue",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "No approved RR Article 21 limit: no space margins",
+   "source_path_in_repository": "evaluation/space_3074/comparison.json"
+  },
+  {
+   "path": "02_Space_IFIC_3074/findings.csv",
+   "bytes": 25034,
+   "sha256": "c02a2652a44ad92ccb73710054b92c331d4c6284752def86c9900f951b99dd10",
+   "description": "Space IFIC 3074: Results table, one row per notice, ranked",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "No approved RR Article 21 limit: no space margins",
+   "source_path_in_repository": "evaluation/space_3074/findings.csv"
+  },
+  {
+   "path": "02_Space_IFIC_3074/findings.json.gz",
+   "bytes": 73771,
+   "sha256": "df5cf9f0068d9c984af446d92cb259bcde65ac9068c8f517b6af442969f5eed2",
+   "description": "Space IFIC 3074: All findings with stage results, calculations, inputs, assumptions, hashes",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "No approved RR Article 21 limit: no space margins",
+   "source_path_in_repository": "evaluation/space_3074/findings.json.gz"
+  },
+  {
+   "path": "02_Space_IFIC_3074/findings_high.json",
+   "bytes": 8579,
+   "sha256": "6ee629480f77876a0662e2893c97ebe692837ad46fe22b2f932cf1a941865214",
+   "description": "Space IFIC 3074: HIGH-tier findings, uncompressed",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "No approved RR Article 21 limit: no space margins",
+   "source_path_in_repository": "evaluation/space_3074/findings_high.json"
+  },
+  {
+   "path": "02_Space_IFIC_3074/manifest.json",
+   "bytes": 3198,
+   "sha256": "6ef2b5860d4ab4180554332444777d463dddb7e62058fc56da3a78e090c4f285",
+   "description": "Space IFIC 3074: Run provenance: input SHA-256 and URLs, parser/rule/method versions",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "No approved RR Article 21 limit: no space margins",
+   "source_path_in_repository": "evaluation/space_3074/manifest.json"
+  },
+  {
+   "path": "02_Space_IFIC_3074/report.md",
+   "bytes": 16452,
+   "sha256": "18bc5dd961fe5cfc92e9350bb06d2a8e0877825f67ca96568e462bb899ba8420",
+   "description": "Space IFIC 3074: Human-readable evaluation report",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "No approved RR Article 21 limit: no space margins",
+   "source_path_in_repository": "evaluation/space_3074/report.md"
+  },
+  {
+   "path": "02_Space_IFIC_3074/space_ific_3074_results.xlsx",
+   "bytes": 21507,
+   "sha256": "78c43028b683f9089582c5ccaa8d4cae772dd1221d679e28a8676c85dc52e7e9",
+   "description": "Space IFIC 3074: Results workbook (About, Results, Inputs)",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; built from the same run's CSV; not byte-compared on reproduction",
+   "regulatory_completeness": "No approved RR Article 21 limit: no space margins",
+   "source_path_in_repository": "evaluation/space_3074/space_ific_3074_results.xlsx"
+  },
+  {
+   "path": "02_Space_IFIC_3074/SPACE_METHODOLOGY.md",
+   "bytes": 3133,
+   "sha256": "db30c7394e91f1791955b69786c7da9e3cfca73dbfadd392664478b0823a9f74",
+   "description": "Space methodology",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "02_Space_IFIC_3074/SPACE_RESULTS_SUMMARY.md",
+   "bytes": 3611,
+   "sha256": "0eb63027c3bbfd51529f90d8d5194417b03a5cfdf49fb04b7896661bfdd44205",
+   "description": "Space 3074 results summary",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/border_points.csv",
+   "bytes": 47089,
+   "sha256": "b4bae9867b7189b7798588640bec413987eef85ef3cd637ee60e86edba148a81",
+   "description": "Terrestrial IFIC 3076: Top 5 border / territorial-sea points per notice",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/border_points.csv"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/comparison.json",
+   "bytes": 4964,
+   "sha256": "d1683eb1b13d66ba2dae537a2f75ed08bc2ce771373a2987806fe375b0b7dd1d",
+   "description": "Terrestrial IFIC 3076: Change types against the previous issue",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/comparison.json"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/findings.csv",
+   "bytes": 582999,
+   "sha256": "99a9acdb80ba5a45331aacaee87569da9dd6a8c6b6716328088c42a117794511",
+   "description": "Terrestrial IFIC 3076: Results table, one row per notice, ranked",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/findings.csv"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/findings.json.gz",
+   "bytes": 235375,
+   "sha256": "d85a9407b3466c1df79f55b67a18898b5eff8e108430d29f64beda2ac1e011d0",
+   "description": "Terrestrial IFIC 3076: All findings with stage results, calculations, inputs, assumptions, hashes",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/findings.json.gz"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/findings_high.json",
+   "bytes": 328363,
+   "sha256": "1166fca989c805567edb62baea56c2cccb9490d1efbc6dc8225ddc9ead096270",
+   "description": "Terrestrial IFIC 3076: HIGH-tier findings, uncompressed",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/findings_high.json"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/manifest.json",
+   "bytes": 6051,
+   "sha256": "8eb5bb6d54b09802efea331af537224911b0e8ccec9316f982e57a7f7e41823e",
+   "description": "Terrestrial IFIC 3076: Run provenance: input SHA-256 and URLs, parser/rule/method versions",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/manifest.json"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/report.md",
+   "bytes": 17251,
+   "sha256": "26f9ee430432713c6a3af94cd717d0feb552c050a2dea1fee83e5963f5efc26c",
+   "description": "Terrestrial IFIC 3076: Human-readable evaluation report",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/report.md"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/terrestrial_ific_3076_cases.json",
+   "bytes": 123648,
+   "sha256": "0ec782e682480af4973f2edd40f382c990eaf12f243936b20a17ac6340852077",
+   "description": "Terrestrial IFIC 3076: Notices above the T/R 25-08 threshold with evidence",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; reproduced from that commit on 2026-11-08 (identical content; CSV line endings differ)",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/terrestrial_ific_3076_cases.json"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/terrestrial_ific_3076_results.xlsx",
+   "bytes": 217222,
+   "sha256": "9429a22919f30ad00e151ba79bc50a1035d7aa79f5d00213ce43d6c0503d1dd8",
+   "description": "Terrestrial IFIC 3076: Results workbook (About, Results, Border points, Inputs)",
+   "data_status": "REAL (ITU IFIC, Traficom M4); special-interest stations synthetic",
+   "verification": "Copied unchanged from evaluation/ at the baseline commit; built from the same run's CSV; not byte-compared on reproduction",
+   "regulatory_completeness": "Compared with ECC T/R 25-08 A1.2.3 (screening, expert review required)",
+   "source_path_in_repository": "evaluation/terrestrial_3076/terrestrial_ific_3076_results.xlsx"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/TERRESTRIAL_METHODOLOGY.md",
+   "bytes": 3529,
+   "sha256": "f6d8b15493b687648926a6609cc6912acf3955c91e144d2906816fd3e56d2cb3",
+   "description": "Terrestrial methodology",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "03_Terrestrial_IFIC_3076/TERRESTRIAL_RESULTS_SUMMARY.md",
+   "bytes": 4580,
+   "sha256": "5b6b03cf9c2a64013b704fe77352908844d90884201dec445439a9018afd6ec9",
+   "description": "Terrestrial 3076 results summary",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "04_Input_Output/DATA_DICTIONARY.md",
+   "bytes": 4752,
+   "sha256": "ef5b20c3c581f27dcbd8a5a0df55340940bd5e71e9068703b2b6294ec5891b48",
+   "description": "Source fields and output columns",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "04_Input_Output/INPUT_OUTPUT_GUIDE.md",
+   "bytes": 5345,
+   "sha256": "da71e4d2d4419d58975814de40797d53a7d39e711f9db85211b4e2ab98a6b4cf",
+   "description": "Input inventory, outputs, worked examples",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "04_Input_Output/PROCESSING_PIPELINE.md",
+   "bytes": 2635,
+   "sha256": "af81f5621b916967a865e03addb4a762d62b52b12be9b1dada98cf55f2959893",
+   "description": "Processing stages",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "04_Input_Output/REPRODUCIBILITY.md",
+   "bytes": 2313,
+   "sha256": "375e9605bf2c3473f39000aa45099a533a949bb8d13d4d8a0f221ac9a5bd5ddb",
+   "description": "Reproduction commands and verification",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "05_Code_Repository/ARCHITECTURE.md",
+   "bytes": 2453,
+   "sha256": "f1ff33a5c0bd5d43d7c6f131aeb6ee43d4dc4b0170a3012c197f363e2e2f6e94",
+   "description": "Architecture and extensibility",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "05_Code_Repository/INSTALLATION_GUIDE.md",
+   "bytes": 1530,
+   "sha256": "958b0488b032525ef9d08dcdca0d0ed15d73f63f0f9e0c506c377b979cbacb45",
+   "description": "Installation",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "05_Code_Repository/REPOSITORY_LINK.md",
+   "bytes": 2007,
+   "sha256": "b140c39aaaedae2f05697ddc7864eb66181bef72017fc8936a33598c9c3cd062",
+   "description": "Repository, branch, baseline commit, commands",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "06_Technical_Documentation/AI_WORKFLOW.md",
+   "bytes": 2279,
+   "sha256": "4570c075a0dd01be7251c02e3d84f31573e79f571cecd539ab23ade18f4ac1c8",
+   "description": "Submission documentation",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "06_Technical_Documentation/LIMITATIONS.md",
+   "bytes": 2329,
+   "sha256": "d93db3f39de9379c72e1d53659f67b1f91506655eb3294b75b5793359d850047",
+   "description": "Submission documentation",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "06_Technical_Documentation/REGULATORY_REFERENCES.md",
+   "bytes": 2561,
+   "sha256": "cd00f14b8fa5b7fb55e20671ead51ed9d544ff2d98c656f9b353da8f3963714e",
+   "description": "Submission documentation",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "06_Technical_Documentation/SCIENTIFIC_VALIDATION.md",
+   "bytes": 3098,
+   "sha256": "9eeaeb5602d9c3d9c89e214b2e4cb910dea9c299e3a683264737fcd332e879bf",
+   "description": "Submission documentation",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "06_Technical_Documentation/SECURITY_AND_PRIVACY.md",
+   "bytes": 2260,
+   "sha256": "bde5d70ffcc8ae42f117c2400a642857f4e25f38b78edafcce1cd05ff1f4696e",
+   "description": "Submission documentation",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  },
+  {
+   "path": "06_Technical_Documentation/TEST_RESULTS.md",
+   "bytes": 1837,
+   "sha256": "3c55da0266dc3668b3418c0ebbf21dc8ffebc589f2d41849149226fc2a610248",
+   "description": "Submission documentation",
+   "data_status": "DOCUMENTATION",
+   "verification": "Written for this submission from the repository and verified results"
+  }
+ ]
+}

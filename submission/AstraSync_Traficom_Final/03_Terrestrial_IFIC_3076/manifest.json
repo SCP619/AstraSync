@@ -1,0 +1,166 @@
+{
+ "artifact": "AstraSync evaluation of TERRESTRIAL_IFIC 3076",
+ "generated_at_utc": "2026-11-08T07:04:37+00:00",
+ "issue": 3076,
+ "publication_date": "2026-07-21",
+ "kind": "TERRESTRIAL_IFIC",
+ "inputs": [
+  {
+   "role": "IFIC issue",
+   "filename": "brific3076.zip",
+   "bytes": 2406450,
+   "sha256": "ba9d0605a4a5494162e17650c290401d84deaef29030cbdbb61e4b00c834c4c2",
+   "official_url": "https://www.itu.int/en/ITU-R/terrestrial/brific/BRIFIC/MDB/brific3076.zip"
+  },
+  {
+   "role": "previous IFIC issue",
+   "filename": "brific3075.zip",
+   "bytes": 3427636,
+   "sha256": "6f63a3dee548422cc722fd95adf7ce99f13abd8c786459d535c73e3320ed92f7",
+   "official_url": "https://www.itu.int/en/ITU-R/terrestrial/brific/BRIFIC/MDB/brific3075.zip"
+  },
+  {
+   "role": "Finnish table of frequencies (M4), Traficom open data, CC BY 4.0",
+   "filename": "Taajuusjakotaulukko-v13.json",
+   "bytes": 4359860,
+   "sha256": "41ffdd0ed84a40c19fd4bb3771699a63c879b1ad4f2201dcb1cd3c37524871fb",
+   "official_url": "https://opendata.traficom.fi/api/v13/Taajuusjakotaulukko"
+  },
+  {
+   "role": "Challenge special-interest workbook (synthetic data)",
+   "filename": "Traficom_SinceAI_Frequencies_of_interest_v05112026.xlsx",
+   "bytes": 100809,
+   "sha256": "bb7f481f085fb6c457efc04b9b6bb8250c42ea81bab4b4a0e518c93834e03c8a",
+   "official_url": null
+  }
+ ],
+ "parsers": {
+  "ific": "itu-terrestrial-ific-mdb/1.0.0",
+  "m4": "traficom-opendata-taajuusjakotaulukko/1.0.0",
+  "workbook": "traficom-frequencies-of-interest/1.0.0"
+ },
+ "rule_version": "ific-finland-relevance/1.0.0",
+ "methods": {
+  "TERR_P1546": {
+   "version": "1.0.0",
+   "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+   "validation": {
+    "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+    "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+    "cases": 54,
+    "max_abs_deviation_db": 5.1e-05
+   }
+  },
+  "SPACE_PFD_FREE_SPACE": {
+   "version": "1.0.0",
+   "implementation_sha": "d9e450a01059dff4de12ce20d4c12ab30061186d8e69a01e41014d0cb0f7d40f",
+   "validation": {
+    "status": "ANALYTIC_FORMULA_UNIT_TESTED"
+   }
+  }
+ },
+ "references": {
+  "m4_rows": 5917,
+  "special_interest_rows": 874
+ },
+ "parse_summary": {
+  "other_service_publication_parts_not_parsed": {
+   "fmtv:GE84:A": 406,
+   "fmtv:GE84:B": 66,
+   "fmtv:NTFD_RR:1": 11,
+   "fmtv:NTFD_RR:3": 34
+  },
+  "fxm_terra_rows": 4057,
+  "intent.ADD": 2905,
+  "intent.MODIFY": 163,
+  "intent.SUPPRESS": 413,
+  "rows.NOTICE": 3481,
+  "rows.RECORDED_CONTEXT": 576,
+  "publication_parts": {
+   "GE06L:A": 2,
+   "GE06L:B": 14,
+   "NTFD_RR:1": 2404,
+   "NTFD_RR:2": 1051,
+   "NTFD_RR:3": 10
+  },
+  "records_out": 4057
+ },
+ "previous_parse_summary": {
+  "other_service_publication_parts_not_parsed": {
+   "fmtv:GE06:A": 12,
+   "fmtv:GE06:B": 193,
+   "fmtv:NTFD_RR:1": 33,
+   "fmtv:NTFD_RR:2": 73,
+   "lfmf:GE75:A": 3,
+   "lfmf:GE75:B": 1
+  },
+  "fxm_terra_rows": 8373,
+  "intent.ADD": 4639,
+  "intent.MODIFY": 322,
+  "intent.SUPPRESS": 1545,
+  "rows.NOTICE": 6506,
+  "rows.RECORDED_CONTEXT": 1867,
+  "publication_parts": {
+   "NTFD_RR:1": 5064,
+   "NTFD_RR:2": 1433,
+   "NTFD_RR:3": 9
+  },
+  "records_out": 8373
+ },
+ "screening_parameters": {
+  "terrestrial_time_percent": 10.0,
+  "terrestrial_location_percent": 50.0,
+  "terrestrial_rx_height_m": 10.0,
+  "terrestrial_rx_area": "Rural",
+  "space_pfd_reference_bandwidth_hz": 1.0,
+  "note": "AstraSync screening defaults, not the conditions of an approved criterion."
+ },
+ "criteria": {
+  "terrestrial": {
+   "document": "ECC Recommendation T/R 25-08: Planning criteria and cross-border coordination of frequencies for land mobile systems in the range 29.7-470 MHz",
+   "edition": "Edition 6 June 2025 (approved 15 January 1990, latest amended 6 June 2025)",
+   "edition_date": "2025-06-06",
+   "section": "Annex 1, A1.2.3 Indicative coordination thresholds for analogue or digital land mobile systems",
+   "source_url": "https://docdb.cept.org/document/909",
+   "download_url": "https://docdb.cept.org/download/4789",
+   "retrieved": "2026-11-08"
+  },
+  "criterion_set_id": "ECC-TR2508-A1.2.3",
+  "challenge_extension_above_470_mhz": {
+   "enabled": true,
+   "max_mhz": 4000.0,
+   "threshold_dbuv_m": 20.0,
+   "basis": "Since AI 2026 Traficom challenge organizer clarification: the general land-mobile criterion for the band above 400 MHz may be applied to IFIC 3076 land-mobile records above 470 MHz. This is a challenge-specific extension, not normative coverage of T/R 25-08 (whose scope ends at 470 MHz).",
+   "upper_limit_basis": "ITU-R P.1546-6 frequency range (30-4000 MHz)"
+  },
+  "boundaries": [
+   {
+    "part": "LAND_BORDER",
+    "dataset": "Natural Earth 1:10m Admin 0 Countries",
+    "publisher": "Natural Earth",
+    "source": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson",
+    "licence": "Public domain (Natural Earth terms of use)",
+    "source_sha256": "239eec57ac17f100a11e2536cffc56752c318b50ae765b0918ff7aab4ce8f255",
+    "method": "Finland ring vertices shared with RUS, NOR or SWE, split per neighbour",
+    "retrieved": "2026-11-08"
+   },
+   {
+    "part": "TERRITORIAL_SEA_OUTER_LIMIT",
+    "dataset": "Aluevesien rajat (territorial waters boundaries), layer avoin:TerritorialSeaArea_L",
+    "publisher": "Liikenne- ja viestintävirasto Traficom",
+    "source": "https://julkinen.traficom.fi/inspirepalvelu/avoin/wfs (WFS 2.0.0, srsName EPSG:4326); catalogue https://avoindata.suomi.fi/data/dataset/aluevesien-rajat",
+    "licence": "Creative Commons Attribution 4.0",
+    "source_sha256": "c9536f502f6ac2bfe0423e172150b8209d403cf921f94fa5bcba1822b2821e2d",
+    "retrieved": "2026-11-08"
+   }
+  ],
+  "border_spacing_km": 5.0,
+  "border_window_km": 150.0,
+  "concern_margin_db": 6.0,
+  "meaning": "Indicative coordination threshold: exceeding it indicates coordination with Finland, not harmful interference or non-compliance."
+ },
+ "environment": {
+  "python": "3.11.0",
+  "platform": "Windows-10-10.0.26300-SP0"
+ }
+}

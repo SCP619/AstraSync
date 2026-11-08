@@ -1,0 +1,103 @@
+{
+ "artifact": "AstraSync evaluation of SPACE_IFIC 3074",
+ "generated_at_utc": "2026-11-08T07:10:02+00:00",
+ "issue": 3074,
+ "publication_date": "2026-06-23",
+ "kind": "SPACE_IFIC",
+ "inputs": [
+  {
+   "role": "IFIC issue",
+   "filename": "ific3074.zip",
+   "bytes": 60837631,
+   "sha256": "c8adf75044bca9d6a2be4213d051805f1b0a88d716fb184bcb1cd812216da721",
+   "official_url": "https://www.itu.int/sns/ific10/ific3074.zip"
+  },
+  {
+   "role": "previous IFIC issue",
+   "filename": "ific3073.zip",
+   "bytes": 14113718,
+   "sha256": "e1bd33e94e4342e6723a898630adac718c8b6406df594cef19a92b4a8b983513",
+   "official_url": "https://www.itu.int/sns/ific10/ific3073.zip"
+  },
+  {
+   "role": "Finnish table of frequencies (M4), Traficom open data, CC BY 4.0",
+   "filename": "Taajuusjakotaulukko-v13.json",
+   "bytes": 4359860,
+   "sha256": "41ffdd0ed84a40c19fd4bb3771699a63c879b1ad4f2201dcb1cd3c37524871fb",
+   "official_url": "https://opendata.traficom.fi/api/v13/Taajuusjakotaulukko"
+  },
+  {
+   "role": "Challenge special-interest workbook (synthetic data)",
+   "filename": "Traficom_SinceAI_Frequencies_of_interest_v05112026.xlsx",
+   "bytes": 100809,
+   "sha256": "bb7f481f085fb6c457efc04b9b6bb8250c42ea81bab4b4a0e518c93834e03c8a",
+   "official_url": null
+  }
+ ],
+ "parsers": {
+  "ific": "itu-space-ific-sns-v10/1.0.0",
+  "m4": "traficom-opendata-taajuusjakotaulukko/1.0.0",
+  "workbook": "traficom-frequencies-of-interest/1.0.0"
+ },
+ "rule_version": "ific-finland-relevance/1.0.0",
+ "methods": {
+  "TERR_P1546": {
+   "version": "1.0.0",
+   "implementation_sha": "d9dea4fb09602a689db9e0bfd6bee0d2d81d95af5279cc2cb93a7b411e61c1d3",
+   "validation": {
+    "status": "VALIDATED_AGAINST_REFERENCE_IMPLEMENTATION",
+    "reference": "ITU-R WP 3K reference P1546FieldStrMixed.m v16 (Zenodo 10.5281/zenodo.6206015)",
+    "cases": 54,
+    "max_abs_deviation_db": 5.1e-05
+   }
+  },
+  "SPACE_PFD_FREE_SPACE": {
+   "version": "1.0.0",
+   "implementation_sha": "d9e450a01059dff4de12ce20d4c12ab30061186d8e69a01e41014d0cb0f7d40f",
+   "validation": {
+    "status": "ANALYTIC_FORMULA_UNIT_TESTED"
+   }
+  }
+ },
+ "references": {
+  "m4_rows": 5917,
+  "special_interest_rows": 874
+ },
+ "parse_summary": {
+  "notices_in_database": 196,
+  "notices_in_issue": 196,
+  "groups": 34367,
+  "notice_type.G": 72,
+  "notice_type.N": 112,
+  "notice_type.S": 12,
+  "special_section.API": 72,
+  "special_section.CR": 148,
+  "special_section.RES49": 5,
+  "records_out": 34367
+ },
+ "previous_parse_summary": {
+  "notices_in_database": 126,
+  "notices_in_issue": 126,
+  "groups": 19468,
+  "notice_type.G": 57,
+  "notice_type.N": 63,
+  "notice_type.S": 6,
+  "special_section.API": 54,
+  "special_section.CR": 30,
+  "special_section.RES4": 10,
+  "records_out": 19468
+ },
+ "screening_parameters": {
+  "terrestrial_time_percent": 10.0,
+  "terrestrial_location_percent": 50.0,
+  "terrestrial_rx_height_m": 10.0,
+  "terrestrial_rx_area": "Rural",
+  "space_pfd_reference_bandwidth_hz": 1.0,
+  "note": "AstraSync screening defaults, not the conditions of an approved criterion."
+ },
+ "criteria": "None approved for space. No PFD limit comparison is made.",
+ "environment": {
+  "python": "3.11.0",
+  "platform": "Windows-10-10.0.26300-SP0"
+ }
+}

@@ -2,12 +2,15 @@
  * Dashboard as a datasheet: KPIs, insights and small charts from the live API. No identifiers,
  * keys or hashes are shown; every number is a screening result for expert review.
  */
-import { useCallback } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Schemas } from "../api/client";
 import { formatFrequencyRange } from "../cases/labels";
 import { OperationsPanel } from "../components/OperationsPanel";
 import { describeError, useLoad, useMe, useSession } from "../shared";
+import { buildMarkers, type GlobeMarker } from "./globe/globeData";
+
+const Globe = lazy(() => import("./globe/Globe").then((m) => ({ default: m.Globe })));
 
 type Analysis = Schemas["IficAnalysis"];
 type CaseItem = Schemas["CaseSummary"];
@@ -91,6 +94,37 @@ function Bars({ title, description, rows }: { title: string; description: string
   );
 }
 
+/** Loads the flagged findings of the latest issues after the KPIs, so the page never waits. */
+function GlobeSection({ analyses, cases }: { analyses: Analysis[]; cases: CaseItem[] }) {
+  const { api } = useSession();
+  const [markers, setMarkers] = useState<GlobeMarker[] | null>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    const latest = new Map<string, Analysis>();
+    for (const a of analyses) {
+      const kind = kindLabel(a.kind);
+      if (!latest.has(kind) || latest.get(kind)!.issue < a.issue) latest.set(kind, a);
+    }
+    const requests = [...latest.values()].flatMap((a) =>
+      (["HIGH", "MEDIUM"] as const).map((tier) =>
+        api.listIficFindings(a.analysis_id, tier, undefined, controller.signal).then((r) => r.items).catch(() => []),
+      ),
+    );
+    void Promise.all(requests).then((pages) => {
+      if (!controller.signal.aborted) setMarkers(buildMarkers(pages.flat(), cases));
+    });
+    return () => controller.abort();
+  }, [api, analyses, cases]);
+  if (markers === null) {
+    return <section className="globe-section" aria-busy="true"><p className="globe-hint small muted">Loading flagged notices…</p></section>;
+  }
+  return (
+    <Suspense fallback={<section className="globe-section" aria-busy="true"><p className="globe-hint small muted">Loading the 3D view…</p></section>}>
+      <Globe markers={markers} />
+    </Suspense>
+  );
+}
+
 export function DashboardPage() {
   const { api } = useSession();
   const me = useMe();
@@ -152,11 +186,15 @@ export function DashboardPage() {
   if (insights.length === 0) insights.push("No analysed IFIC issue reports a concern yet. Run an analysis from the IFIC issues page.");
 
   return (
-    <main className="content">
+    <main className="dashboard">
+      <div className="content dashboard-head">
       <header className="page-header">
         <h1>Dashboard</h1>
         <p className="muted">Spectrum screening at a glance: what was published, what needs a look, and why.</p>
       </header>
+      </div>
+      {canSources && analyses.length > 0 && <GlobeSection analyses={analyses} cases={cases} />}
+      <div className="content">
 
       <div className="kpi-grid">
         <Kpi label="IFIC issues analysed" value={analyses.length} trend={ordered.map((a) => a.findings_count)} />
@@ -201,6 +239,7 @@ export function DashboardPage() {
         </section>
       )}
       {me.capabilities.includes("JOB_READ") && <OperationsPanel />}
+      </div>
     </main>
   );
 }

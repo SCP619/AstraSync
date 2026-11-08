@@ -10,7 +10,7 @@ import re
 from collections import defaultdict
 from collections.abc import Mapping
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import uuid4
 
 from fastapi import Request
@@ -81,6 +81,7 @@ from .contract.models import (
     ReviewEvent,
     ReviewEventList,
 )
+from .drafting import DeterministicDraftAgent, deterministic_answer
 from .errors import ApiError
 from .identity import Principal
 from .jobs import LANE_ANALYSIS, emit_event, enqueue, utc_now
@@ -443,6 +444,23 @@ def _evidence_of(session: Session, case_id: str) -> list[EvidenceLink]:
     return [_evidence_view(row) for row in rows]
 
 
+def record_screening(
+    sessions: sessionmaker[Session], case_id: str, screening: dict[str, Any] | None
+) -> None:
+    """Keep the latest IFIC screening result with the case (updated on re-analysis)."""
+    with sessions() as session:
+        row = session.get(CaseRow, case_id)
+        if row is None:
+            return
+        scenario = dict(row.scenario or {})
+        if screening is None:
+            scenario.pop("ific_screening", None)
+        else:
+            scenario["ific_screening"] = screening
+        row.scenario = scenario
+        session.commit()
+
+
 def get_case(
     runtime: LibraryRuntime,
     request: Request,
@@ -469,6 +487,7 @@ def get_case(
             criterion_available=gates.criterion_available,
         ),
         evidence=_evidence_of(session, case_id),
+        screening=(row.scenario or {}).get("ific_screening"),
         latest_analysis_run_id=row.latest_analysis_run_id,
         priority=row.priority,
         priority_reason=row.priority_reason,
@@ -803,8 +822,21 @@ def create_draft(
         )
 
     evidence = build_case_evidence(session, case, run)
-    draft = _agent_draft(agent, evidence, body.draft_type, run.analysis_run_id)
-    warnings = [f"Uncertain: {item}" for item in draft.uncertainties]
+    provenance, model_id = "evidence-bound-agent", getattr(agent, "model_id", None)
+    fallback_warning: list[str] = []
+    try:
+        draft = _agent_draft(agent, evidence, body.draft_type, run.analysis_run_id)
+    except ApiError:
+        if not getattr(agent, "fallback_to_deterministic", False):
+            raise
+        deterministic = DeterministicDraftAgent()
+        draft = _agent_draft(deterministic, evidence, body.draft_type, run.analysis_run_id)
+        provenance, model_id = "deterministic-fallback", deterministic.model_id
+        fallback_warning = [
+            "The local model's draft was refused by the evidence checks; this draft uses fixed "
+            "wording composed from the evidence."
+        ]
+    warnings = fallback_warning + [f"Uncertain: {item}" for item in draft.uncertainties]
     if not draft.cited_evidence_ids:
         warnings.append("This draft cites no evidence.")
     for claim in sorted(
@@ -820,8 +852,8 @@ def create_draft(
         content_markdown=draft.draft_markdown,
         citations=draft.cited_evidence_ids,
         warnings=warnings,
-        ai_model_id=getattr(agent, "model_id", None),
-        generation_provenance="evidence-bound-agent",
+        ai_model_id=model_id,
+        generation_provenance=provenance,
         status=DraftStatus.DRAFT.value,
         created_by=principal.user_id,
         created_at_utc=utc_now(),
@@ -864,22 +896,33 @@ def answer_question(
         )
     evidence = build_case_evidence(session, case, run)
     known = {item["evidence_id"] for item in evidence["evidence"]}
+    generation: Literal["MODEL", "DETERMINISTIC_FALLBACK"] = "MODEL"
+    refused: str | None = None
+    cited: list[str] = []
+    text = ""
+    result: dict[str, Any] = {}
     try:
         result = answer(evidence, body.question)
         cited = [str(c) for c in result["cited_evidence_ids"]]
         text = str(result["answer_markdown"])
+        if not cited or not set(cited) <= known or _UNSUPPORTED_CLAIMS.search(text):
+            refused = "server_check"
     except Exception as exc:
-        logger.warning(
-            "answer_refused case=%s reason=%s: %s", case_id, type(exc).__name__, str(exc)[:200]
-        )
-        raise ApiError(
-            503, ErrorCode.AI_UNAVAILABLE, "The assistant did not return a usable answer."
-        ) from exc
-    if not cited or not set(cited) <= known or _UNSUPPORTED_CLAIMS.search(text):
-        logger.warning("answer_refused case=%s reason=server_check", case_id)
-        raise ApiError(
+        refused = f"{type(exc).__name__}: {str(exc)[:200]}"
+    if refused is not None:
+        logger.warning("answer_refused case=%s reason=%s", case_id, refused)
+        unusable = ApiError(
             503, ErrorCode.AI_UNAVAILABLE, "The assistant did not return a usable answer."
         )
+        if not getattr(agent, "fallback_to_deterministic", False):
+            raise unusable
+        try:
+            result = deterministic_answer(evidence)
+        except ValueError:
+            raise unusable from None
+        cited = result["cited_evidence_ids"]
+        text = result["answer_markdown"]
+        generation = "DETERMINISTIC_FALLBACK"
     return CaseAnswer(
         **_envelope(),
         case_id=case_id,
@@ -887,8 +930,9 @@ def answer_question(
         answer_markdown=text,
         uncertainties=[str(u) for u in result.get("uncertainties", [])][:20],
         cited_evidence_ids=cited,
-        ai_model_id=getattr(agent, "model_id", None),
+        ai_model_id=getattr(agent, "model_id", None) if generation == "MODEL" else None,
         requires_human_review=True,
+        generation=generation,
     )
 
 

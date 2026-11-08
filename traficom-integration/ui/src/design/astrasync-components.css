@@ -107,3 +107,22 @@ progress { width: 100%; height: 8px; accent-color: var(--accent); }
   main.content, .content { max-width: none; padding: 0; } .panel, .insight, .kpi { break-inside: avoid; } .table-scroll { overflow: visible; max-height: none; } .table-scroll thead th { position: static; }
 }
 }
+
+/* Dashboard globe: full width of the main column, between the page header and the KPIs. */
+@layer components {
+main.dashboard { width: 100%; min-width: 0; }
+.dashboard-head { padding-bottom: 0; }
+.globe-section { position: relative; height: clamp(340px, 48vh, 500px); margin: 0 0 1.5rem; overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: radial-gradient(ellipse at 50% 60%, #12263f 0%, #070d18 70%); color: #e8f0fa; }
+.globe-canvas { position: absolute; inset: 0; }
+.globe-canvas canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.globe-title { position: absolute; top: 1rem; left: 1.5rem; pointer-events: none; max-width: 60%; }
+.globe-title h2 { margin: 0 0 .2rem; font-size: 18px; color: #e8f0fa; }
+.globe-title .muted, .globe-section .muted { color: #a9b9ca; }
+.globe-legend { position: absolute; left: 1.5rem; bottom: 1rem; display: grid; gap: .3rem; font-size: 11px; pointer-events: none; }
+.globe-legend li { padding: 0; border: 0; display: flex; align-items: center; gap: .45rem; }
+.globe-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.globe-hint { position: absolute; right: 1.5rem; bottom: 1rem; max-width: 46%; text-align: right; margin: 0; pointer-events: none; }
+.globe-card { position: absolute; z-index: 5; display: grid; gap: .2rem; min-width: 210px; max-width: 280px; padding: .65rem .8rem; background: rgba(13, 22, 36, .94); border: 1px solid #2b3d54; border-left: 4px solid; border-radius: 6px; font-size: 12px; pointer-events: none; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); }
+.light .globe-section { color: #e8f0fa; }
+@media (max-width: 767px) { .globe-section { height: 300px; } .globe-legend { display: none; } .globe-hint { max-width: 90%; } }
+}

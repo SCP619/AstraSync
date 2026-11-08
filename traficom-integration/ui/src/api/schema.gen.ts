@@ -1604,6 +1604,11 @@ export interface components {
              * Format: date-time
              */
             generated_at_utc: string;
+            /**
+             * Generation
+             * @enum {string}
+             */
+            generation: "MODEL" | "DETERMINISTIC_FALLBACK";
             /** Requires Human Review */
             requires_human_review: boolean;
             /**
@@ -1711,6 +1716,10 @@ export interface components {
              * @constant
              */
             schema_version: "1.0.0-draft.5";
+            /** Screening */
+            screening: {
+                [key: string]: unknown;
+            } | null;
             /** Source Issue Id */
             source_issue_id: string;
             /**

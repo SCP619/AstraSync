@@ -414,3 +414,26 @@ describe("evidence download", () => {
     expect(button.title).toBe("You do not have download permission");
   });
 });
+
+describe("IFIC screening on the case", () => {
+  it("shows the criterion, value, threshold and margin in the Criteria tab and header", async () => {
+    const screening = {
+      classification: "COORDINATION_REVIEW",
+      margin_db: 14.84,
+      criterion: "ECC T/R 25-08 A1.2.3 indicative coordination threshold",
+      criterion_basis: "NORMATIVE_T/R_25-08_A1.2.3",
+      threshold: 12,
+      value: 26.84,
+      unit: "dB(uV/m)",
+      where: "Finland-Russia land border",
+      coordination_with_finland: true,
+      statement: "Screening result for expert review; not a finding of harmful interference or non-compliance.",
+    };
+    show(backend(ANALYST, { [`GET ${CASE}`]: { body: { ...analysed, screening } } }));
+    expect(await screen.findByText(/\+14\.84 dB \(IFIC screening\)/)).toBeTruthy();
+    await openTab("Criteria");
+    expect(await screen.findByText("Above the threshold, coordination with Finland noted")).toBeTruthy();
+    expect(screen.getByText(/26\.84 dB\(uV\/m\) · Finland-Russia land border/)).toBeTruthy();
+    expect(screen.queryByText(/violat/i)).toBeNull();
+  });
+});

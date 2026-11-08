@@ -188,6 +188,7 @@ export const fixture3 = {
       "note": null
     }
   ],
+  "screening": null,
   "latest_analysis_run_id": null,
   "priority": null,
   "priority_reason": null,

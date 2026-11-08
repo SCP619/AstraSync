@@ -580,6 +580,84 @@ function DraftAndReview({ item, run }: { item: Case; run: Run | null }) {
 }
 
 /** Grounded questions: answered only from this case's evidence; the server checks citations. */
+type Screening = {
+  classification?: string;
+  margin_db?: number | null;
+  criterion?: string;
+  criterion_basis?: string | null;
+  citation?: string | null;
+  threshold?: number | null;
+  value?: number | null;
+  unit?: string;
+  where?: string | null;
+  assumptions?: string[];
+  coordination_with_finland?: boolean | null;
+  ific_issue?: number;
+  statement?: string;
+};
+
+const SCREENING_TEXT: Record<string, string> = {
+  VERIFIED_CRITERION_EXCEEDANCE: "Above the coordination threshold",
+  COORDINATION_REVIEW: "Above the threshold, coordination with Finland noted",
+  WORST_CASE_EXCEEDANCE: "Worst-case PFD above the Table 21-4 limit",
+  POTENTIAL_CONCERN: "Within the concern window below the limit",
+  BELOW_SCREENING_THRESHOLD: "Below the screening threshold",
+  INCONCLUSIVE_UNKNOWN_PARAMETER: "Inconclusive: a limit parameter is unknown",
+  FREQUENCY_OVERLAP_ONLY: "Frequency overlap only",
+  INSUFFICIENT_EVIDENCE: "Insufficient evidence",
+  NO_APPLICABLE_CRITERION: "No applicable criterion",
+};
+
+function screeningOf(item: Case): Screening | null {
+  return ((item as Case & { screening?: Screening | null }).screening ?? null) as Screening | null;
+}
+
+/** The IFIC screening comparison of the finding that opened this case. */
+export function ScreeningPanel({ item }: { item: Case }) {
+  const screening = screeningOf(item);
+  if (!screening?.classification) return null;
+  return (
+    <section aria-labelledby="screening-title">
+      <h3 id="screening-title">IFIC screening criterion</h3>
+      <dl className="facts">
+        <dt>Result</dt>
+        <dd><strong>{SCREENING_TEXT[screening.classification] ?? screening.classification}</strong></dd>
+        <dt>Criterion</dt>
+        <dd>{screening.criterion}{screening.criterion_basis ? ` (${screening.criterion_basis})` : ""}</dd>
+        {screening.value !== null && screening.value !== undefined && (
+          <>
+            <dt>Screened value</dt>
+            <dd className="numeric">{screening.value.toFixed(2)} {screening.unit}{screening.where ? ` · ${screening.where}` : ""}</dd>
+          </>
+        )}
+        {screening.threshold !== null && screening.threshold !== undefined && (
+          <>
+            <dt>Threshold</dt>
+            <dd className="numeric">{screening.threshold.toFixed(2)} {screening.unit}</dd>
+          </>
+        )}
+        {screening.margin_db !== null && screening.margin_db !== undefined && (
+          <>
+            <dt>Margin</dt>
+            <dd className="numeric">{screening.margin_db > 0 ? "+" : ""}{screening.margin_db.toFixed(2)} dB</dd>
+          </>
+        )}
+        {screening.coordination_with_finland !== null && screening.coordination_with_finland !== undefined && (
+          <>
+            <dt>Coordination with Finland noted</dt>
+            <dd>{screening.coordination_with_finland ? "Yes: review the coordination history" : "No"}</dd>
+          </>
+        )}
+      </dl>
+      {(screening.assumptions ?? []).length > 0 && (
+        <ul className="small">{screening.assumptions!.map((a) => <li key={a}>{a}</li>)}</ul>
+      )}
+      {screening.citation && <p className="muted small">{screening.citation}</p>}
+      <p className="notice">{screening.statement ?? "Screening result for expert review; not a regulatory finding."}</p>
+    </section>
+  );
+}
+
 export function AskCase({ item, run }: { item: Case; run: Run | null }) {
   const { api } = useSession();
   const { capabilities } = useMe();
@@ -627,6 +705,9 @@ export function AskCase({ item, run }: { item: Case; run: Run | null }) {
           <li key={index}>
             <p><strong>Q:</strong> {question}</p>
             <p className="pre-wrap"><strong>A:</strong> {answer.answer_markdown}</p>
+            {answer.generation === "DETERMINISTIC_FALLBACK" && (
+              <p className="small review">Fixed summary of the evidence: the local model's reply was refused by the checks.</p>
+            )}
             <p className="muted small">
               Evidence: {answer.cited_evidence_ids.map((id) => <code key={id}>{id} </code>)}
               {answer.ai_model_id && <> · model {answer.ai_model_id}</>}
@@ -760,7 +841,11 @@ export function CaseInspectorPage() {
         <dt>Methods run</dt>
         <dd>{item.method_summary.succeeded} of {item.method_summary.candidates}</dd>
         <dt>Criterion margin</dt>
-        <dd className="numeric">{formatMargin(item.margin_db, item.criterion_status)}</dd>
+        <dd className="numeric">
+          {item.margin_db === null && screeningOf(item)?.margin_db != null
+            ? `${screeningOf(item)!.margin_db! > 0 ? "+" : ""}${screeningOf(item)!.margin_db!.toFixed(2)} dB (IFIC screening)`
+            : formatMargin(item.margin_db, item.criterion_status)}
+        </dd>
       </dl>
       <div className="actions">
         {capabilities.includes("ANALYSIS_RUN") && (
@@ -797,7 +882,12 @@ export function CaseInspectorPage() {
       <section className="panel" role="tabpanel" id="case-panel" aria-labelledby={`tab-${tab}`}>
         {tab === "Overview" && <Overview item={item} />}
         {tab === "Methods" && <Methods run={run} />}
-        {tab === "Criteria" && <Criteria run={run} />}
+        {tab === "Criteria" && (
+          <>
+            <ScreeningPanel item={item} />
+            <Criteria run={run} />
+          </>
+        )}
         {tab === "Evidence" && <Evidence item={item} />}
         {tab === "Draft and review" && <DraftAndReview item={item} run={run} />}
         {tab === "Ask" && <AskCase item={item} run={run} />}

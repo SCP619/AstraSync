@@ -1,6 +1,8 @@
 # Lovable UI prompts (handover)
 
-Status: **prompts only, nothing generated yet.** A prompt is not an implemented UI. Generated
+Status: **prompts only; Lovable has generated nothing.** Built by hand in the repository instead:
+the judge demonstration (`/demo`, `?demo=judge`, section 8), the case **Ask** tab (section 1,
+backed by `POST /api/v1/cases/{id}/questions`) and the IFIC criterion panel (section 3). A prompt is not an implemented UI. Generated
 components must be brought into `traficom-integration/ui/src/`, wired to the typed client
 (`src/api/client.ts`, types from `src/api/schema.gen.ts`), and pass `npm run contract:check`,
 `npm test` and `npm run build` before they count as integrated.

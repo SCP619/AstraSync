@@ -708,16 +708,44 @@ def _space_geometry(group: dict[str, Any]) -> dict[str, Any]:
         looks = [
             (name, *geo.gso_look(lat, lon, longitude)) for name, lat, lon in geo.FINLAND_POINTS
         ]
-        visible = [(n, e, s) for n, e, s in looks if e > 0]
         best = max(looks, key=lambda x: x[1])
+        # Every grid node: the upper-bound PFD is largest where the slant range is shortest.
+        grid = geo.finland_grid()
+        grid_looks = [(lat, lon, *geo.gso_look(lat, lon, longitude)) for lat, lon in grid]
+        grid_visible = [g for g in grid_looks if g[2] > 0]
+        nearest = min(grid_visible, key=lambda g: g[3]) if grid_visible else None
         return {
-            "status": "VISIBLE" if visible else "NOT_VISIBLE",
+            "status": "VISIBLE" if grid_visible else "NOT_VISIBLE",
             "nominal_longitude_deg": longitude,
             "elevations_deg": {n: round(e, 2) for n, e, _ in looks},
-            "min_slant_range_km": round(min(s for _, _, s in visible), 1) if visible else None,
+            "min_slant_range_km": round(nearest[3], 1) if nearest else None,
             "best_point": best[0],
+            "evaluation_grid": {
+                "nodes": len(grid),
+                "visible_nodes": len(grid_visible),
+                "step_lat_deg": geo.GRID_STEP_LAT_DEG,
+                "step_lon_deg": geo.GRID_STEP_LON_DEG,
+                "crs": "WGS-84 lat/lon degrees; nodes inside the Natural Earth 1:10m Finland "
+                "outline",
+                "elevation_range_deg": [
+                    round(min(g[2] for g in grid_looks), 2),
+                    round(max(g[2] for g in grid_looks), 2),
+                ],
+                "max_pfd_location": (
+                    {
+                        "lat": nearest[0],
+                        "lon": nearest[1],
+                        "elevation_deg": round(nearest[2], 2),
+                        "slant_range_km": round(nearest[3], 1),
+                    }
+                    if nearest
+                    else None
+                ),
+                "spatial_uncertainty": "Grid spacing about 28 km; values between nodes differ "
+                "by well under 0.1 dB for GSO slant ranges.",
+            },
             "basis": "Spherical Earth, GSO radius 42164 km, at the nominal longitude; station-"
-            "keeping tolerance ignored.",
+            "keeping tolerance ignored. Slant range is the minimum over the Finland grid.",
         }
     if kind == "NON_GSO_SPACE_STATION":
         incl = norm(group, "orbit_inclination_deg_range")

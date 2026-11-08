@@ -74,6 +74,33 @@ def in_finland(lat: float, lon: float) -> bool:
     return any(_ring_contains(ring, lon, lat) for ring in rings)
 
 
+# Space evaluation grid over Finland (organizer clarification C8: a grid across Finland is
+# acceptable). Regular lat/lon spacing in WGS-84 degrees; a node is kept when it lies inside the
+# Natural Earth 1:10m Finland outline. 0.25 deg latitude is about 28 km; 0.5 deg longitude is
+# about 28 km at 60 N and 17 km at 70 N.
+GRID_STEP_LAT_DEG = 0.25
+GRID_STEP_LON_DEG = 0.5
+GRID_EXTENT = {"lat": (59.5, 70.25), "lon": (19.0, 31.75)}
+
+
+@cache
+def finland_grid(
+    step_lat: float = GRID_STEP_LAT_DEG, step_lon: float = GRID_STEP_LON_DEG
+) -> tuple[tuple[float, float], ...]:
+    """Grid nodes (lat, lon) inside Finland, south to north, west to east."""
+    (lat0, lat1), (lon0, lon1) = GRID_EXTENT["lat"], GRID_EXTENT["lon"]
+    nodes = []
+    i = 0
+    while (lat := lat0 + i * step_lat) <= lat1 + 1e-9:
+        j = 0
+        while (lon := lon0 + j * step_lon) <= lon1 + 1e-9:
+            if in_finland(lat, lon):
+                nodes.append((round(lat, 6), round(lon, 6)))
+            j += 1
+        i += 1
+    return tuple(nodes)
+
+
 def nearest_finland_point(lat: float, lon: float) -> tuple[float, float, float]:
     """(distance km, lat, lon) of the nearest boundary vertex; 0 km when inside Finland."""
     if in_finland(lat, lon):

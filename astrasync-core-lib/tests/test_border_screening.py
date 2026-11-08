@@ -120,3 +120,37 @@ def test_the_concern_margin_is_configurable() -> None:
         ]
         == "POTENTIAL_CONCERN"
     )
+
+
+def test_the_finland_grid_covers_the_country_and_only_the_country() -> None:
+    grid = geo.finland_grid()
+    assert 400 < len(grid) < 700
+    assert all(geo.in_finland(lat, lon) for lat, lon in grid)
+    lats = [lat for lat, _ in grid]
+    assert min(lats) < 60.5 and max(lats) > 69.0  # south coast to Lapland
+    # Spacing as documented: neighbours on a row are one longitude step apart.
+    row = sorted(lon for lat, lon in grid if lat == 62.0)
+    assert all(
+        abs(b - a - geo.GRID_STEP_LON_DEG) < 1e-6
+        for a, b in zip(row, row[1:], strict=False)
+        if b - a < 1
+    )
+
+
+def test_gso_geometry_reports_the_grid_and_the_max_pfd_location() -> None:
+    from astrasync_data import ific_analysis as A
+
+    group = {
+        "raw_fields": {
+            "norm.notice_type": '"GSO_SPACE_STATION"',
+            "norm.nominal_longitude_deg": "20.0",
+        }
+    }
+    geometry = A._space_geometry(group)
+    grid = geometry["evaluation_grid"]
+    assert geometry["status"] == "VISIBLE"
+    assert grid["visible_nodes"] == grid["nodes"]
+    location = grid["max_pfd_location"]
+    # The shortest slant range to 20 E is at the southernmost, nearest-longitude nodes.
+    assert location["lat"] < 61.0
+    assert geometry["min_slant_range_km"] == location["slant_range_km"]

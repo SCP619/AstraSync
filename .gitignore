@@ -16,6 +16,7 @@ src-tauri/target/
 *.csv
 # Evaluation outputs derived from public ITU IFIC data are submission artifacts.
 !evaluation/**/*.csv
+!evaluation/**/*.xlsx
 raw_data/
 dataset/
 .DS_Store

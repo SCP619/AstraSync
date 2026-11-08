@@ -18,6 +18,7 @@ import csv
 import gzip
 import hashlib
 import json
+import math
 import platform
 import sys
 from collections import Counter
@@ -224,7 +225,94 @@ def evaluate(
     (out / "report.md").write_text(
         _report(manifest, findings, comparison, trends, kind), encoding="utf-8", newline="\n"
     )
+    prefix = "terrestrial" if kind == I.TERRESTRIAL_SOURCE_TYPE else "space"
+    write_xlsx(out, out / f"{prefix}_ific_{summary.issue}_results.xlsx", manifest)
     return {"issue": summary.issue, "findings": len(findings), "out": str(out)}
+
+
+def _cell(value: str) -> Any:
+    """CSV text back to a number where it is one, so spreadsheet sorting and filters work."""
+    if value == "":
+        return None
+    try:
+        number = float(value)
+    except ValueError:
+        return value
+    if not math.isfinite(number):
+        return value
+    return int(number) if number.is_integer() and "." not in value else number
+
+
+def write_xlsx(out: Path, path: Path, manifest: dict[str, Any]) -> None:
+    """One workbook for evaluators: About, Results, Border points (terrestrial), Inputs.
+
+    Built from the CSV files of the same run, so the sheets and the CSVs cannot disagree.
+    Workbook timestamps are set to the run time.
+    """
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+    from openpyxl.utils import get_column_letter
+
+    book = Workbook()
+    about = book.create_sheet("About", 0)
+    book.remove(book.worksheets[1])
+    criteria = manifest.get("criteria")
+    rows: list[list[Any]] = [
+        [manifest["artifact"]],
+        [],
+        [
+            "Data status",
+            "Real IFIC data; screening results for expert review (not regulatory findings).",
+        ],
+        ["Issue", manifest["issue"]],
+        ["Publication date", manifest["publication_date"]],
+        ["Generated (UTC)", manifest["generated_at_utc"]],
+        ["Rule set", manifest["rule_version"]],
+        [
+            "Criterion",
+            json.dumps(criteria, ensure_ascii=False) if isinstance(criteria, dict) else criteria,
+        ],
+        ["Screening parameters", json.dumps(manifest["screening_parameters"])],
+        ["Report", "report.md in the same folder; full detail in findings.json.gz"],
+    ]
+    for row in rows:
+        about.append(row)
+    about["A1"].font = Font(bold=True, size=13)
+    about.column_dimensions["A"].width = 24
+    about.column_dimensions["B"].width = 120
+
+    for title, name in (("Results", "findings.csv"), ("Border points", "border_points.csv")):
+        source = out / name
+        if not source.exists():
+            continue
+        sheet = book.create_sheet(title)
+        with source.open(encoding="utf-8", newline="") as handle:
+            reader = csv.reader(handle)
+            header = next(reader)
+            sheet.append(header)
+            for record in reader:
+                sheet.append([_cell(v) for v in record])
+        for index, column in enumerate(header, 1):
+            sheet.cell(row=1, column=index).font = Font(bold=True)
+            width = max(10, min(40, len(column) + 2))
+            sheet.column_dimensions[get_column_letter(index)].width = width
+        sheet.freeze_panes = "A2"
+        sheet.auto_filter.ref = sheet.dimensions
+
+    inputs = book.create_sheet("Inputs")
+    inputs.append(["role", "filename", "bytes", "sha256", "official_url"])
+    for item in manifest["inputs"]:
+        inputs.append(
+            [item["role"], item["filename"], item["bytes"], item["sha256"], item["official_url"]]
+        )
+    for cell in inputs[1]:
+        cell.font = Font(bold=True)
+
+    stamp = datetime.fromisoformat(manifest["generated_at_utc"]).replace(tzinfo=None)
+    book.properties.created = stamp
+    book.properties.modified = stamp
+    book.properties.creator = "AstraSync ific_evaluate"
+    book.save(path)
 
 
 def _border_columns(f: dict[str, Any]) -> list[Any]:

@@ -1,6 +1,6 @@
 # AstraSync evaluation: Space IFIC 3074
 
-Publication date (from the database): 2026-06-23. Generated 2026-11-08T04:34:05+00:00 by rule set `ific-finland-relevance/1.0.0`.
+Publication date (from the database): 2026-06-23. Generated 2026-11-08T07:10:02+00:00 by rule set `ific-finland-relevance/1.0.0`.
 
 **What this is.** A deterministic screening of every notice in the issue against Finnish frequency use (M4 table and the challenge's special-interest stations), with explainable priorities and, where the notice holds the inputs, technical calculations. **What it is not.** No approved space PFD criterion is configured, so nothing here is a limit exceedance or a statement of harmful interference. Every high-priority item needs expert review.
 

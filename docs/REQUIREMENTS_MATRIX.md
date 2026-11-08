@@ -88,7 +88,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-RF-011 | BE, CORE | VERIFIED | Missing/invalid inputs refused with reasons | |
 | TR-RF-012 | BE | VERIFIED | Comparison groups by metric and reference conditions | |
 | TR-RF-013 | CORE | IN_PROGRESS | Tier 1 analytic vectors for PFD | Tiers 2–4 need reference cases and expert review |
-| TR-REG-001 | BE | BLOCKED | Criteria registry with mandatory edition, citation and approval (`criteria.py`, A43) | No approved criteria: cited RR edition needs user approval; M4 edition unnamed by API (A36) |
+| TR-REG-001 | BE, CORE | IMPLEMENTED | Criteria registry with mandatory edition, citation and approval (`criteria.py`, A43). Terrestrial: ECC T/R 25-08 A1.2.3 (edition 6 June 2025) in `astrasync_data/criteria/tr2508_a123.json`, applied by `border_screening.py` in the IFIC evaluation (above 470 MHz as the organizer-approved challenge extension) | Space: RR Article 21 Table 21-4 not entered (complete authoritative table not obtained). Backend `RegistryCriterionResolver` has no T/R 25-08 registry yet (method runs carry no reference bandwidth) |
 | TR-REG-002 | BE | IMPLEMENTED_UNVERIFIED | `RegistryCriterionResolver`: metric, frequency and declared conditions; unknown values give UNVERIFIED (`test_criteria.py`, made-up limits) | Real criteria entries need scientific review |
 | TR-REG-003 | BE | VERIFIED | Margin null unless verified criterion (`test_cases.py`) | |
 | TR-REG-004 | BE | VERIFIED | `margin_db = predicted - limit` for upper bounds only | |
@@ -103,7 +103,7 @@ Components: **BE** backend (`traficom-integration/backend`), **CORE** `astrasync
 | TR-CASE-002 | UI | VERIFIED | Split-pane inspector (UI tests) | |
 | TR-CASE-003 | BE, UI | IMPLEMENTED_UNVERIFIED | `GET /cases/{id}/export` (`CASE_EXPORT`) returns the evidence pack: evidence links (artifact hash, record, relevance), analysis runs with method and criterion checks, drafts marked unapproved, review events; audited (`test_cases.py::test_export_contains_the_chain_and_marks_unapproved_drafts`, restricted-export test) | Links are not re-verified (hash re-check) at export time; JSON only, no signed bundle |
 | TR-CASE-004 | BE | VERIFIED | Append-only review events, role-protected | |
-| TR-CASE-005 | BE, UI | IMPLEMENTED | Drafts from evidence, pending approval; `DeterministicDraftAgent` (no model) and `GroundedLlmDraftAgent` (G28) | Live LLM provider not configured or exercised |
+| TR-CASE-005 | BE, UI | IMPLEMENTED | Drafts from evidence, pending approval; `DeterministicDraftAgent` (no model) and `GroundedLlmDraftAgent` (G28) with a local n8n/Ollama transport (`n8n_transport`, `test_n8n_transport.py`) | n8n webhook published and Ollama inference verified in n8n; backend-to-webhook call with the real secret not yet run (secret held by the user) |
 | TR-AI-001 | BE | VERIFIED | Agent cannot write method results (API); grounded agent receives evidence only | |
 | TR-AI-002 | BE | VERIFIED | Citation check on drafts; grounded agent also refuses numbers absent from the evidence and violation wording (`test_drafting.py`) | Live model output not evaluated |
 | TR-AI-003 | BE | VERIFIED | Classification policy (`ASTRASYNC_AI_CLASSIFICATIONS`) | |

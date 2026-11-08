@@ -1,6 +1,6 @@
 {
  "artifact": "AstraSync evaluation of SPACE_IFIC 3074",
- "generated_at_utc": "2026-11-08T01:19:39+00:00",
+ "generated_at_utc": "2026-11-08T04:34:05+00:00",
  "issue": 3074,
  "publication_date": "2026-06-23",
  "kind": "SPACE_IFIC",
@@ -95,7 +95,7 @@
   "space_pfd_reference_bandwidth_hz": 1.0,
   "note": "AstraSync screening defaults, not the conditions of an approved criterion."
  },
- "criteria": "None approved. No limit comparison is made and no finding is a limit exceedance.",
+ "criteria": "None approved for space. No PFD limit comparison is made.",
  "environment": {
   "python": "3.11.0",
   "platform": "Windows-10-10.0.26300-SP0"

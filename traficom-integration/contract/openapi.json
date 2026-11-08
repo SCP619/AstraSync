@@ -5714,6 +5714,29 @@
             ],
             "title": "Directivity Code"
           },
+          "effective_bandwidth_hz": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective Bandwidth Hz"
+          },
+          "effective_bandwidth_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective Bandwidth Rule"
+          },
           "emission_bandwidth_hz": {
             "anyOf": [
               {
@@ -5764,6 +5787,17 @@
               }
             ],
             "title": "Licence Class Code"
+          },
+          "licence_class_normalized": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Licence Class Normalized"
           },
           "longitude_deg": {
             "anyOf": [
@@ -5904,6 +5938,9 @@
           "rx_frequency_hz",
           "channel_bandwidth_hz",
           "emission_bandwidth_hz",
+          "effective_bandwidth_hz",
+          "effective_bandwidth_rule",
+          "licence_class_normalized",
           "polarization_code",
           "radiation_power_value",
           "radiation_power_unit",

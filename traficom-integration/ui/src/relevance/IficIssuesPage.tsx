@@ -24,6 +24,68 @@ function Stage({ title, value }: { title: string; value: unknown }) {
   );
 }
 
+type Concern = { classification?: string; margin_db?: number | null; concern_margin_db?: number; meaning?: string | null };
+type Criterion = {
+  basis?: string;
+  threshold_dbuv_m?: number;
+  base_threshold_dbuv_m?: number;
+  bandwidth_correction_db?: number;
+  citation?: string;
+  assumptions?: string[];
+};
+type BorderPoint = { kind?: string; label?: string; lat?: number; lon?: number; distance_km?: number; field_strength_dbuv_m?: number };
+type Border = { status?: string; points_evaluated?: number; max_point?: BorderPoint; spacing_km?: number; window_km?: number };
+
+/** Border field strength against ECC T/R 25-08 A1.2.3: a coordination screen, never a finding. */
+export function CriterionPanel({ detail }: { detail: Record<string, unknown> }) {
+  const concern = detail.concern as Concern | undefined;
+  if (!concern?.classification) return null;
+  const criterion = detail.criterion as Criterion | null | undefined;
+  const border = detail.border_screening as Border | undefined;
+  const coordination = detail.coordination as { finland_mentioned?: boolean } | undefined;
+  const point = border?.max_point;
+  return (
+    <>
+      <h3>Coordination criterion</h3>
+      <dl className="facts" aria-label="Coordination criterion">
+        <dt>Classification</dt>
+        <dd><strong>{concern.classification}</strong></dd>
+        {criterion && (
+          <>
+            <dt>Threshold</dt>
+            <dd>
+              {criterion.threshold_dbuv_m} dB(µV/m) ({criterion.base_threshold_dbuv_m} +{" "}
+              {criterion.bandwidth_correction_db} dB bandwidth correction) · {criterion.basis}
+            </dd>
+          </>
+        )}
+        {point && (
+          <>
+            <dt>Highest border value</dt>
+            <dd>
+              {point.field_strength_dbuv_m} dB(µV/m) at {point.label} ({point.lat}, {point.lon}),{" "}
+              {point.distance_km} km; {border?.points_evaluated} points evaluated
+            </dd>
+          </>
+        )}
+        {concern.margin_db !== null && concern.margin_db !== undefined && (
+          <>
+            <dt>Margin</dt>
+            <dd>{concern.margin_db} dB (concern window {concern.concern_margin_db} dB)</dd>
+          </>
+        )}
+        <dt>Coordination with Finland noted</dt>
+        <dd>{coordination?.finland_mentioned ? "Yes: expert review of coordination history" : "No"}</dd>
+      </dl>
+      {criterion?.citation && <p className="muted small">{criterion.citation}</p>}
+      {concern.meaning && <p className="notice">{concern.meaning}</p>}
+      {(criterion?.assumptions ?? []).length > 0 && (
+        <ul className="plain small">{criterion?.assumptions?.map((a) => <li key={a}>{a}</li>)}</ul>
+      )}
+    </>
+  );
+}
+
 function FindingDetail({ finding }: { finding: Finding }) {
   const d = finding.detail as Record<string, unknown> & {
     calculations?: Array<Record<string, unknown>>;
@@ -44,6 +106,7 @@ function FindingDetail({ finding }: { finding: Finding }) {
         {String(d.regulatory_finding ?? "")}. Priority orders expert work; it is not a statement of
         interference or of a limit exceedance.
       </p>
+      <CriterionPanel detail={d} />
       <h3>Why it was selected</h3>
       <ul className="plain">
         {Object.entries(d.priority?.components ?? {}).map(([name, points]) => (

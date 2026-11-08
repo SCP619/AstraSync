@@ -1049,6 +1049,13 @@ class RecordQualityFinding(ContractModel):
     reviewer_override_id: StableId | None
 
 
+STATION_FIELDS_ADDED_LATER = (
+    "effective_bandwidth_hz",
+    "effective_bandwidth_rule",
+    "licence_class_normalized",
+)
+
+
 class ReferenceStationRecord(ContractModel):
     """Normalized national reference row. Unknown values are null, never zero or a guessed unit."""
 
@@ -1066,6 +1073,12 @@ class ReferenceStationRecord(ContractModel):
     rx_frequency_hz: PositiveFloat | None
     channel_bandwidth_hz: PositiveFloat | None
     emission_bandwidth_hz: PositiveFloat | None
+    # Screening bandwidth beside the raw widths: the smaller valid value on a mismatch (C3).
+    effective_bandwidth_hz: PositiveFloat | None
+    effective_bandwidth_rule: str | None
+    # Published licence class if known (BC, BT, FX, MVV, MUUT), otherwise MUUT; raw kept above.
+    # Null for records parsed before these fields existed.
+    licence_class_normalized: str | None
     polarization_code: str | None
     radiation_power_value: FiniteFloat | None
     radiation_power_unit: str | None

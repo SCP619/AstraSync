@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import meFixture from "../../../contract/fixtures/valid/Me.analyst.json";
 import { App } from "../App";
+import { CriterionPanel } from "./IficIssuesPage";
 import type { AuthAdapter } from "../auth/adapter";
 
 // Made-up test values only.
@@ -130,5 +131,29 @@ describe("IFIC issues", () => {
     );
     expect(await screen.findByText(/not authorised for this/)).toBeTruthy();
     expect(screen.getByText("req-9")).toBeTruthy();
+  });
+});
+
+describe("CriterionPanel", () => {
+  it("shows the classification, threshold, border point and margin without claiming a violation", () => {
+    render(
+      <CriterionPanel
+        detail={{
+          concern: { classification: "COORDINATION_REVIEW", margin_db: 14.84, concern_margin_db: 6, meaning: "Screening exceedance; not non-compliance." },
+          criterion: { basis: "NORMATIVE_T/R_25-08_A1.2.3", threshold_dbuv_m: 12, base_threshold_dbuv_m: 12, bandwidth_correction_db: 0, citation: "ECC T/R 25-08 A1.2.3", assumptions: [] },
+          border_screening: { status: "READY", points_evaluated: 40, max_point: { label: "Finland-Russia land border", lat: 64.5, lon: 30.1, distance_km: 28.5, field_strength_dbuv_m: 26.84 } },
+          coordination: { finland_mentioned: true },
+        }}
+      />,
+    );
+    expect(screen.getByText("COORDINATION_REVIEW")).toBeTruthy();
+    expect(screen.getByText(/14.84 dB/)).toBeTruthy();
+    expect(screen.getByText(/Finland-Russia land border/)).toBeTruthy();
+    expect(screen.queryByText(/violat/i)).toBeNull();
+  });
+
+  it("renders nothing without a concern", () => {
+    const { container } = render(<CriterionPanel detail={{}} />);
+    expect(container.innerHTML).toBe("");
   });
 });

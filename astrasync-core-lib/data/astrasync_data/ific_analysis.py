@@ -29,7 +29,7 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
-from . import geo
+from . import border_screening, geo
 
 RULE_VERSION = "ific-finland-relevance/1.0.0"
 LAND_MOBILE_SERVICES = ("MOBILE", "LAND MOBILE")
@@ -126,11 +126,15 @@ def m4_references(records: Iterable[dict[str, Any]]) -> list[Reference]:
 
 
 def station_references(records: Iterable[dict[str, Any]]) -> list[Reference]:
-    """From ``TraficomWorkbookAdapter`` records: TX and RX intervals, centre +/- half channel."""
+    """From ``TraficomWorkbookAdapter`` records: TX and RX intervals, centre +/- half bandwidth.
+
+    The bandwidth is the effective screening bandwidth (smaller valid value where the channel and
+    transmission widths disagree, organizer clarification C3), else the channel bandwidth.
+    """
     refs = []
     for r in records:
         station = r.get("reference_station") or {}
-        channel = station.get("channel_bandwidth_hz")
+        channel = station.get("effective_bandwidth_hz") or station.get("channel_bandwidth_hz")
         for side, key in (("TX", "tx_frequency_hz"), ("RX", "rx_frequency_hz")):
             centre = station.get(key)
             if not isinstance(centre, int | float) or centre <= 0:
@@ -303,7 +307,12 @@ def _erp_dbw(record: dict[str, Any]) -> tuple[float | None, str | None]:
 
 
 def _p1546_scenario(
-    record: dict[str, Any], rx_lat: float, rx_lon: float, rx_height_m: float, label: str
+    record: dict[str, Any],
+    rx_lat: float,
+    rx_lon: float,
+    rx_height_m: float,
+    label: str,
+    zone_step_km: float = 1.0,
 ) -> tuple[dict[str, Any] | None, list[str]]:
     lat, lon = norm(record, "latitude_deg"), norm(record, "longitude_deg")
     f = norm(record, "assigned_frequency_mhz")
@@ -333,7 +342,7 @@ def _p1546_scenario(
         return None, ["distance over 1000 km (outside P.1546)"]
     if not 30 <= f <= 4000:
         return None, ["frequency outside 30-4000 MHz (outside P.1546)"]
-    zones = geo.path_zones(lat, lon, rx_lat, rx_lon) if area_note is None else None
+    zones = geo.path_zones(lat, lon, rx_lat, rx_lon, zone_step_km) if area_note is None else None
     block: dict[str, Any] = {
         "frequency_mhz": f,
         "time_percent": SCREEN_TIME_PERCENT,
@@ -351,6 +360,66 @@ def _p1546_scenario(
         total = sum(float(z[0]) for z in zones)
         block["zones"] = [[float(z[0]) * distance / total, z[1]] for z in zones]
     return {"terrestrial_p1546": block, "area_note": area_note}, []
+
+
+def _border_screening(record: dict[str, Any], method: Any) -> dict[str, Any]:
+    """P.1546 at every land-border and territorial-sea-limit sample near the transmitter."""
+    lat, lon = norm(record, "latitude_deg"), norm(record, "longitude_deg")
+    if lat is None or lon is None:
+        return {"status": "NOT_READY", "missing_inputs": ["coordinates"]}
+    candidates = border_screening.candidate_samples(lat, lon)
+    points: list[dict[str, Any]] = []
+    missing: set[str] = set()
+    for _distance, sample in candidates:
+        scenario, absent = _p1546_scenario(
+            record, sample.lat, sample.lon, SCREEN_RX_HEIGHT_M, sample.label, zone_step_km=2.0
+        )
+        if scenario is None:
+            missing.update(absent)
+            continue
+        if method.assess_applicability(scenario)["applicability"] != "APPLICABLE":
+            missing.add("P.1546 not applicable")
+            continue
+        output = method.calculate(scenario)
+        points.append(
+            {
+                "kind": sample.kind,
+                "label": sample.label,
+                "sample_index": sample.index,
+                "lat": round(sample.lat, 5),
+                "lon": round(sample.lon, 5),
+                "distance_km": round(scenario["terrestrial_p1546"]["distance_km"], 3),
+                "path_zones": scenario["terrestrial_p1546"].get("zones"),
+                "field_strength_dbuv_m": round(output["numeric_value"], 3),
+                "calculation_sha256": output.get("calculation_sha256"),
+            }
+        )
+    if not points:
+        return {"status": "NOT_READY", "missing_inputs": sorted(missing)}
+    points.sort(key=lambda p: -p["field_strength_dbuv_m"])
+    best = points[0]
+    by_kind: dict[str, dict[str, Any]] = {}
+    for point in points:
+        by_kind.setdefault(point["kind"], point)
+    return {
+        "status": "READY",
+        "screening_version": border_screening.SCREENING_VERSION,
+        "spacing_km": border_screening.DEFAULT_SPACING_KM,
+        "window_km": border_screening.DEFAULT_WINDOW_KM,
+        "points_evaluated": len(points),
+        "max_field_strength_dbuv_m": best["field_strength_dbuv_m"],
+        "max_point": best,
+        "max_by_boundary_kind": by_kind,
+        "top_points": points[:5],
+        "parameters": {
+            "time_percent": SCREEN_TIME_PERCENT,
+            "location_percent": SCREEN_LOCATION_PERCENT,
+            "rx_height_agl_m": SCREEN_RX_HEIGHT_M,
+            "rx_area": SCREEN_RX_AREA,
+            "effective_height_basis": "ASSUMED_EQUAL_TO_HA (no terrain data)",
+            "standard": "ITU-R P.1546-6",
+        },
+    }
 
 
 def analyse_terrestrial(
@@ -469,6 +538,25 @@ def _terrestrial_finding(
         "missing_inputs": sorted(set(missing_inputs)),
     }
     max_e = max((c["numeric_value"] for c in calculations), default=None)
+    border: dict[str, Any] = (
+        _border_screening(record, method)
+        if method is not None
+        and change["change_type"] != "WITHDRAWN"
+        and geography.get("status") == "WITHIN_1000_KM"
+        else {"status": "NOT_ATTEMPTED"}
+    )
+    criterion = (
+        border_screening.threshold(float(start), norm(record, "bandwidth_khz"))
+        if isinstance(start, int | float)
+        else None
+    )
+    coordination = border_screening.coordination_summary(norm(record, "coordination"))
+    concern = border_screening.classify(
+        border.get("max_field_strength_dbuv_m") if border["status"] == "READY" else None,
+        criterion,
+        coordination,
+        frequency_match=freq["status"] == "MATCH",
+    )
 
     near = distance is not None and distance <= 300
     components = {
@@ -482,6 +570,12 @@ def _terrestrial_finding(
         "within_300_km_of_finland": 1 if distance is not None and distance <= 300 else 0,
         "neighbouring_administration": 1 if record["administration"] in NEIGHBOURS else 0,
         "calculation_available": 1 if calculations else 0,
+        # Border/sea-limit field strength against T/R 25-08 A1.2.3 (screening, see concern).
+        "coordination_threshold_exceeded": 3
+        if concern["classification"] in ("VERIFIED_CRITERION_EXCEEDANCE", "COORDINATION_REVIEW")
+        else 1
+        if concern["classification"] == "POTENTIAL_CONCERN"
+        else 0,
     }
     score = sum(components.values())
     status = (
@@ -509,9 +603,18 @@ def _terrestrial_finding(
         "stage_d_readiness": readiness,
         "calculations": calculations,
         "max_field_strength": max_e,
+        "border_screening": border,
+        "criterion": criterion,
+        "coordination": coordination,
+        "concern": concern,
         "priority": {"score": score, "tier": _tier(score), "components": components},
         "finding_status": status,
-        "regulatory_finding": "NOT_EVALUATED: no approved criterion is configured",
+        "regulatory_finding": (
+            "SCREENING_ONLY: compared with the indicative coordination threshold of ECC T/R 25-08 "
+            "A1.2.3; not a finding of harmful interference or non-compliance"
+            if criterion is not None and concern["margin_db"] is not None
+            else "NOT_EVALUATED: no applicable criterion or no border field strength"
+        ),
         "rule_version": RULE_VERSION,
     }
 

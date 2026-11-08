@@ -20,10 +20,12 @@ import hashlib
 import json
 import platform
 import sys
+from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from . import border_screening
 from . import ific_analysis as A
 from . import itu_ific as I
 from .traficom_m4_table import TraficomM4TableAdapter
@@ -162,8 +164,23 @@ def evaluate(
             "space_pfd_reference_bandwidth_hz": A.PFD_REFERENCE_BANDWIDTH_HZ,
             "note": "AstraSync screening defaults, not the conditions of an approved criterion.",
         },
-        "criteria": "None approved. No limit comparison is made and no finding is a limit "
-        "exceedance.",
+        "criteria": (
+            {
+                "terrestrial": border_screening.criterion_set()["source"],
+                "criterion_set_id": border_screening.criterion_set()["criterion_set_id"],
+                "challenge_extension_above_470_mhz": border_screening.criterion_set()[
+                    "challenge_extension_above_470_mhz"
+                ],
+                "boundaries": border_screening.boundaries()["provenance"],
+                "border_spacing_km": border_screening.DEFAULT_SPACING_KM,
+                "border_window_km": border_screening.DEFAULT_WINDOW_KM,
+                "concern_margin_db": border_screening.DEFAULT_CONCERN_MARGIN_DB,
+                "meaning": "Indicative coordination threshold: exceeding it indicates coordination "
+                "with Finland, not harmful interference or non-compliance.",
+            }
+            if kind == I.TERRESTRIAL_SOURCE_TYPE
+            else "None approved for space. No PFD limit comparison is made."
+        ),
         "environment": {"python": sys.version.split()[0], "platform": platform.platform()},
     }
     _write_json(out / "manifest.json", manifest)
@@ -186,10 +203,96 @@ def evaluate(
     )
     _write_json(out / "comparison.json", {**comparison, "trends": trends})
     _write_csv(out / "findings.csv", findings, kind)
+    if kind == I.TERRESTRIAL_SOURCE_TYPE:
+        _write_border_points(out / "border_points.csv", findings)
+        concerns = Counter((f.get("concern") or {}).get("classification") for f in findings)
+        _write_json(
+            out / f"terrestrial_ific_{summary.issue}_cases.json",
+            {
+                "issue": summary.issue,
+                "data_status": "REAL_IFIC_SCREENING_RESULTS (expert review required)",
+                "criterion": border_screening.criterion_set(),
+                "concern_counts": dict(concerns),
+                "cases": [
+                    f
+                    for f in findings
+                    if (f.get("concern") or {}).get("classification")
+                    in ("VERIFIED_CRITERION_EXCEEDANCE", "COORDINATION_REVIEW", "POTENTIAL_CONCERN")
+                ],
+            },
+        )
     (out / "report.md").write_text(
         _report(manifest, findings, comparison, trends, kind), encoding="utf-8", newline="\n"
     )
     return {"issue": summary.issue, "findings": len(findings), "out": str(out)}
+
+
+def _border_columns(f: dict[str, Any]) -> list[Any]:
+    border = f.get("border_screening") or {}
+    point = border.get("max_point") or {}
+    criterion = f.get("criterion") or {}
+    concern = f.get("concern") or {}
+    coordination = f.get("coordination") or {}
+    return [
+        border.get("max_field_strength_dbuv_m"),
+        point.get("kind"),
+        point.get("label"),
+        point.get("lat"),
+        point.get("lon"),
+        point.get("distance_km"),
+        border.get("points_evaluated"),
+        criterion.get("basis"),
+        criterion.get("base_threshold_dbuv_m"),
+        criterion.get("bandwidth_correction_db"),
+        criterion.get("threshold_dbuv_m"),
+        concern.get("margin_db"),
+        concern.get("classification"),
+        coordination.get("finland_mentioned"),
+        json.dumps(coordination.get("rows") or [], ensure_ascii=False),
+    ]
+
+
+def _write_border_points(path: Path, findings: list[dict[str, Any]]) -> None:
+    """Every notice's strongest boundary points (up to five), so no exposure is hidden."""
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(
+            [
+                "notice_id",
+                "assignment_id",
+                "rank_at_notice",
+                "boundary_kind",
+                "boundary_label",
+                "lat",
+                "lon",
+                "distance_km",
+                "field_strength_dbuv_m",
+                "threshold_dbuv_m",
+                "margin_db",
+                "calculation_sha256",
+            ]
+        )
+        for f in findings:
+            border = f.get("border_screening") or {}
+            threshold = (f.get("criterion") or {}).get("threshold_dbuv_m")
+            for rank, point in enumerate(border.get("top_points") or [], 1):
+                value = point["field_strength_dbuv_m"]
+                writer.writerow(
+                    [
+                        f["notice_id"],
+                        f["assignment_id"],
+                        rank,
+                        point["kind"],
+                        point["label"],
+                        point["lat"],
+                        point["lon"],
+                        point["distance_km"],
+                        value,
+                        threshold,
+                        None if threshold is None else round(value - threshold, 2),
+                        point.get("calculation_sha256"),
+                    ]
+                )
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -241,6 +344,21 @@ def _write_csv(path: Path, findings: list[dict[str, Any]], kind: str) -> None:
                     "distance_to_finland_km",
                     "special_interest_overlaps",
                     "max_field_strength_dbuv_m",
+                    "border_max_field_strength_dbuv_m",
+                    "border_point_kind",
+                    "border_point_label",
+                    "border_point_lat",
+                    "border_point_lon",
+                    "border_point_distance_km",
+                    "border_points_evaluated",
+                    "criterion_basis",
+                    "base_threshold_dbuv_m",
+                    "bandwidth_correction_db",
+                    "threshold_dbuv_m",
+                    "margin_db",
+                    "concern_classification",
+                    "coordination_finland_mentioned",
+                    "coordination_rows",
                     "priority_score",
                     "tier",
                     "status",
@@ -263,6 +381,7 @@ def _write_csv(path: Path, findings: list[dict[str, Any]], kind: str) -> None:
                         None
                         if f["max_field_strength"] is None
                         else round(f["max_field_strength"], 2),
+                        *_border_columns(f),
                         f["priority"]["score"],
                         f["priority"]["tier"],
                         f["finding_status"],
@@ -332,9 +451,18 @@ def _report(
         "**What this is.** A deterministic screening of every notice in the issue against "
         "Finnish frequency use (M4 table and the challenge's special-interest stations), with "
         "explainable priorities and, where the notice holds the inputs, technical calculations. "
-        "**What it is not.** No approved regulatory criterion is configured, so nothing here is "
-        "a limit exceedance or a statement of harmful interference. Every high-priority item "
-        "needs expert review.",
+        + (
+            "**Criterion.** Land-mobile notices are screened along Finland's land borders and "
+            "territorial-sea outer limit with ITU-R P.1546-6 (10 % time, 50 % locations, 10 m) "
+            "against the indicative coordination thresholds of ECC T/R 25-08 A1.2.3 (edition 6 "
+            "June 2025), applied above 470 MHz as a challenge extension approved by the "
+            "organizers. An exceedance indicates coordination with Finland; it is not harmful "
+            "interference or non-compliance. Every flagged item needs expert review."
+            if kind == I.TERRESTRIAL_SOURCE_TYPE
+            else "**What it is not.** No approved space PFD criterion is configured, so nothing "
+            "here is a limit exceedance or a statement of harmful interference. Every "
+            "high-priority item needs expert review."
+        ),
         "",
         "## Inputs",
         "",
@@ -450,9 +578,16 @@ def _report(
         "",
         "## Limitations",
         "",
-        "- No approved criterion: no margin, no exceedance. Candidate criteria (for example "
-        "ECC T/R 25-08 trigger field strengths, RR Article 21 PFD limits) must be entered "
-        "with citations and approved before AstraSync compares against them.",
+        "- Terrestrial criterion: ECC T/R 25-08 A1.2.3 coordination thresholds (normative "
+        "29.7-470 MHz; above 470 MHz a challenge extension). Bandwidth correction assumes a "
+        "uniform spectral power distribution. The 1 % time variant for digital systems "
+        "(footnote 2) is not applied. No 10 m to 3 m receiving-height correction (organizers: "
+        "not required).",
+        "- Boundaries: Natural Earth 1:10m land borders and the Traficom territorial-sea limit "
+        "(WFS); screening geometry, not legal boundaries. The territorial-sea layer ends near "
+        "65.5 N in the Bay of Bothnia.",
+        "- Space: no approved PFD criterion; RR Article 21 Table 21-4 values must be entered "
+        "from the authoritative edition before comparison.",
         "- Special-interest stations are synthetic challenge data.",
         "- Terrestrial: no terrain database (heff = ha, no clearance-angle correction); "
         "antenna patterns are not applied, so values are for the direction of maximum "

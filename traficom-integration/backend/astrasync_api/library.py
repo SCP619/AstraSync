@@ -30,6 +30,7 @@ from .contract.enums import (
     UsageClassification,
 )
 from .contract.models import (
+    STATION_FIELDS_ADDED_LATER,
     ArtifactIntegrityCheck,
     ArtifactIntegrityReport,
     DownloadLink,
@@ -774,7 +775,10 @@ def get_record(
         field_aliases=location.field_aliases,
         raw_fields=location.raw_fields,
         reference_station=(
-            ReferenceStationRecord(source_record_id=source_record_id, **station.fields)
+            ReferenceStationRecord(
+                source_record_id=source_record_id,
+                **{**dict.fromkeys(STATION_FIELDS_ADDED_LATER), **station.fields},
+            )
             if station is not None
             else None
         ),

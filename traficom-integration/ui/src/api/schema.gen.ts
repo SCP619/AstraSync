@@ -2811,6 +2811,10 @@ export interface components {
             channel_bandwidth_hz: number | null;
             /** Directivity Code */
             directivity_code: string | null;
+            /** Effective Bandwidth Hz */
+            effective_bandwidth_hz: number | null;
+            /** Effective Bandwidth Rule */
+            effective_bandwidth_rule: string | null;
             /** Emission Bandwidth Hz */
             emission_bandwidth_hz: number | null;
             /** Ground Elevation M */
@@ -2821,6 +2825,8 @@ export interface components {
             latitude_deg: number | null;
             /** Licence Class Code */
             licence_class_code: string | null;
+            /** Licence Class Normalized */
+            licence_class_normalized: string | null;
             /** Longitude Deg */
             longitude_deg: number | null;
             /** Mast Height M */

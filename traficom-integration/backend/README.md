@@ -86,6 +86,12 @@ There is no self-registration. A valid sign-in with no provisioned account gets 
 | `ASTRASYNC_SOURCE_ADAPTERS`, `ASTRASYNC_SOURCE_CLIENTS` | Worker | Comma-separated. See above |
 | `ASTRASYNC_RF_METHODS`, `ASTRASYNC_CRITERION_RESOLVER` | Worker | See "Cases and review" |
 | `ASTRASYNC_DRAFT_AGENT` | API | Empty means AI drafting is off |
+| `ASTRASYNC_LLM_PROVIDER` | For `GroundedLlmDraftAgent` | `n8n` (local n8n webhook running Ollama) or `anthropic` |
+| `ASTRASYNC_LLM_N8N_URL` | For `n8n` | Loopback URL of the webhook, e.g. `http://127.0.0.1:5678/webhook/astrasync-llm` |
+| `ASTRASYNC_LLM_N8N_ALLOWED_HOSTS` | No | Extra local host names (e.g. a container name) the n8n URL may use |
+| `ASTRASYNC_LLM_API_KEY` | For a provider | `X-AstraSync-Secret` value for `n8n`; API key for `anthropic`. Server-side only |
+| `ASTRASYNC_LLM_MODEL` | No | Default `qwen3:8b` for `n8n` |
+| `ASTRASYNC_LLM_TIMEOUT_SECONDS` | No | n8n call timeout, default 120 (see `docs/operations/N8N_LOCAL_AI.md`) |
 | `ASTRASYNC_AI_CLASSIFICATIONS` | No | Default `PUBLIC,INTERNAL` |
 | `ASTRASYNC_BUILD_SHA` | No | Stored on each analysis run for replay |
 | `ASTRASYNC_PUSH_TOKEN_KEY` | For device registration | Fernet key that encrypts push tokens at rest |

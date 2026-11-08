@@ -211,3 +211,46 @@ def test_records_satisfy_the_backend_contract(tmp_path: Path) -> None:
                 "parse_status": validated.record_status,
             }
         )
+
+
+def test_station_440557_style_mismatch_keeps_raw_and_screens_the_smaller_width() -> None:
+    # The organizers' reported transcription error: 2500 kHz channel, 118600k transmission.
+    record = parse_row(
+        12, cells(**{"Channel bandwidth": "2500 kHz", "Transmission bandwidth": "118600k"})
+    )
+    station = record["reference_station"]
+    assert station["channel_bandwidth_hz"] == pytest.approx(2.5e6)
+    assert station["emission_bandwidth_hz"] == pytest.approx(118.6e6)
+    assert station["effective_bandwidth_hz"] == pytest.approx(2.5e6)
+    assert station["effective_bandwidth_rule"] == "MISMATCH_SMALLER_VALID_VALUE"
+    assert record["raw_fields"]["transmission_bandwidth"] == "118600k"
+    assert any(f["rule_id"] == "BANDWIDTH_MISMATCH" for f in record["quality_findings"])
+
+
+def test_broadcast_9_and_10_khz_pair_screens_at_9_khz() -> None:
+    record = parse_row(
+        12, cells(**{"Channel bandwidth": "9 kHz", "Transmission bandwidth": "10K0"})
+    )
+    station = record["reference_station"]
+    assert station["effective_bandwidth_hz"] == pytest.approx(9e3)
+    assert station["effective_bandwidth_rule"] == "MISMATCH_SMALLER_VALID_VALUE"
+
+
+def test_consistent_or_single_bandwidths_are_not_flagged() -> None:
+    record = parse_row(12, cells())
+    assert record["reference_station"]["effective_bandwidth_rule"] == "CONSISTENT"
+    assert not any(f["rule_id"] == "BANDWIDTH_MISMATCH" for f in record["quality_findings"])
+    only = parse_row(12, cells(**{"Transmission bandwidth": ""}))["reference_station"]
+    assert only["effective_bandwidth_hz"] == pytest.approx(300e3)
+    assert only["effective_bandwidth_rule"] == "CHANNEL_BANDWIDTH_ONLY"
+
+
+@pytest.mark.parametrize(
+    ("raw", "normalized"), [("BC", "BC"), ("FX", "FX"), ("XYZ", "MUUT"), ("", "MUUT")]
+)
+def test_unmapped_licence_classes_screen_as_muut_with_the_raw_value_kept(
+    raw: str, normalized: str
+) -> None:
+    record = parse_row(12, cells(**{"Class of licence": raw}))
+    assert record["reference_station"]["licence_class_normalized"] == normalized
+    assert record["raw_fields"]["licence_class"] == raw

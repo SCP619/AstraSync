@@ -230,7 +230,14 @@ def run_relevance(
     tiers: dict[str, int] = {}
     statuses: dict[str, int] = {}
     changes: dict[str, int] = {}
+    concerns: dict[str, int] = {}
+    administrations: dict[str, int] = {}
     for f in findings:
+        concern = (f.get("concern") or {}).get("classification")
+        if concern:
+            concerns[concern] = concerns.get(concern, 0) + 1
+        adm = f.get("administration") or "Unknown"
+        administrations[adm] = administrations.get(adm, 0) + 1
         tiers[f["priority"]["tier"]] = tiers.get(f["priority"]["tier"], 0) + 1
         statuses[f["finding_status"]] = statuses.get(f["finding_status"], 0) + 1
         changes[f["change"]["change_type"]] = changes.get(f["change"]["change_type"], 0) + 1
@@ -251,6 +258,10 @@ def run_relevance(
                     "tiers": tiers,
                     "statuses": statuses,
                     "change_types": changes,
+                    "concerns": concerns,
+                    "top_administrations": dict(
+                        sorted(administrations.items(), key=lambda kv: -kv[1])[:8]
+                    ),
                     "records": len(records),
                     "skipped": result.get("skipped"),
                     "references": refs.provenance,

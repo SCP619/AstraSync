@@ -165,3 +165,22 @@ def test_a_question_cannot_unlock_unsupported_or_invented_answers() -> None:
     agent, _ = _scripted(invented, violation)
     with pytest.raises(ValueError):
         agent.answer_question(EVIDENCE, hostile)
+
+
+def test_the_model_sees_results_not_calculation_traces() -> None:
+    from astrasync_api.drafting import model_view
+
+    run = {**EVIDENCE["method_runs"][0], "result_trace": {"e_max": 83.58}}
+    evidence = {**EVIDENCE, "method_runs": [run]}
+    view = model_view(evidence)
+    assert "result_trace" not in view["method_runs"][0]
+    assert view["method_runs"][0]["numeric_value"] == 31.75
+    assert view["method_runs"][0]["validation_status"] == "VALIDATED_AGAINST_REFERENCE"
+    # A trace value is no longer grounded, so it cannot be presented as the result.
+    answer = {
+        "answer_markdown": "The result was 83.58 dB(uV/m) [E:c1-record].",
+        "uncertainties": [],
+    }
+    agent, _ = _scripted(answer, answer)
+    with pytest.raises(ValueError, match="Numbers not in the evidence"):
+        agent.answer_question(evidence, "What was calculated?")

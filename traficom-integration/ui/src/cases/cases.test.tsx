@@ -385,3 +385,32 @@ describe("ask about this case", () => {
     expect(screen.queryByRole("button", { name: "Ask" })).toBeNull();
   });
 });
+
+describe("evidence download", () => {
+  const record = { location: { artifact_id: "DEMO-ARTIFACT-001" } };
+  const artifact = { artifact_id: "DEMO-ARTIFACT-001", byte_length: 1024, filename_original: "demo-source.xlsx" };
+
+  it("downloads the evidence's source file with permission", async () => {
+    const created = vi.fn(() => "blob:demo");
+    URL.createObjectURL = created as unknown as typeof URL.createObjectURL;
+    URL.revokeObjectURL = vi.fn();
+    const fetchImpl = backend([...ANALYST, "SOURCE_DOWNLOAD"], {
+      "GET /api/v1/source-records/DEMO-RECORD-001": { body: record },
+      "GET /api/v1/source-artifacts/DEMO-ARTIFACT-001": { body: artifact },
+      "GET /api/v1/source-artifacts/DEMO-ARTIFACT-001/content": { body: "raw" },
+    });
+    show(fetchImpl);
+    await openTab("Evidence");
+    await userEvent.click(await screen.findByRole("button", { name: "Download source file" }));
+    await vi.waitFor(() => expect(created).toHaveBeenCalled());
+    expect(calls(fetchImpl).some((c) => c.path === "/api/v1/source-artifacts/DEMO-ARTIFACT-001/content")).toBe(true);
+  });
+
+  it("is disabled with an explanation without the download permission", async () => {
+    show(backend(ANALYST));
+    await openTab("Evidence");
+    const button = (await screen.findByRole("button", { name: "Download source file" })) as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    expect(button.title).toBe("You do not have download permission");
+  });
+});

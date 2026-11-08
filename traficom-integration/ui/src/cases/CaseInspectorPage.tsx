@@ -246,6 +246,59 @@ function Criteria({ run }: { run: Run | null }) {
   );
 }
 
+function EvidenceDownload({ evidence }: { evidence: Case["evidence"][number] }) {
+  const { api } = useSession();
+  const { capabilities } = useMe();
+  const [state, setState] = useState<"IDLE" | "BUSY" | string>("IDLE");
+  const allowed = capabilities.includes("SOURCE_DOWNLOAD");
+  const downloadable = evidence.entity_type === "source_record";
+
+  async function download() {
+    setState("BUSY");
+    try {
+      const record = await api.getRecord(evidence.entity_id);
+      const artifact = await api.getArtifact(record.location.artifact_id);
+      const megabytes = artifact.byte_length / 1e6;
+      if (megabytes > 50 && !window.confirm(`This source file is ${megabytes.toFixed(0)} MB. Download it?`)) {
+        setState("IDLE");
+        return;
+      }
+      const blob = await api.downloadArtifact(record.location.artifact_id);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = artifact.filename_original.split(/[\/]/).pop() ?? "evidence-source";
+      link.click();
+      URL.revokeObjectURL(url);
+      setState("IDLE");
+    } catch (error) {
+      setState(describeError(error));
+    }
+  }
+
+  const reason = !allowed
+    ? "You do not have download permission"
+    : !downloadable
+      ? "This evidence has no downloadable file"
+      : undefined;
+  return (
+    <>
+      <button
+        type="button"
+        className="ghost"
+        disabled={reason !== undefined || state === "BUSY"}
+        title={reason}
+        aria-describedby={reason ? `why-${evidence.evidence_id}` : undefined}
+        onClick={() => void download()}
+      >
+        {state === "BUSY" ? "Downloading…" : "Download source file"}
+      </button>
+      {reason && <span id={`why-${evidence.evidence_id}`} className="sr-only">{reason}</span>}
+      {state !== "IDLE" && state !== "BUSY" && <p role="alert">{state}</p>}
+    </>
+  );
+}
+
 function Evidence({ item }: { item: Case }) {
   if (item.evidence.length === 0) {
     return <p className="muted">No evidence is linked to this case yet.</p>;
@@ -254,8 +307,11 @@ function Evidence({ item }: { item: Case }) {
     <ul className="plain">
       {item.evidence.map((evidence) => (
         <li key={evidence.evidence_id}>
-          <strong>{evidence.label}</strong>
-          <dl>
+          <div className="panel-header">
+            <strong>{evidence.label}</strong>
+            <EvidenceDownload evidence={evidence} />
+          </div>
+          <dl className="facts">
             <dt>Location</dt>
             <dd><code>{evidence.source_locator}</code></dd>
             <dt>Record SHA-256</dt>

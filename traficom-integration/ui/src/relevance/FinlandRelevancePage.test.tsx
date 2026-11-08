@@ -161,7 +161,7 @@ describe("overview processing panel", () => {
   it("is absent without JOB_READ and never requested", async () => {
     const fetchImpl = backend(["AUTHENTICATED"]);
     show(fetchImpl, "/dashboard");
-    await screen.findByText("Your access");
+    await screen.findByRole("heading", { name: "Dashboard" });
     expect(screen.queryByText("Processing")).toBeNull();
     const requested = vi.mocked(fetchImpl).mock.calls.some(([url]) => String(url).includes("operations"));
     expect(requested).toBe(false);

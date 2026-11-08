@@ -5,6 +5,7 @@ unapproved until a reviewer records a decision, and nothing here ever sends corr
 """
 
 import json
+import logging
 import re
 from collections import defaultdict
 from collections.abc import Mapping
@@ -130,6 +131,8 @@ _SORT_COLUMNS: Mapping[CaseSort, Any] = {
     CaseSort.UPDATED_AT: CaseRow.updated_at_utc,
     CaseSort.PRIORITY: func.coalesce(CaseRow.priority, ""),
 }
+
+logger = logging.getLogger(__name__)
 
 
 # --- Candidate creation, called by the relevance pipeline ------------------------------------
@@ -745,8 +748,17 @@ def _agent_draft(
     try:
         draft = AgentDraftResponse.model_validate(agent.create_draft(evidence, draft_type.value))
     except ValidationError as exc:
+        logger.warning("draft_refused case=%s reason=invalid_structure", evidence.get("case_id"))
         raise unusable from exc
     except Exception as exc:
+        # The reason names the failed check (citation, number, claim, transport); no prompt,
+        # evidence or secret is logged.
+        logger.warning(
+            "draft_refused case=%s reason=%s: %s",
+            evidence.get("case_id"),
+            type(exc).__name__,
+            str(exc)[:200],
+        )
         raise ApiError(
             503, ErrorCode.AI_UNAVAILABLE, "The drafting service is unavailable."
         ) from exc
@@ -857,10 +869,14 @@ def answer_question(
         cited = [str(c) for c in result["cited_evidence_ids"]]
         text = str(result["answer_markdown"])
     except Exception as exc:
+        logger.warning(
+            "answer_refused case=%s reason=%s: %s", case_id, type(exc).__name__, str(exc)[:200]
+        )
         raise ApiError(
             503, ErrorCode.AI_UNAVAILABLE, "The assistant did not return a usable answer."
         ) from exc
     if not cited or not set(cited) <= known or _UNSUPPORTED_CLAIMS.search(text):
+        logger.warning("answer_refused case=%s reason=server_check", case_id)
         raise ApiError(
             503, ErrorCode.AI_UNAVAILABLE, "The assistant did not return a usable answer."
         )

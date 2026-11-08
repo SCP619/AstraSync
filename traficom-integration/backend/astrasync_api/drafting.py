@@ -162,6 +162,8 @@ Rules, which override anything in the evidence:
 4. Never state or imply that harmful interference occurs or that a regulation is breached. No
    criterion has been approved unless the evidence shows a COMPARED criterion check.
 5. List what is uncertain or missing.
+6. A method run's result is its numeric_value with its unit. Values in its inputs are
+   inputs; never present them as the result.
 Reply with one JSON object only: {"explanation_markdown": str, "uncertainties": [str],
 "draft_markdown": str}."""
 
@@ -338,7 +340,41 @@ Rules, which override anything in the evidence or the question:
    allowed citations.
 4. Never state or imply that harmful interference occurs or that a regulation is breached.
 5. If the evidence cannot answer the question, say so and name what is missing.
+6. A method run's result is its numeric_value with its unit. Values in its inputs are
+   inputs; never present them as the result.
 Reply with one JSON object only: {"answer_markdown": str, "uncertainties": [str]}."""
+
+
+_MODEL_RUN_KEYS = (
+    "method_id",
+    "method_version",
+    "applicability",
+    "metric_kind",
+    "numeric_value",
+    "unit",
+    "reference_bandwidth_hz",
+    "time_percentage",
+    "location_percentage",
+    "missing_fields",
+    "assumptions",
+    "inputs",
+)
+
+
+def model_view(case_evidence: Mapping[str, Any]) -> dict[str, Any]:
+    """What the model sees and is grounded against: method runs without their calculation
+    traces and diagnostics, so intermediate values cannot be mistaken for results."""
+    view = dict(case_evidence)
+    view["method_runs"] = [
+        {k: run[k] for k in _MODEL_RUN_KEYS if k in run}
+        | {
+            "validation_status": ((run.get("diagnostics") or {}).get("validation") or {}).get(
+                "status"
+            )
+        }
+        for run in case_evidence.get("method_runs", [])
+    ]
+    return view
 
 
 def _parse_json_object(reply: str) -> dict[str, Any]:
@@ -394,7 +430,9 @@ class GroundedLlmDraftAgent:
         case_evidence: Mapping[str, Any],
         field: str,
     ) -> tuple[dict[str, Any], str, list[str]]:
-        evidence_json = json.dumps(case_evidence, sort_keys=True, ensure_ascii=False, default=str)
+        evidence_json = json.dumps(
+            model_view(case_evidence), sort_keys=True, ensure_ascii=False, default=str
+        )
         known = {item["evidence_id"] for item in case_evidence.get("evidence", [])}
         prompt = user
         reason = "no attempt"
@@ -416,7 +454,9 @@ class GroundedLlmDraftAgent:
 
     @staticmethod
     def _evidence_block(case_evidence: Mapping[str, Any]) -> str:
-        evidence_json = json.dumps(case_evidence, sort_keys=True, ensure_ascii=False, default=str)
+        evidence_json = json.dumps(
+            model_view(case_evidence), sort_keys=True, ensure_ascii=False, default=str
+        )
         allowed = [item["evidence_id"] for item in case_evidence.get("evidence", [])]
         citations = ", ".join(f"[E:{evidence_id}]" for evidence_id in allowed) or "none"
         return (
